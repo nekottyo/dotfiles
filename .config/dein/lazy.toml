@@ -1,0 +1,51 @@
+[[plugins]]
+repo = 'ntpeters/vim-better-whitespace'
+
+[[plugins]]
+repo = 'Vimjas/vim-python-pep8-indent'
+on_ft = 'py'
+
+[[plugins]]
+repo = 'nvie/vim-flake8'
+on_ft = 'py'
+hock_add = '''
+autocmd BufWritePost *.py call Flake8()
+'''
+
+[[plugins]]
+repo = 'plasticboy/vim-markdown'
+on_ft = 'md'
+
+[[plugins]]
+repo = 'zchee/deoplete-go'
+on_ft = 'go'
+build = 'make'
+depends = ['deoplete.nvim']
+hook_source = '''
+    let g:deoplete#sources#go#gocode_binary = $GOPATH . '/bin/gocode'
+    set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
+'''
+
+[[plugins]]
+repo = 'fatih/vim-go'
+on_ft = 'go'
+hook_add = '''
+  let g:go_highlight_functions = 1
+  let g:go_highlight_methods = 1
+  let g:go_highlight_fields = 1
+  let g:go_highlight_types = 1
+  let g:go_highlight_operators = 1
+  let g:go_highlight_build_constraints = 1
+
+  let g:go_fmt_command = 'goimports'
+  let g:neomake_go_errcheck_maker = {
+    \ 'args': ['-abspath'],
+    \ 'append_file': 0,
+    \ 'errorformat': '%f:%l:%c:\ %m, %f:%l:%c\ %#%m',
+    \ }
+  let g:neomake_go_enabled_makers = ['golint', 'govet']
+  let g:go_gocode_unimported_packages = 1
+  set noexpandtab
+  set tabstop=4
+  set shiftwidth=4
+'''

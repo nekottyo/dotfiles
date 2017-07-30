@@ -1,0 +1,19 @@
+### 2nd Window
+## Create New Window
+new-window 
+
+# Horizonal split
+split-window -d
+resize-pane -U 30 
+
+send-keys 'ssh hop73' C-m
+send-keys 'ams_view . MS' C-m
+
+# Move Right Pane
+select-pane -D
+
+# Horizontal split
+split-window -d
+
+# Move Left Pane
+select-pane -L
