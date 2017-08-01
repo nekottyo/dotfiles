@@ -40,7 +40,7 @@ nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() 
 repo = 'neomake/neomake'
 hook_add = '''
 let g:neomake_python_enabled_makers = ['flake8', 'pycodestyle']
-autocmd! BufWritePost * Neomake  
+autocmd! BufWritePost * Neomake
 '''
 
 [[plugins]]
@@ -95,6 +95,12 @@ hook_add = '''
 #    au MyAutoCmd VimEnter * nested colorscheme ayu
 #'''
 
+[[plugins]]
+repo = 'ntpeters/vim-better-whitespace'
+hook_add = '''
+highlight ExtraWhitespace ctermbg=red
+autocmd BufEnter * EnableStripWhitespaceOnSave
+'''
 
 [[plugins]]
 repo = 'Yggdroot/indentLine'
