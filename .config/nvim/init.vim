@@ -74,4 +74,5 @@ set smarttab
 
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType yaml setl tabstop=4 expandtab shiftwidth=2 softtabstop=2
+autocmd FileType ruby setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 

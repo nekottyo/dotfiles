@@ -46,3 +46,7 @@ hook_add = '''
   set tabstop=4
   set shiftwidth=4
 '''
+
+[[plugins]]
+repo = 'vim-ruby/vim-ruby'
+on_ft = 'ruby'

@@ -59,7 +59,7 @@ on_ft = 'json'
 
 [[plugins]] # ansible
 repo = 'chase/vim-ansible-yaml'
-on_ft = 'yaml'
+on_ft = 'ansible'
 
 [[plugins]] # jinaj2
 repo = 'Glench/Vim-Jinja2-Syntax'
