@@ -1,10 +1,10 @@
 [[plugins]]
 repo = 'Vimjas/vim-python-pep8-indent'
-on_ft = 'py'
+on_ft = ['py', 'python']
 
 [[plugins]]
 repo = 'nvie/vim-flake8'
-on_ft = 'py'
+on_ft = ['py', 'python']
 hock_add = '''
 autocmd BufWritePost *.py call Flake8()
 '''
