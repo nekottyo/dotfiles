@@ -40,6 +40,7 @@ nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() 
 repo = 'neomake/neomake'
 hook_add = '''
 let g:neomake_python_enabled_makers = ['flake8', 'pycodestyle']
+let g:neomake_ruby_enabled_makers = ['rubocop']
 autocmd! BufWritePost * Neomake
 '''
 
@@ -57,9 +58,13 @@ on_ft = 'toml'
 repo = 'elzr/vim-json'
 on_ft = 'json'
 
+#[[plugins]] # ansible
+#repo = 'chase/vim-ansible-yaml'
+#on_ft =  ['ansible', 'yaml', 'yml']
+
 [[plugins]] # ansible
-repo = 'chase/vim-ansible-yaml'
-on_ft = 'ansible'
+repo = 'pearofducks/ansible-vim'
+on_ft =  ['ansible', 'yaml', 'yml']
 
 [[plugins]] # jinaj2
 repo = 'Glench/Vim-Jinja2-Syntax'
@@ -111,3 +116,17 @@ hook_add = '''
     let g:indentLine_setColors = 0
     hi MatchParen term=standout ctermbg=White ctermfg=White guibg=White guifg=White
 '''
+
+# markdown
+[[plugins]]
+repo = 'plasticboy/vim-markdown'
+on_ft = ['markdown', 'md']
+depends = ['tabular']
+hook_add = '''
+let g:vim_markdown_folding_disabled = 1
+'''
+
+[[plugins]]
+repo = 'godlygeek/tabular'
+on_ft = ['markdown', 'md']
+

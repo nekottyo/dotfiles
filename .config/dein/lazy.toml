@@ -10,10 +10,6 @@ autocmd BufWritePost *.py call Flake8()
 '''
 
 [[plugins]]
-repo = 'plasticboy/vim-markdown'
-on_ft = 'md'
-
-[[plugins]]
 repo = 'zchee/deoplete-go'
 on_ft = 'go'
 build = 'make'
@@ -50,3 +46,14 @@ hook_add = '''
 [[plugins]]
 repo = 'vim-ruby/vim-ruby'
 on_ft = 'ruby'
+
+[[plugins]]
+repo = 'ruby-formatter/rufo-vim'
+on_ft = 'ruby'
+hook_add = '''
+let g:rufo_auto_formatting = 1
+'''
+
+[[plugins]]
+repo = 'robbles/logstash.vim'
+on_ft = ['yaml','yml']
