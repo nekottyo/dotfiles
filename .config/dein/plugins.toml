@@ -130,3 +130,8 @@ let g:vim_markdown_folding_disabled = 1
 repo = 'godlygeek/tabular'
 on_ft = ['markdown', 'md']
 
+[[plugins]]
+repo = 'junegunn/vim-emoji'
+
+[[plugins]]
+repo = 'pocari/vim-denite-emoji'
