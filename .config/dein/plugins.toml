@@ -5,13 +5,13 @@ repo = 'Shougo/dein.vim'
 repo = 'itchyny/lightline.vim'
 hook_add = '''
 let g:lightline = {
-      \ 'colorscheme': 'tender',
-      \ 'component': {
-      \   'readonly': '%{&readonly?"":""}',
-      \ },
-      \ 'separator': { 'left': '', 'right': '' },
-      \ 'subseparator': { 'left': '', 'right': '' }
-      \ }
+    \ 'colorscheme': 'tender',
+    \ 'component': {
+    \   'readonly': '%{&readonly?"":""}',
+    \ },
+    \ 'separator': { 'left': '', 'right': '' },
+    \ 'subseparator': { 'left': '', 'right': '' }
+    \ }
 '''
 
 [[plugins]]
@@ -42,12 +42,6 @@ hook_add = '''
 let g:neomake_python_enabled_makers = ['flake8', 'pycodestyle']
 let g:neomake_ruby_enabled_makers = ['rubocop']
 autocmd! BufWritePost * Neomake
-'''
-
-[[plugins]]
-repo = 'tell-k/vim-autopep8'
-hock_add = '''
-autocmd FileType python noremap <buffer> <S-f> :call Autopep8()<CR>
 '''
 
 [[plugins]] # Toml
@@ -93,6 +87,17 @@ hook_add = '''
 '''
 
 #[[plugins]]
+#repo = 'rakr/vim-one'
+#hook_add = '''
+#    if (has("termguicolors"))
+#     set termguicolors
+#    endif
+#    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+#    set background=dark
+#    au MyAutoCmd VimEnter * nested colorscheme one
+#'''
+
+#[[plugins]]
 #repo = 'ayu-theme/ayu-vim'
 #hook_add = '''
 #    set termguicolors
@@ -106,18 +111,16 @@ hook_add = '''
 highlight ExtraWhitespace ctermbg=red
 autocmd BufEnter * EnableStripWhitespaceOnSave
 '''
-
 [[plugins]]
-repo = 'Yggdroot/indentLine'
+repo = 'nathanaelkane/vim-indent-guides'
 hook_add = '''
-    let g:indentLine_char = '|'
-    let g:indentLine_first_char = '|'
-    let g:indentLine_showFirstIndentLevel = 1
-    let g:indentLine_setColors = 0
-    hi MatchParen term=standout ctermbg=White ctermfg=White guibg=White guifg=White
+let g:indent_guides_enable_on_vim_startup = 1
 '''
 
 # markdown
+[[plugins]]
+repo = 'godlygeek/tabular'
+
 [[plugins]]
 repo = 'plasticboy/vim-markdown'
 on_ft = ['markdown', 'md']
@@ -127,11 +130,10 @@ let g:vim_markdown_folding_disabled = 1
 '''
 
 [[plugins]]
-repo = 'godlygeek/tabular'
-on_ft = ['markdown', 'md']
-
-[[plugins]]
 repo = 'junegunn/vim-emoji'
 
 [[plugins]]
 repo = 'pocari/vim-denite-emoji'
+
+[[plugins]]
+repo = 'chr4/nginx.vim'

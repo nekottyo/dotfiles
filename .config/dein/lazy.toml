@@ -8,6 +8,12 @@ on_ft = ['py', 'python']
 hock_add = '''
 autocmd BufWritePost *.py call Flake8()
 '''
+[[plugins]]
+repo = 'tell-k/vim-autopep8'
+on_ft = ['py', 'python']
+hock_add = '''
+autocmd FileType python noremap <buffer> <S-f> :call Autopep8()<CR>
+'''
 
 [[plugins]]
 repo = 'zchee/deoplete-go'
