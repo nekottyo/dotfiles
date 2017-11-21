@@ -76,6 +76,16 @@ hook_add = '''
 '''
 
 # Colors
+#[[plugins]]
+#repo = 'dracula/vim'
+#hook_add = '''
+#    if (has("termguicolors"))
+#     set termguicolors
+#    endif
+#    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+#    au MyAutoCmd VimEnter * nested colorscheme dracula
+#'''
+
 [[plugins]]
 repo = 'jacoborus/tender.vim'
 hook_add = '''
