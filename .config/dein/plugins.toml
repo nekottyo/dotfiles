@@ -16,6 +16,7 @@ let g:lightline = {
 
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
+build = 'make'
 hook_post_update = '''
   if dein#util#_is_windows()
     let cmd = 'tools\\update-dll-mingw'
@@ -42,6 +43,18 @@ hook_add = '''
 let g:neomake_python_enabled_makers = ['flake8', 'pycodestyle']
 let g:neomake_ruby_enabled_makers = ['rubocop']
 autocmd! BufWritePost * Neomake
+'''
+
+[[plugins]]
+repo = 'scrooloose/nerdtree'
+hook_add = '''
+map <C-n> :NERDTreeToggle<CR>
+'''
+
+[[plugins]]
+repo = 'Shougo/vimshell.vim'
+hook_add = '''
+map <C-p> :VimShellPop<CR>
 '''
 
 [[plugins]] # Toml
@@ -147,3 +160,4 @@ repo = 'pocari/vim-denite-emoji'
 
 [[plugins]]
 repo = 'chr4/nginx.vim'
+
