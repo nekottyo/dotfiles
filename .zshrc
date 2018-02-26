@@ -20,9 +20,13 @@ zplug "junegunn/fzf-bin", \
     as:command, \
     rename-to:fzf, \
     use:"*linux*amd64*"
-zplug "b4b4r07/dotfiles",  \
+
+zplug "junegunn/fzf", \
     as:command, \
-    use:bin/peco-tmux
+    use: "bin/fzf-tmux"
+
+#zplug "b4b4r07/dotfiles",  \
+#    use:bin/peco-tmux
 
 # Supports oh-my-zsh plugins and the like
 zplug "plugins/git",   from:oh-my-zsh
@@ -107,7 +111,6 @@ zplug "yous/vanilli.sh"
 zplug "zsh-users/zsh-completions"
 zplug "mollifier/anyframe"
 zplug "mafredri/zsh-async", from:github
-zplug "jimeh/zsh-peco-history"
 zplug "greymd/tmux-xpanes"
 zplug "mollifier/cd-gitroot"
 
@@ -155,6 +158,9 @@ alias hop="ssh hop"
 ## env
 export LC_CTYPE='ja_JP.UTF-8'
 
+## kubectl completion
+. <(kubectl completion zsh)
+
 zplug check || zplug install
 zplug load
 
@@ -170,3 +176,15 @@ if (which zprof > /dev/null) ;then
   zprof | less
 fi
 eval $(thefuck --alias)
+
+fh() {
+  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
+}
+zle -N fh
+bindkey '^R' fh
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/staro/google-cloud-sdk/path.zsh.inc' ]; then source '/home/staro/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/staro/google-cloud-sdk/completion.zsh.inc' ]; then source '/home/staro/google-cloud-sdk/completion.zsh.inc'; fi
