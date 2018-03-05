@@ -168,23 +168,21 @@ if [ "${TMUX}" != "" ] ; then
   tmux pipe-pane 'cat | rotatelogs -L /var/log/tmux/tmux.lnk /var/log/tmux/%Y%m%d_#S:#I.#P.log 86400 540'
 fi
 
-if [ $DOTFILES/.zshrc -nt ~/.zshrc.zwc ]; then
-  zcompile ~/.zshrc
-fi
-
 if (which zprof > /dev/null) ;then
   zprof | less
 fi
 eval $(thefuck --alias)
-
-fh() {
-  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
-}
-zle -N fh
-bindkey '^R' fh
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/staro/google-cloud-sdk/path.zsh.inc' ]; then source '/home/staro/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/staro/google-cloud-sdk/completion.zsh.inc' ]; then source '/home/staro/google-cloud-sdk/completion.zsh.inc'; fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
+export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
+
+if [ $DOTFILES/.zshrc -nt ~/.zshrc.zwc ]; then
+  zcompile ~/.zshrc
+fi
