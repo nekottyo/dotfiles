@@ -8,7 +8,7 @@ source ~/.zplug/init.zsh
 zplug "Jxck/dotfiles", as:command, use:"bin/{histuniq,color}"
 
 # Can manage everything e.g., other person's zshrc
-zplug "tcnksm/docker-alias", use:zshrc
+#zplug "tcnksm/docker-alias", use:zshrc
 
 # Disable updates using the "frozen" tag
 zplug "k4rthik/git-cal", as:command
@@ -23,7 +23,7 @@ zplug "junegunn/fzf-bin", \
 
 zplug "junegunn/fzf", \
     as:command, \
-    use: "bin/fzf-tmux"
+    use:"bin/fzf-tmux"
 
 #zplug "b4b4r07/dotfiles",  \
 #    use:bin/peco-tmux
@@ -100,12 +100,13 @@ zplug "takaaki-kasai/git-foresta", \
     as:command, \
     use:'git-foresta'
 
-zplug "technosophos/glide-zsh", \
-    use: glide.plugin.zsh
+zplug "technosophos/glide-zsh"
+
 
 zplug "simonwhitaker/gibo", \
     as:command, \
-    use: gibo
+    use:gibo
+zplug "simonwhitaker/gibo"
 
 zplug "yous/vanilli.sh"
 zplug "zsh-users/zsh-completions"
@@ -113,6 +114,12 @@ zplug "mollifier/anyframe"
 zplug "mafredri/zsh-async", from:github
 zplug "greymd/tmux-xpanes"
 zplug "mollifier/cd-gitroot"
+#zplug "pierpo/fzf-docker"
+zplug "docker/cli", \
+    use:"cli/contrib/completion/zsh/_docker"
+
+zplug "github/hub", \
+    use: "hub/etc/hub.zsh_completion"
 
 # theme
 #setopt prompt_subst
@@ -129,7 +136,6 @@ zplug "plugins/common-aliases",   from:oh-my-zsh
 zplug "plugins/archlinux",   from:oh-my-zsh
 zplug "plugins/ssh-agent",   from:oh-my-zsh
 zplug "plugins/vagrant",   from:oh-my-zsh
-zplug "plugins/docker",   from:oh-my-zsh
 zplug "plugins/tmux",   from:oh-my-zsh
 
 setopt share_history

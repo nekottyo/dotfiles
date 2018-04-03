@@ -49,10 +49,7 @@ hook_add = '''
   set shiftwidth=4
 '''
 
-[[plugins]]
-repo = 'vim-ruby/vim-ruby'
-on_ft = 'ruby'
-
+# ruby formatter
 [[plugins]]
 repo = 'ruby-formatter/rufo-vim'
 on_ft = 'ruby'
@@ -60,6 +57,24 @@ hook_add = '''
 let g:rufo_auto_formatting = 1
 '''
 
+# ruby if..end completion
+[[plugins]]
+repo = 'tpope/vim-endwise'
+on_ft = 'ruby'
+
+# ruby completion
+[[plugins]]
+repo = 'uplus/deoplete-solargraph'
+on_ft = 'ruby'
+depends = ['deoplete.nvim']
+
+# deoplete ruby
+[[plugins]]
+repo = 'fishbullet/deoplete-ruby'
+on_ft = 'ruby'
+depends = 'deoplete.nvim'
+
 [[plugins]]
 repo = 'robbles/logstash.vim'
 on_ft = ['yaml','yml']
+

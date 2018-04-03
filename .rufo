@@ -1,2 +1,2 @@
 parens_in_def :yes
-trailing_commas true
+trailing_commas false

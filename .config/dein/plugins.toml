@@ -179,9 +179,26 @@ hook_add = '''
 let g:indent_guides_enable_on_vim_startup = 1
 '''
 
+[[plugins]]
+repo = 'szw/vim-tags'
+
+[[plugins]]
+repo = 'majutsushi/tagbar'
+depends = 'vim-tags'
+
+[[plugins]]
+repo = "tyru/caw.vim.git"
+hook_add = '''
+nmap <C-_> <Plug>(caw:hatpos:toggle)
+vmap <C-_> <Plug>(caw:hatpos:toggle)
+'''
+
 # markdown
 [[plugins]]
 repo = 'godlygeek/tabular'
+hook_add = '''
+nmap <F8> :TagbarToggle<CR>
+'''
 
 [[plugins]]
 repo = 'plasticboy/vim-markdown'
@@ -192,6 +209,10 @@ let g:vim_markdown_folding_disabled = 1
 '''
 
 [[plugins]]
+repo = 'dhruvasagar/vim-table-mode'
+on_ft = 'markdown'
+
+[[plugins]]
 repo = 'junegunn/vim-emoji'
 
 [[plugins]]
@@ -199,4 +220,3 @@ repo = 'pocari/vim-denite-emoji'
 
 [[plugins]]
 repo = 'chr4/nginx.vim'
-
