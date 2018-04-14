@@ -220,3 +220,4 @@ repo = 'pocari/vim-denite-emoji'
 
 [[plugins]]
 repo = 'chr4/nginx.vim'
+
