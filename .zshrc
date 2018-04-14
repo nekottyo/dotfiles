@@ -143,6 +143,10 @@ setopt share_history
 export XDG_CONFIG_HOME=$HOME/.config
 
 ## PATH
+## for Mac OS
+if [[ $(uname) == "Darwin" ]]; then
+    export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
+fi
 # anyenv
 export PATH="/usr/bin:$PATH"
 export PATH="$HOME/.anyenv/bin:$PATH"
