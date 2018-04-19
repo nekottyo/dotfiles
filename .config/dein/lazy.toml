@@ -74,6 +74,17 @@ repo = 'fishbullet/deoplete-ruby'
 on_ft = 'ruby'
 depends = 'deoplete.nvim'
 
+# Ruby on Rails
+[[plugins]]
+repo = 'tpope/vim-rails'
+on_ft = ['rails', 'ruby', 'eruby']
+
+[[plugins]]
+repo = '5t111111/denite-rails'
+on_ft = ['rails', 'ruby', 'eruby']
+depends = 'deoplete.nvim'
+
+
 [[plugins]]
 repo = 'robbles/logstash.vim'
 on_ft = ['yaml','yml']
