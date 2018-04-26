@@ -50,11 +50,18 @@ hook_add = '''
 '''
 
 # ruby formatter
+#[[plugins]]
+#repo = 'ruby-formatter/rufo-vim'
+#on_ft = 'ruby'
+#hook_add = '''
+#let g:rufo_auto_formatting = 1
+#'''
+
 [[plugins]]
-repo = 'ruby-formatter/rufo-vim'
-on_ft = 'ruby'
+repo = 'Chiel92/vim-autoformat'
 hook_add = '''
-let g:rufo_auto_formatting = 1
+let g:formatterpath = ['/home/staro/.anyenv/envs/rbenv/shims/']
+au BufWrite * :Autoformat
 '''
 
 # ruby if..end completion
