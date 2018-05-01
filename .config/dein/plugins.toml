@@ -237,3 +237,9 @@ repo = 'itchyny/vim-gitbranch'
 
 [[plugins]]
 repo = 'edkolev/tmuxline.vim'
+
+[[plugins]]
+repo = 'cohama/lexima.vim'
+hook_post_source = '''
+inoremap <C-f> <C-r>=lexima#insmode#leave(1, '<LT>C-G>U<LT>RIGHT>')<CR>
+'''
