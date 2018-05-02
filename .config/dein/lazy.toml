@@ -51,13 +51,6 @@ let g:neomake_go_errcheck_maker = {
 '''
 
 # ruby formatter
-#[[plugins]]
-#repo = 'ruby-formatter/rufo-vim'
-#on_ft = 'ruby'
-#hook_add = '''
-#let g:rufo_auto_formatting = 1
-#'''
-
 [[plugins]]
 repo = 'Chiel92/vim-autoformat'
 hook_add = '''
@@ -83,6 +76,11 @@ depends = ['deoplete.nvim']
 repo = 'fishbullet/deoplete-ruby'
 on_ft = 'ruby'
 depends = 'deoplete.nvim'
+
+# rdoc
+[[plugins]]
+repo = 'hallison/vim-rdoc'
+on_ft = 'ruby'
 
 # Ruby on Rails
 [[plugins]]
