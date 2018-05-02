@@ -89,7 +89,6 @@ repo = 'Shougo/neosnippet.vim'
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 depends = 'neosnippet.vim'
-on_ft = 'snippet'
 on_i = 1
 hook_source = '''
 imap <C-k> <Plug>(neosnippet_expand_or_jump)

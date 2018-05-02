@@ -68,6 +68,7 @@ let g:autoformat_remove_trailing_spaces = 0
 autocmd FileType ruby,cucumber let b:autoformat_autoindent=1
 autocmd FileType ruby,cucumber let b:autoformat_retab=1
 autocmd FileType ruby,cucumber let b:autoformat_trailing_space=1
+noremap <F3> :Autoformat<CR>
 "au BufWrite * :Autoformat
 '''
 
