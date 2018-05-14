@@ -228,6 +228,9 @@ let g:gen_tags#gtags_auto_gen = 1
 [[plugins]]
 repo = 'majutsushi/tagbar'
 depends = 'vim-tags'
+hook_add = '''
+autocmd VimEnter * nested :call tagbar#autoopen(1)
+'''
 
 # コメントアウト
 [[plugins]]
@@ -240,9 +243,6 @@ vmap <C-_> <Plug>(caw:hatpos:toggle)
 # markdown
 [[plugins]]
 repo = 'godlygeek/tabular'
-hook_add = '''
-nmap <F8> :TagbarToggle<CR>
-'''
 
 [[plugins]]
 repo = 'plasticboy/vim-markdown'
