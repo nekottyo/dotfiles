@@ -64,6 +64,13 @@ inoremap <silent> <C-j> j
 inoremap <silent> kk <ESC>
 inoremap <silent> <C-k> k
 
+" insert モードで Alt + hjkl でカーソル移動
+inoremap <A-h> <left>
+inoremap <A-j> <down>
+inoremap <A-k> <up>
+inoremap <A-l> <right>
+
+
 filetype indent on
 set incsearch
 set ignorecase
@@ -72,6 +79,10 @@ set shiftround
 set autoindent smartindent
 set expandtab
 set smarttab
+set smartcase
+
+" ESCキー2度押しでハイライトの切り替え
+nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
 
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType yaml setl tabstop=4 expandtab shiftwidth=2 softtabstop=2

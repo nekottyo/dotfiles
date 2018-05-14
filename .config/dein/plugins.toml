@@ -85,6 +85,12 @@ map <C-n> :NERDTreeToggle<CR>
 '''
 
 [[plugins]]
+repo = 'jistr/vim-nerdtree-tabs'
+
+[[plugins]]
+repo = 'Xuyuanp/nerdtree-git-plugin'
+
+[[plugins]]
 repo = 'Shougo/vimshell.vim'
 hook_add = '''
 map <C-p> :VimShellPop<CR>
@@ -219,8 +225,9 @@ repo = 'szw/vim-tags'
 repo = 'majutsushi/tagbar'
 depends = 'vim-tags'
 
+# コメントアウト
 [[plugins]]
-repo = "tyru/caw.vim.git"
+repo = "tyru/caw.vim"
 hook_add = '''
 nmap <C-_> <Plug>(caw:hatpos:toggle)
 vmap <C-_> <Plug>(caw:hatpos:toggle)
@@ -265,3 +272,11 @@ repo = 'cohama/lexima.vim'
 hook_post_source = '''
 inoremap <C-f> <C-r>=lexima#insmode#leave(1, '<LT>C-G>U<LT>RIGHT>')<CR>
 '''
+
+# show diff
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+
+# vim git
+[[plugins]]
+repo = 'cohama/agit.vim'
