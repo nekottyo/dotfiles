@@ -1,14 +1,19 @@
 [global_config]
-  enabled_plugins = CustomCommandsMenu, LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
-  hide_from_taskbar = True
+  borderless = True
+  dbus = False
+  enabled_plugins = CustomCommandsMenu, InactivityWatch, LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  geometry_hinting = True
   inactive_color_offset = 1.0
+  scroll_tabbar = True
+  sticky = True
   suppress_multiple_term_dialog = True
   title_font = Ricty Diminished for Powerline 9
-  title_hide_sizetext = True
   title_transmit_bg_color = "#555753"
   title_use_system_font = False
   window_state = maximise
 [keybindings]
+  hide_window = F12
+  layout_launcher = F11
   page_down = Page_Down
   page_up = Page_Up
 [layouts]
@@ -30,7 +35,6 @@
 [plugins]
 [profiles]
   [[default]]
-    allow_bold = False
     background_color = "#222222"
     copy_on_selection = True
     cursor_color = "#c2b790"
@@ -39,7 +43,6 @@
     icon_bell = False
     palette = "#202020:#8c3432:#728271:#e8bf6a:#69819e:#896492:#5b8390:#b9aa99:#676767:#b55242:#869985:#ebeb91:#60827e:#de4974:#38add8:#d6bfb8"
     scrollbar_position = hidden
-    show_titlebar = False
     use_system_font = False
   [[BirdsOfParadise]]
     allow_bold = False
