@@ -219,7 +219,11 @@ let g:indent_guides_enable_on_vim_startup = 1
 '''
 
 [[plugins]]
-repo = 'szw/vim-tags'
+repo = 'jsfaint/gen_tags.vim'
+hook_add = '''
+let g:gen_tags#ctags_auto_gen = 1
+let g:gen_tags#gtags_auto_gen = 1
+'''
 
 [[plugins]]
 repo = 'majutsushi/tagbar'
