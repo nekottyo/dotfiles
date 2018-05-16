@@ -118,3 +118,11 @@ on_ft = ['yaml','yml']
 [[plugins]]
 repo = 'othree/yajs.vim'
 on_ft = ['javascript']
+
+# html tag close
+[[plugins]]
+repo = 'alvan/vim-closetag'
+on_ft = ['xml', 'html', 'eruby', 'xhtml', 'phtml']
+hook_add = '''
+let g:closetag_filetypes = 'html,xhtml,phtml,eruby'
+'''
