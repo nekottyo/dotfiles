@@ -81,12 +81,23 @@ set expandtab
 set smarttab
 set smartcase
 
+" spell check
+set spell
+set spelllang=en,cjk
+" spell check で下線だけにする
+hi clear SpellBad
+hi SpellBad cterm=underline
+" キャメルケースを大文字
+hi clear SpellCap
+hi SpellCap cterm=underline,bold
+
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
 
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType yaml setl tabstop=4 expandtab shiftwidth=2 softtabstop=2
-autocmd FileType ruby setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+autocmd FileType ruby,eruby,scss setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+autocmd FileType ruby let &colorcolumn=join(range(81,999),",")
 autocmd FileType sh setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType make setl noexpandtab
 

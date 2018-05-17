@@ -1,39 +1,9 @@
-#[[plugins]]
-#repo = ''
-
 [[plugins]]
 repo = 'Shougo/context_filetype.vim'
 
 [[plugins]]
 repo = 'osyo-manga/vim-precious'
 depends = ['context_filetype.vim']
-
-
-[[plugins]] # 補完
-repo = 'Shougo/deoplete.nvim'
-if = 'has("python3")'
-depends = 'context_filetype.vim'
-on_event = 'InsertEnter'
-hook_source = '''
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#enable_ignore_case = 1
-    let g:deoplete#enable_smart_case = 1
-
-    " <TAB>: completion.
-    "imap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
-    inoremap <expr><tab> pumvisible() ? "\<C-n>" :
-        \ neosnippet#expandable_or_jumpable() ?
-        \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
-
-
-    function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~ '\s'
-    endfunction
-
-    " <S-TAB>: completion back.
-    inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
-'''
 
 [[plugins]] # unite.vim 後継
 repo = 'Shougo/denite.nvim'
@@ -94,22 +64,8 @@ repo = 'Shougo/echodoc.vim'
 [[plugins]]
 repo = 'Shougo/neoinclude.vim'
 
-
-[[plugins]]
-repo = 'Shougo/neosnippet.vim'
-
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
-depends = 'neosnippet.vim'
-hook_source = '''
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
-'''
 
 [[olugins]]
 repo = 'honza/vim-snippets'
-depends = 'neosnippet.vim'
