@@ -52,7 +52,6 @@ endif
 " }}}
 
 
-
 " 行数
 set number
 

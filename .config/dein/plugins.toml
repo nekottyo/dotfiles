@@ -157,10 +157,6 @@ on_ft = 'toml'
 repo = 'elzr/vim-json'
 on_ft = 'json'
 
-#[[plugins]] # ansible
-#repo = 'chase/vim-ansible-yaml'
-#on_ft =  ['ansible', 'yaml', 'yml']
-
 [[plugins]] # ansible
 repo = 'pearofducks/ansible-vim'
 on_ft =  ['ansible', 'yaml', 'yml']
@@ -307,9 +303,9 @@ call lexima#add_rule({'char': '<', 'input_after': '>', 'filetype': 'eruby'})
 call lexima#add_rule({'char': '>', 'at': '\%#>', 'leave': 1, 'filetype': 'eruby'})
 call lexima#add_rule({'char': '<BS>', 'at': '<\%#>', 'delete': 1, 'filetype': 'eruby'})
 
-call lexima#add_rule({'char': '%', 'input_after': '%'})
-call lexima#add_rule({'char': '%', 'at': '\%#%', 'leave': 1})
-call lexima#add_rule({'char': '<BS>', 'at': '%\%#%', 'delete': 1})
+call lexima#add_rule({'char': '%', 'input_after': '%', 'filetype': 'eruby'})
+call lexima#add_rule({'char': '%', 'at': '\%#%', 'leave': 1, 'filetype': 'eruby'})
+call lexima#add_rule({'char': '<BS>', 'at': '%\%#%', 'delete': 1, 'filetype': 'eruby'})
 '''
 
 # show diff
