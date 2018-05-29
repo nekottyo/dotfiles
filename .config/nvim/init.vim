@@ -99,5 +99,6 @@ autocmd FileType ruby,eruby,scss setl tabstop=2 expandtab shiftwidth=2 softtabst
 autocmd FileType ruby let &colorcolumn=join(range(81,999),",")
 autocmd FileType sh setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType make setl noexpandtab
+autocmd FileType html,vue setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 
 set clipboard+=unnamedplus

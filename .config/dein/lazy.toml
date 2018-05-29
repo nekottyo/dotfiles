@@ -99,9 +99,9 @@ let g:formatterpath = ['/home/staro/.anyenv/envs/rbenv/shims/']
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
-autocmd FileType ruby,cucumber let b:autoformat_autoindent=1
-autocmd FileType ruby,cucumber let b:autoformat_retab=1
-autocmd FileType ruby,cucumber let b:autoformat_trailing_space=1
+autocmd FileType ruby,cucumber,vue,html let b:autoformat_autoindent=1
+autocmd FileType ruby,cucumber,vue,html let b:autoformat_retab=1
+autocmd FileType ruby,cucumber,vue,html let b:autoformat_trailing_space=1
 noremap <F3> :Autoformat<CR>
 "au BufWrite * :Autoformat
 '''
@@ -143,6 +143,8 @@ nnoremap <silent> [rails]v :<C-u>Denite<Space>rails:view<Return>
 nnoremap <silent> [rails]h :<C-u>Denite<Space>rails:helper<Return>
 nnoremap <silent> [rails]t :<C-u>Denite<Space>rails:test<Return>
 nnoremap <silent> [rails]s :<C-u>Denite<Space>rails:spec<Return>
+
+au BufNewFile,BufRead *.json.jbuilder set ft=ruby
 '''
 
 [[plugins]]
@@ -163,7 +165,17 @@ on_ft = ['javascript']
 # html tag close
 [[plugins]]
 repo = 'alvan/vim-closetag'
-on_ft = ['xml', 'html', 'eruby', 'xhtml', 'phtml']
+on_ft = ['xml', 'html', 'eruby', 'xhtml', 'phtml','vue']
 hook_add = '''
-let g:closetag_filetypes = 'html,xhtml,phtml,eruby'
+let g:closetag_filetypes = 'html,xhtml,phtml,eruby,vue'
 '''
+
+# haml
+[[plugins]]
+repo = 'tpope/vim-haml'
+on_ft = ['haml']
+
+[[plugins]]
+repo = 'posva/vim-vue'
+on_ft = 'vue'
+

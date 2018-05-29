@@ -86,12 +86,26 @@ endfunction
 autocmd BufReadPost *_test.rb call RSpecQuickrun()
 '''
 
+#[[plugins]]
+#repo = 'neomake/neomake'
+#hook_add = '''
+#let g:neomake_python_enabled_makers = ['flake8', 'pycodestyle']
+#let g:neomake_ruby_enabled_makers = ['rubocop']
+#let g:neomake_javascript_enabled_makers = ['eslint']
+#autocmd! BufWritePost * Neomake
+#'''
+
 [[plugins]]
-repo = 'neomake/neomake'
-hook_add = '''
-let g:neomake_python_enabled_makers = ['flake8', 'pycodestyle']
-let g:neomake_ruby_enabled_makers = ['rubocop']
-autocmd! BufWritePost * Neomake
+repo = 'w0rp/ale'
+hook_source = '''
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
+let g:airline#extensions#ale#enabled = 1
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
 '''
 
 [[plugins]]
@@ -242,6 +256,18 @@ repo = 'majutsushi/tagbar'
 depends = 'vim-tags'
 hook_add = '''
 autocmd VimEnter * nested :call tagbar#autoopen(1)
+nmap <F8> :TagbarToggle<CR>
+
+let g:tagbar_type_ruby = {
+    \ 'kinds' : [
+        \ 'm:modules',
+        \ 'c:classes',
+        \ 'd:describes',
+        \ 'C:contexts',
+        \ 'f:methods',
+        \ 'F:singleton methods'
+    \ ]
+\ }
 '''
 
 # コメントアウト
@@ -339,4 +365,14 @@ hook_add = '''
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+'''
+
+[[plugins]]
+repo = 'justincampbell/vim-eighties'
+hook_post_update = '''
+let g:eighties_enabled = 1
+let g:eighties_minimum_width = 80
+let g:eighties_extra_width = 0 " Increase this if you want some extra room
+let g:eighties_compute = 1 " Disable this if you just want the minimum + extra
+let g:eighties_bufname_additional_patterns = [''] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.
 '''
