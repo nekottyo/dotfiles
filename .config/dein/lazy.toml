@@ -91,21 +91,6 @@ let g:neomake_go_errcheck_maker = {
     set shiftwidth=4
 '''
 
-# ruby formatter
-[[plugins]]
-repo = 'Chiel92/vim-autoformat'
-hook_add = '''
-let g:formatterpath = ['/home/staro/.anyenv/envs/rbenv/shims/']
-let g:autoformat_autoindent = 0
-let g:autoformat_retab = 0
-let g:autoformat_remove_trailing_spaces = 0
-autocmd FileType ruby,cucumber,vue,html let b:autoformat_autoindent=1
-autocmd FileType ruby,cucumber,vue,html let b:autoformat_retab=1
-autocmd FileType ruby,cucumber,vue,html let b:autoformat_trailing_space=1
-noremap <F3> :Autoformat<CR>
-"au BufWrite * :Autoformat
-'''
-
 # ruby completion
 [[plugins]]
 repo = 'uplus/deoplete-solargraph'
