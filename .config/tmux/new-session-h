@@ -1,0 +1,11 @@
+# Create New Window
+new-window
+
+# Move Right Pane
+select-pane -D
+
+# Horizontal split
+split-window -h
+
+# Move Left Pane
+select-pane -R

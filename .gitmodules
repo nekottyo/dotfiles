@@ -1,3 +1,0 @@
-[submodule ".config/tmux-powerline"]
-	path = .config/tmux-powerline
-	url = https://github.com/nekottyo/tmux-powerline.git
