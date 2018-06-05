@@ -6,13 +6,13 @@
   inactive_color_offset = 1.0
   sticky = True
   suppress_multiple_term_dialog = True
-  title_font = Ricty Diminished for Powerline 9
+  title_font = Ricty Diminished for Powerline 10
   title_transmit_bg_color = "#555753"
   title_use_system_font = False
   window_state = maximise
 [keybindings]
   hide_window = F12
-  layout_launcher = F11
+  layout_launcher = <Primary><Shift><Alt>Right
   page_down = Page_Down
   page_up = Page_Up
 [layouts]
@@ -37,7 +37,7 @@
     background_color = "#222222"
     copy_on_selection = True
     cursor_color = "#c2b790"
-    font = Ricty Diminished for Powerline 10
+    font = Fira Mono for Powerline 10
     foreground_color = "#c2b790"
     icon_bell = False
     palette = "#202020:#8c3432:#728271:#e8bf6a:#69819e:#896492:#5b8390:#b9aa99:#676767:#b55242:#869985:#ebeb91:#60827e:#de4974:#38add8:#d6bfb8"
@@ -57,22 +57,17 @@
     use_system_font = False
   [[Gruvbox Dark]]
     allow_bold = False
-    copy_on_selection = True
-    cursor_color = "#aaaaaa"
-    font = Ricty Diminished for Powerline 10
-    icon_bell = False
-    scrollbar_position = hidden
-    show_titlebar = False
-    use_system_font = False
-  [[Medallion]]
-    allow_bold = False
     background_color = "#1d1908"
     copy_on_selection = True
     cursor_color = "#d3ba30"
-    font = Ricty Diminished for Powerline 10
+    font = Fira Mono for Powerline 10
     foreground_color = "#cac296"
     icon_bell = False
     palette = "#000000:#b64c00:#7c8b16:#d3bd26:#616bb0:#8c5a90:#916c25:#cac29a:#5e5219:#ff9149:#b2ca3b:#ffe54a:#acb8ff:#ffa0ff:#ffbc51:#fed698"
     scrollbar_position = hidden
     show_titlebar = False
+    use_system_font = False
+  [[Medallion]]
+    cursor_color = "#aaaaaa"
+    font = Fira Mono for Powerline 10
     use_system_font = False

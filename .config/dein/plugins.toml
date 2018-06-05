@@ -111,15 +111,6 @@ endfunction
 autocmd BufReadPost *_test.rb call RSpecQuickrun()
 '''
 
-#[[plugins]]
-#repo = 'neomake/neomake'
-#hook_add = '''
-#let g:neomake_python_enabled_makers = ['flake8', 'pycodestyle']
-#let g:neomake_ruby_enabled_makers = ['rubocop']
-#let g:neomake_javascript_enabled_makers = ['eslint']
-#autocmd! BufWritePost * Neomake
-#'''
-
 [[plugins]]
 repo = 'w0rp/ale'
 hook_add = '''
@@ -307,22 +298,6 @@ hook_add = '''
 nmap <C-_> <Plug>(caw:hatpos:toggle)
 vmap <C-_> <Plug>(caw:hatpos:toggle)
 '''
-
-# markdown
-[[plugins]]
-repo = 'godlygeek/tabular'
-
-[[plugins]]
-repo = 'plasticboy/vim-markdown'
-on_ft = ['markdown', 'md']
-depends = ['tabular']
-hook_add = '''
-let g:vim_markdown_folding_disabled = 1
-'''
-
-[[plugins]]
-repo = 'dhruvasagar/vim-table-mode'
-on_ft = 'markdown'
 
 [[plugins]]
 repo = 'junegunn/vim-emoji'

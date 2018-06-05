@@ -164,3 +164,23 @@ on_ft = ['haml']
 repo = 'posva/vim-vue'
 on_ft = 'vue'
 
+# markdown
+[[plugins]]
+repo = 'godlygeek/tabular'
+on_ft = ['markdown', 'md']
+
+[[plugins]]
+repo = 'plasticboy/vim-markdown'
+on_ft = ['markdown', 'md']
+depends = ['tabular']
+hook_add = '''
+let g:vim_markdown_folding_disabled = 1
+'''
+
+[[plugins]]
+repo = 'dhruvasagar/vim-table-mode'
+on_ft = ['markdown', 'md']
+
+[[plugins]]
+repo = 'iamcco/markdown-preview.vim'
+on_ft = ['markdown', 'md']
