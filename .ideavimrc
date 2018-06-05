@@ -1,0 +1,90 @@
+set number
+
+set noswapfile
+
+" insertモードから抜ける
+inoremap <silent> jj <ESC>
+inoremap <silent> <C-j> j
+inoremap <silent> kk <ESC>
+inoremap <silent> <C-k> k
+
+" insert モードで Alt + hjkl でカーソル移動
+inoremap <A-h> <left>
+inoremap <A-j> <down>
+inoremap <A-k> <up>
+inoremap <A-l> <right>
+
+
+filetype indent on
+set incsearch
+set ignorecase
+set shiftwidth=4
+set shiftround
+set autoindent smartindent
+set expandtab
+set smarttab
+set smartcase
+
+
+" ESCキー2度押しでハイライトの切り替え
+nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
+
+nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+nnoremap sn gt
+nnoremap sp gT
+nnoremap sr <C-w>r
+nnoremap s= <C-w>=
+nnoremap sw <C-w>w
+nnoremap so <C-w>_<C-w>|
+nnoremap sO <C-w>=
+nnoremap sN :<C-u>bn<CR>
+nnoremap sP :<C-u>bp<CR>
+nnoremap st :<C-u>tabnew<CR>
+nnoremap sT :<C-u>Unite tab<CR>
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sq :<C-u>q<CR>
+nnoremap sQ :<C-u>bd<CR>
+
+" https://ikenox.info/2017-12-25/ideavim-introduction
+nnoremap <C-u> <Nop>
+nnoremap <C-u><C-a> :action GotoAction<CR>
+vnoremap <C-u><C-a> :action GotoAction<CR>
+
+nnoremap <C-u><C-e> :action SearchEverywhere<CR>
+nnoremap <C-u><C-s> :action FileStructurePopup<CR>
+nnoremap <C-u><C-g> :action FindInPath<CR>
+
+nnoremap <C-u><C-d> :action GotoDeclaration<CR>
+nnoremap <C-u><C-s> :action GotoSuperMethod<CR>
+
+nnoremap <C-u><C-b> :action JumpToLastChange<CR>
+
+nnoremap <C-u><C-u> :action FindUsages<CR>
+nnoremap <C-u><C-r> :action Refactorings.QuickListPopupAction<CR>
+
+nnoremap <C-u><C-g> :action Back<CR>
+nnoremap <C-u><C-l> :action Forward<CR>
+
+inoremap <C-u><C-o> :action InsertLiveTemplate<CR>
+nnoremap <C-u><C-q> :action QuickImplementations<CR>
+
+nnoremap <C-u><C-p> :action PasteMultiple<CR>
+nnoremap <C-u><C-P> :action PasteMultiple<CR>
+
+nnoremap == :action ReformatCode<CR>
+vnoremap == :action ReformatCode<CR>
+
+nnoremap cc :action CommentByLineComment<CR>
+vnoremap cc :action CommentByLineComment<CR>
+
+nnoremap <C-u><C-f> :action ShowIntentionActions<CR>
+
