@@ -264,31 +264,62 @@ repo = 'nathanaelkane/vim-indent-guides'
 hook_add = '''
 let g:indent_guides_enable_on_vim_startup = 1
 '''
-
+# tag
 [[plugins]]
 repo = 'jsfaint/gen_tags.vim'
 hook_add = '''
 let g:gen_tags#ctags_auto_gen = 1
 let g:gen_tags#gtags_auto_gen = 1
+
+nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 '''
 
 [[plugins]]
-repo = 'majutsushi/tagbar'
+repo = 'xolox/vim-misc'
+
+[[plugins]]
+repo = 'xolox/vim-easytags'
+depends_on = 'vim-misc'
+hook_add = '''
+let g:easytags_file = '~/.cache/vimtags'
+'''
+
+[[plugins]]
+repo = 'nekottyo/tagbar'
 depends = 'vim-tags'
 hook_add = '''
 autocmd VimEnter * nested :call tagbar#autoopen(1)
+autocmd BufWritePost *.rb !ripper-tags -R --exclude=vendor
 nmap <F8> :TagbarToggle<CR>
 
-let g:tagbar_type_ruby = {
-    \ 'kinds' : [
-        \ 'm:modules',
-        \ 'c:classes',
-        \ 'd:describes',
-        \ 'C:contexts',
-        \ 'f:methods',
-        \ 'F:singleton methods'
-    \ ]
-\ }
+if executable('ripper-tags')
+  let g:tagbar_type_ruby = {
+      \ 'kinds'      : ['m:modules',
+                      \ 'c:classes',
+                      \ 'C:constants',
+                      \ 'F:singleton methods',
+                      \ 'f:methods',
+                      \ 'a:aliases'],
+      \ 'kind2scope' : { 'c' : 'class',
+                       \ 'm' : 'class' },
+      \ 'scope2kind' : { 'class' : 'c' },
+      \ 'ctagsbin'   : 'ripper-tags',
+      \ 'ctagsargs'  : ['--exclude=vendor', '-f', '-']
+      \ }
+endif
+'''
+
+[[plugins]]
+repo = "ozelentok/denite-gtags"
+hook_add = '''
+nnoremap ta :DeniteCursorWord -buffer-name=gtags_context gtags_context<cr>
+nnoremap td :DeniteCursorWord -buffer-name=gtags_def gtags_def<cr>
+nnoremap tr :DeniteCursorWord -buffer-name=gtags_ref gtags_ref<cr>
+nnoremap tg :DeniteCursorWord -buffer-name=gtags_grep gtags_grep<cr>
+nnoremap tt :Denite -buffer-name=gtags_completion gtags_completion<cr>
+nnoremap tf :Denite -buffer-name=gtags_file gtags_file<cr>
+nnoremap tp :Denite -buffer-name=gtags_path gtags_path<cr>
 '''
 
 # コメントアウト
@@ -380,4 +411,33 @@ let g:eighties_minimum_width = 80
 let g:eighties_extra_width = 0 " Increase this if you want some extra room
 let g:eighties_compute = 1 " Disable this if you just want the minimum + extra
 let g:eighties_bufname_additional_patterns = [''] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.
+'''
+
+[[plugins]]
+repo = 'luochen1990/rainbow'
+hook_add = '''
+let g:rainbow_active = 1
+	let g:rainbow_conf = {
+	\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+	\	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+	\	'operators': '_,_',
+	\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+	\	'separately': {
+	\		'*': {},
+	\		'tex': {
+	\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
+	\		},
+	\		'lisp': {
+	\			'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+	\		},
+	\		'vim': {
+	\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+	\		},
+	\		'html': {
+	\			'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+	\		},
+	\		'css': 0,
+	\	}
+	\}
+
 '''

@@ -137,6 +137,25 @@ repo = '5t111111/denite-rails'
 on_ft = ['rails', 'ruby', 'eruby']
 depends = 'deoplete.nvim'
 
+[[plugins]]
+repo = 'tpope/vim-pathogen'
+on_ft = ['rails', 'ruby', 'eruby']
+hook_source = '''
+execute pathogen#infect()
+'''
+
+[[plugins]]
+repo = 'tpope/vim-rake'
+depends = 'vim-pathogen'
+
+[[plugins]]
+repo = 'tpope/vim-projectionist'
+depends = 'vim-pathogen'
+
+[[plugins]]
+repo = 'tpope/vim-bundler'
+depends = 'vim-pathogen'
+
 
 [[plugins]]
 repo = 'robbles/logstash.vim'

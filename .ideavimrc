@@ -2,6 +2,14 @@ set number
 
 set noswapfile
 
+hi MatchParen term=standout ctermbg=White ctermfg=White guibg=White guifg=White
+
+set clipboard=unnamed,unnamedplus
+set iminsert=2
+set scrolloff=10
+nnoremap x "_x
+vnoremap x "_x
+
 " insertモードから抜ける
 inoremap <silent> jj <ESC>
 inoremap <silent> <C-j> j
@@ -26,8 +34,11 @@ set smarttab
 set smartcase
 
 
+
+nnoremap m <Nop>
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
+nnoremap <CR> i<CR><Esc>
 
 nnoremap s <Nop>
 nnoremap sj <C-w>j
@@ -39,7 +50,7 @@ nnoremap sK <C-w>K
 nnoremap sL <C-w>L
 nnoremap sH <C-w>H
 nnoremap sn gt
-nnoremap sp gT
+nnoremap sm gT
 nnoremap sr <C-w>r
 nnoremap s= <C-w>=
 nnoremap sw <C-w>w
@@ -88,3 +99,6 @@ vnoremap cc :action CommentByLineComment<CR>
 
 nnoremap <C-u><C-f> :action ShowIntentionActions<CR>
 
+
+nnoremap <C-u><C-p> :action PasteMultiple<CR>
+nnoremap <C-u><C-P> :action PasteMultiple<CR>
