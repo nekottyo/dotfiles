@@ -97,8 +97,9 @@ autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType yaml setl tabstop=4 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType ruby,eruby,scss setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType ruby let &colorcolumn=join(range(81,999),",")
-autocmd FileType sh setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+autocmd FileType sh,zsh setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType make setl noexpandtab
 autocmd FileType html,vue setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 
 set clipboard+=unnamedplus

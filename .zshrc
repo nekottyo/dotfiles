@@ -168,8 +168,7 @@ alias hop="ssh hop"
 ## env
 export LC_CTYPE='ja_JP.UTF-8'
 
-## kubectl completion
-. <(kubectl completion zsh)
+source /usr/share/nvm/init-nvm.sh
 
 zplug check || zplug install
 zplug load
@@ -192,6 +191,13 @@ if [ -f '/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc' ]; then source '
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
 export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
+
+
+## kubectl completion
+export KUBECONFIG=~/.kube/config:$(ls ~/.kube/config-*)
+. <(kubectl completion zsh)
+. <(helm completion zsh)
+. <(stern --completion zsh)
 
 if [ $DOTFILES/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc

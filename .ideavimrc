@@ -6,7 +6,7 @@ hi MatchParen term=standout ctermbg=White ctermfg=White guibg=White guifg=White
 
 set clipboard=unnamed,unnamedplus
 set iminsert=2
-set scrolloff=10
+"set scrolloff=10
 nnoremap x "_x
 vnoremap x "_x
 
