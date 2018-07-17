@@ -192,6 +192,9 @@ if [ -f '/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc' ]; then source '
 export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
 export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
 
+# direnv
+eval "$(direnv hook zsh)"
+
 
 ## kubectl completion
 export KUBECONFIG=~/.kube/config:$(ls ~/.kube/config-*)
