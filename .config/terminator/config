@@ -1,7 +1,7 @@
 [global_config]
   borderless = True
   dbus = False
-  enabled_plugins = CustomCommandsMenu, InactivityWatch, LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  enabled_plugins = CustomCommandsMenu, InactivityWatch, TerminatorThemes, LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
   geometry_hinting = True
   inactive_color_offset = 1.0
   sticky = True
@@ -19,7 +19,7 @@
   [[default]]
     [[[child1]]]
       parent = window0
-      profile = BirdsOfParadise
+      profile = Monokai Soda
       type = Terminal
     [[[window0]]]
       parent = ""
@@ -55,19 +55,53 @@
     scrollbar_position = hidden
     show_titlebar = False
     use_system_font = False
-  [[Gruvbox Dark]]
+  [[Earthsong]]
     allow_bold = False
-    background_color = "#1d1908"
     copy_on_selection = True
-    cursor_color = "#d3ba30"
-    font = Fira Mono for Powerline 10
-    foreground_color = "#cac296"
+    cursor_color = "#aaaaaa"
+    font = Ricty Diminished Discord for Powerline 10
     icon_bell = False
-    palette = "#000000:#b64c00:#7c8b16:#d3bd26:#616bb0:#8c5a90:#916c25:#cac29a:#5e5219:#ff9149:#b2ca3b:#ffe54a:#acb8ff:#ffa0ff:#ffbc51:#fed698"
     scrollbar_position = hidden
     show_titlebar = False
     use_system_font = False
+  [[Espresso]]
+    background_color = "#323232"
+    cursor_color = "#d6d6d6"
+    foreground_color = "#ffffff"
+    palette = "#353535:#d25252:#a5c261:#ffc66d:#6c99bb:#d197d9:#bed6ff:#eeeeec:#535353:#f00c0c:#c2e075:#e1e48b:#8ab7d9:#efb5f7:#dcf4ff:#ffffff"
+  [[Firewatch]]
+    background_color = "#1e2027"
+    cursor_color = "#f6f7ec"
+    foreground_color = "#9ba2b2"
+    palette = "#585f6d:#d95360:#5ab977:#dfb563:#4d89c4:#d55119:#44a8b6:#e6e5ff:#585f6d:#d95360:#5ab977:#dfb563:#4c89c5:#d55119:#44a8b6:#e6e5ff"
+  [[Gruvbox Dark]]
+    allow_bold = False
+    background_color = "#292520"
+    copy_on_selection = True
+    cursor_color = "#f6f7ec"
+    font = Ricty Diminished for Powerline 10
+    foreground_color = "#e5c7a9"
+    icon_bell = False
+    palette = "#121418:#c94234:#85c54c:#f5ae2e:#1398b9:#d0633d:#509552:#e5c6aa:#675f54:#ff645a:#98e036:#e0d561:#5fdaff:#ff9269:#84f088:#f6f7ec"
+    show_titlebar = False
+    use_system_font = False
+  [[Mathias]]
+    cursor_color = "#bbbbbb"
+    foreground_color = "#bbbbbb"
+    palette = "#000000:#e52222:#a6e32d:#fc951e:#c48dff:#fa2573:#67d9f0:#f2f2f2:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ffff:#ffffff"
   [[Medallion]]
     cursor_color = "#aaaaaa"
     font = Fira Mono for Powerline 10
+    use_system_font = False
+  [[Monokai Soda]]
+    allow_bold = False
+    background_color = "#1a1a1a"
+    copy_on_selection = True
+    cursor_color = "#f6f7ec"
+    font = Ricty Diminished Discord for Powerline 10
+    foreground_color = "#c4c5b5"
+    icon_bell = False
+    palette = "#1a1a1a:#f4005f:#98e024:#fa8419:#9d65ff:#f4005f:#58d1eb:#c4c5b5:#625e4c:#f4005f:#98e024:#e0d561:#9d65ff:#f4005f:#58d1eb:#f6f6ef"
+    scrollbar_position = hidden
+    show_titlebar = False
     use_system_font = False
