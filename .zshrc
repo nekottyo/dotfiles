@@ -166,6 +166,7 @@ alias grep="grep --color=auto"
 alias hop="ssh hop"
 alias dcp="docker-compose"
 alias k="kubectl"
+alias vimdiff="nvim -d"
 
 ## env
 export LC_CTYPE='ja_JP.UTF-8'
