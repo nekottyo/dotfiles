@@ -1,2 +1,6 @@
 set main-view = id date author commit-title:graph=yes,refs=yes
 set split-view-height = 80%
+set mouse-scroll      = 10
+
+bind generic  <C-f> move-half-page-down
+bind generic  <C-b> move-half-page-up
