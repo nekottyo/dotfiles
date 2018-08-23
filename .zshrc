@@ -66,18 +66,6 @@ zplug "b4b4r07/httpstat", \
     use:'(*).sh', \
     rename-to:'$1'
 
-# Group dependencies
-# Load "emoji-cli" if "jq" is installed in this example
-zplug "stedolan/jq", \
-    from:gh-r, \
-    as:command, \
-    rename-to:jq
-
-zplug "b4b4r07/emoji-cli", \
-    on:"stedolan/jq"
-# Note: To specify the order in which packages should be loaded, use the defer
-#       tag described in the next section
-
 # Set the priority when loading
 # e.g., zsh-syntax-highlighting must be loaded
 # after executing compinit command and sourcing other plugins
