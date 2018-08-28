@@ -109,6 +109,9 @@ zplug "docker/cli", \
 zplug "github/hub", \
     use: "hub/etc/hub.zsh_completion"
 
+zplug "zsh-users/zsh-autosuggestions", \
+    defer:2
+
 # theme
 #setopt prompt_subst
 #zplug "adambiggs/zsh-theme", use:adambiggs.zsh-theme
