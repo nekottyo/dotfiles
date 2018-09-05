@@ -111,6 +111,21 @@ zplug "github/hub", \
 
 zplug "zsh-users/zsh-autosuggestions", \
     defer:2
+ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
+
+zplug "rupa/z", use:z.sh
+fzf-z-search() {
+    local res=$(z | sort -rn | cut -c 12- | fzf)
+    if [ -n "$res" ]; then
+        BUFFER+="cd $res"
+        zle accept-line
+    else
+        return 1
+    fi
+}
+
+zle -N fzf-z-search
+bindkey '^f' fzf-z-search
 
 # theme
 #setopt prompt_subst
@@ -185,6 +200,14 @@ if [ -f '/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc' ]; then source '
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
 export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
+
+# fbr - checkout git branch
+fbr() {
+  local branches branch
+  branches=$(git branch -vv) &&
+  branch=$(echo "$branches" | fzf +m) &&
+  git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+}
 
 # direnv
 eval "$(direnv hook zsh)"
