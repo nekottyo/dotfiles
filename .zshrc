@@ -1,16 +1,6 @@
 source ~/.zplug/init.zsh
 
-# Make sure to use double quotes
-#zplug "zsh-users/zsh-history-substring-search", use:zsh-history-substring-search.zsh
-
-# Use the package as a command
-# And accept glob patterns (e.g., brace, wildcard, ...)
 zplug "Jxck/dotfiles", as:command, use:"bin/{histuniq,color}"
-
-# Can manage everything e.g., other person's zshrc
-#zplug "tcnksm/docker-alias", use:zshrc
-
-# Disable updates using the "frozen" tag
 zplug "k4rthik/git-cal", as:command
 
 # Grab binaries from GitHub Releases
@@ -25,14 +15,8 @@ zplug "junegunn/fzf", \
     as:command, \
     use:"bin/fzf-tmux"
 
-#zplug "b4b4r07/dotfiles",  \
-#    use:bin/peco-tmux
-
 # Supports oh-my-zsh plugins and the like
 zplug "plugins/git",   from:oh-my-zsh
-
-# Also prezto
-#zplug "modules/prompt", from:prezto
 
 # Load if "if" tag returns true
 zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
@@ -48,32 +32,14 @@ zplug "jhawthorn/fzy", \
 zplug "b4b4r07/enhancd", use:enhancd.sh
 zplug "mollifier/anyframe"
 
-# Can manage gist file just like other packages
-#zplug "b4b4r07/79ee61f7c140c63d2786", \
-#    from:gist, \
-#    as:command, \
-#    use:get_last_pane_path.sh
-
-# Support bitbucket
-#zplug "b4b4r07/hello_bitbucket", \
-#    from:bitbucket, \
-#    as:command, \
-#    use:"*.sh"
-
 # Rename a command with the string captured with `use` tag
 zplug "b4b4r07/httpstat", \
     as:command, \
     use:'(*).sh', \
     rename-to:'$1'
 
-# Set the priority when loading
-# e.g., zsh-syntax-highlighting must be loaded
-# after executing compinit command and sourcing other plugins
-# (If the defer tag is given 2 or above, run after compinit command)
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
-# Can manage local plugins
-#zplug "~/.zsh", from:local
 
 # ##########
 # user setting
