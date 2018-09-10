@@ -96,5 +96,5 @@ repo = 'Shougo/neoinclude.vim'
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 
-[[olugins]]
+[[plugins]]
 repo = 'honza/vim-snippets'
