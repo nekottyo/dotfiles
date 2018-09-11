@@ -92,6 +92,8 @@ hi SpellCap cterm=underline,bold
 
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
+" F1 で相対行数と絶対行数の切り替え
+nnoremap <F3> :<C-u>setlocal relativenumber!<CR>
 
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType yaml setl tabstop=4 expandtab shiftwidth=2 softtabstop=2
