@@ -498,3 +498,10 @@ endfunction
 
 noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
 '''
+
+[[plugins]]
+repo = 'blueyed/vim-diminactive'
+hook_add = '''
+let g:diminactive_enable_focus = 1
+'''
+
