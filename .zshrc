@@ -16,7 +16,8 @@ zplug "junegunn/fzf", \
     use:"bin/fzf-tmux"
 
 # Supports oh-my-zsh plugins and the like
-zplug "plugins/git",   from:oh-my-zsh
+zplug "plugins/git", \
+    from:oh-my-zsh
 
 # Load if "if" tag returns true
 zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
@@ -75,8 +76,7 @@ zplug "docker/cli", \
 zplug "github/hub", \
     use: "hub/etc/hub.zsh_completion"
 
-zplug "zsh-users/zsh-autosuggestions", \
-    defer:2
+zplug "zsh-users/zsh-autosuggestions"
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
 
 zplug "rupa/z", use:z.sh
@@ -119,16 +119,19 @@ export XDG_CONFIG_HOME=$HOME/.config
 if [[ $(uname) == "Darwin" ]]; then
     export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
 fi
-# anyenv
-export PATH="/usr/bin:$PATH"
-export PATH="$HOME/.anyenv/bin:$PATH"
-export PATH="$HOME/.local/bin/powerline:$PATH"
-eval "$(anyenv init - --no-rehash)"
 
-# go
-export GOPATH=$HOME/.golang
-export GOROOT=$( go env GOROOT )
-export PATH=$GOPATH/bin:$PATH
+if [ -z $TMUX ]; then
+  # anyenv
+  export PATH="/usr/bin:$PATH"
+  export PATH="$HOME/.anyenv/bin:$PATH"
+  export PATH="$HOME/.local/bin/powerline:$PATH"
+  eval "$(anyenv init - --no-rehash)"
+
+  # go
+  export GOPATH=$HOME/.golang
+  export GOROOT=$( go env GOROOT )
+  export PATH=$GOPATH/bin:$PATH
+fi
 
 
 ## aliases
@@ -145,7 +148,7 @@ alias vimdiff="nvim -d"
 ## env
 export LC_CTYPE='ja_JP.UTF-8'
 
-source /usr/share/nvm/init-nvm.sh
+#source /usr/share/nvm/init-nvm.sh
 
 zplug check || zplug install
 zplug load
@@ -217,6 +220,8 @@ export KUBECONFIG=~/.kube/config:$(ls ~/.kube/config-*)
 . <(kubectl completion zsh)
 . <(helm completion zsh)
 . <(stern --completion zsh)
+
+alias mlcl=molecule
 
 if [ $DOTFILES/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
