@@ -81,20 +81,8 @@ set expandtab
 set smarttab
 set smartcase
 
-" spell check
-set spell
-set spelllang=en,cjk
-" spell check で下線だけにする
-hi clear SpellBad
-hi SpellBad cterm=underline
-" キャメルケースを大文字
-hi clear SpellCap
-hi SpellCap cterm=underline,bold
-
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
-" F1 で相対行数と絶対行数の切り替え
-nnoremap <F3> :<C-u>setlocal relativenumber!<CR>
 
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
 autocmd FileType yaml setl tabstop=4 expandtab shiftwidth=2 softtabstop=2
