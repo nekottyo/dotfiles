@@ -93,4 +93,7 @@ autocmd FileType make setl noexpandtab
 autocmd FileType html,vue setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 
+autocmd BufRead,BufNewFile *.gs setfiletype javascript
+autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+
 set clipboard+=unnamedplus
