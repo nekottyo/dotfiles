@@ -82,7 +82,6 @@ on_path = '.*'
 [[plugins]]
 repo = 'Shougo/neoyank.vim'
 depends = 'denite.nvim'
-on_event = 'TextYankPost'
 
 [[plugins]]
 repo = 'Shougo/neopairs.vim'
