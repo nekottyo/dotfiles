@@ -91,11 +91,16 @@ let g:neomake_go_errcheck_maker = {
     set shiftwidth=4
 '''
 
-# ruby completion
 [[plugins]]
-repo = 'uplus/deoplete-solargraph'
-on_ft = 'ruby'
-depends = ['deoplete.nvim']
+repo = 'autozimu/LanguageClient-neovim'
+rev = 'next'
+build = 'bash install.sh'
+hook_add = '''
+let g:LanguageClient_serverCommands = {
+    \ 'ruby': ['solargraph','stdio']
+    \ }
+'''
+
 
 # ruby local variable highlight
 [[plugins]]
@@ -128,7 +133,6 @@ nnoremap <silent> [rails]v :<C-u>Denite<Space>rails:view<Return>
 nnoremap <silent> [rails]h :<C-u>Denite<Space>rails:helper<Return>
 nnoremap <silent> [rails]t :<C-u>Denite<Space>rails:test<Return>
 nnoremap <silent> [rails]s :<C-u>Denite<Space>rails:spec<Return>
-
 au BufNewFile,BufRead *.json.jbuilder set ft=ruby
 '''
 
