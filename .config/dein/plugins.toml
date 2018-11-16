@@ -41,7 +41,7 @@ let g:lightline#ale#indicator_ok = "\uf00c"
 
 
 function! LightlineFilename()
-  let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+  let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
   let modified = &modified ? ' +' : ''
   return filename . modified
 endfunction
