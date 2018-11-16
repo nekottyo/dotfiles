@@ -124,7 +124,8 @@ let g:ale_python_pylint_use_global = 1
 let g:ale_python_flake8_use_global = 1
 let g:ale_fixers = {
 \  'ruby': ['rubocop'],
-\  'python': ['autopep8', 'yapf']
+\  'python': ['autopep8', 'yapf'],
+\  'javascript': ['prettier']
 \}
 nmap <F3> <Plug>(ale_fix)
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
