@@ -279,18 +279,18 @@ nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 '''
 
 [[plugins]]
-repo = 'xolox/vim-misc'
-
-[[plugins]]
-repo = 'xolox/vim-easytags'
-depends_on = 'vim-misc'
+repo = 'ludovicchabant/vim-gutentags'
 hook_add = '''
-let g:easytags_file = '~/.cache/vimtags'
+let g:gtentags_cache_dir = expand('~/.cache/gutentags')
+augroup MyGutentagsStatusLineRefresher
+    autocmd!
+    autocmd User GutentagsUpdating call lightline#update()
+    autocmd User GutentagsUpdated call lightline#update()
+augroup END
 '''
 
 [[plugins]]
 repo = 'nekottyo/tagbar'
-depends = 'vim-tags'
 hook_add = '''
 autocmd VimEnter * nested :call tagbar#autoopen(1)
 autocmd BufWritePost *.rb !ripper-tags -R --exclude=vendor
