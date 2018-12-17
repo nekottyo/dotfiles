@@ -91,7 +91,9 @@ rev = 'next'
 build = 'bash install.sh'
 hook_add = '''
 let g:LanguageClient_serverCommands = {
-    \ 'ruby': ['solargraph','stdio']
+    \ 'ruby': ['solargraph','stdio'],
+    \ 'go': ['golsp', '-mode', 'stdio'],
+    \ 'javascript': [expand('~/node_modules/javascript-typescript-langserver/lib/language-server.js')]
     \ }
 '''
 
@@ -184,6 +186,10 @@ let b:javascript_lib_use_flux = 1
 let b:javascript_lib_use_jasmine = 1
 let b:javascript_lib_use_d3 = 1
 '''
+
+[[plugins]]
+repo = 'leafgarland/typescript-vim'
+on_ft = ['typescript']
 
 # html tag close
 [[plugins]]
