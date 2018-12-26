@@ -52,16 +52,6 @@ autocmd FileType python noremap <buffer> <S-f> :call Autopep8()<CR>
 '''
 
 [[plugins]]
-repo = 'zchee/deoplete-go'
-on_ft = 'go'
-build = 'make'
-depends = ['deoplete.nvim']
-hook_source = '''
-let g:deoplete#sources#go#gocode_binary = $GOPATH . '/bin/gocode'
-set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
-'''
-
-[[plugins]]
 repo = 'fatih/vim-go'
 on_ft = 'go'
 hook_add = '''
@@ -237,4 +227,4 @@ on_ft = ['markdown', 'md']
 
 [[plugins]]
 repo = 'tbodt/deoplete-tabnine'
-
+build = 'install.sh'
