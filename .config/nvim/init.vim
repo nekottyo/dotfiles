@@ -1,5 +1,5 @@
 let g:python3_host_prog = '/usr/bin/python3'
-let g:ruby_host_prog = expand('/usr/lib/ruby/gems/2.5.0/gems/neovim-0.7.1/bin/neovim-ruby-host')
+"let g:ruby_host_prog = expand('/usr/lib/ruby/gems/2.5.0/gems/neovim-0.7.1/bin/neovim-ruby-host')
 let g:deoplete#enable_at_startup = 1
 
 let g:cache_home = empty($XDG_CACHE_HOME) ? expand('$HOME/.cache') : $XDG_CACHE_HOME
@@ -40,7 +40,7 @@ if dein#load_state(s:dein_cache_dir)
     call dein#load_toml(s:toml_dir . '/plugins.toml', {'lazy': 0})
     call dein#load_toml(s:toml_dir . '/lazy.toml', {'lazy': 1})
     if has('nvim')
-        call dein#load_toml(s:toml_dir . '/neovim.toml', {'lazy': 1})
+        call dein#load_toml(s:toml_dir . '/neovim.toml', {'lazy': 0})
     endif
 
     call dein#end()

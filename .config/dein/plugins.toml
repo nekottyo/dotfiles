@@ -121,12 +121,6 @@ nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 '''
 
-#[[plugins]]
-#repo = 'scrooloose/nerdtree'
-#hook_add = '''
-#map <C-n> :NERDTreeToggle<CR>
-#'''
-
 [[plugins]]
 repo = 'jistr/vim-nerdtree-tabs'
 
@@ -505,3 +499,5 @@ hook_add = '''
 let g:diminactive_enable_focus = 1
 '''
 
+[[plugins]]
+repo = 'junegunn/fzf'

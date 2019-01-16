@@ -1,31 +1,7 @@
-[[plugins]] # 補完
-repo = 'Shougo/deoplete.nvim'
-if = 'has("python3")'
-depends = 'context_filetype.vim'
-on_event = 'InsertEnter'
-hook_source = '''
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#custom#option({
-    \ 'smart_case': v:true,
-    \ 'auto_complete_delay': 200,
-    \ 'smart_casel': v:true,
-    \ 'max_list': 1000
-\ })
-
-inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
-
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function() abort
-  return deoplete#close_popup() . "\<CR>"
-endfunction
-'''
 
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
 on_event = 'InsertEnter'
-on_ft = ['snippet']
 depends = ['neosnippet-snippets']
 hook_source = '''
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -62,29 +38,19 @@ let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
-let g:go_fmt_command = 'goimports'
+let g:go_fmt_command = "goimports"
+let g:go_def_mapping_enabled = 0
+let g:go_doc_keywordprg_enabled = 0
+
 let g:neomake_go_errcheck_maker = {
     \ 'args': ['-abspath'],
     \ 'append_file': 0,
     \ 'errorformat': '%f:%l:%c:\ %m, %f:%l:%c\ %#%m',
     \ }
-    let g:neomake_go_enabled_makers = ['golint', 'govet']
-    let g:go_gocode_unimported_packages = 1
-    set noexpandtab
-    set tabstop=4
-    set shiftwidth=4
-'''
-
-[[plugins]]
-repo = 'autozimu/LanguageClient-neovim'
-rev = 'next'
-build = 'bash install.sh'
-hook_add = '''
-let g:LanguageClient_serverCommands = {
-    \ 'ruby': ['solargraph','stdio'],
-    \ 'go': ['golsp', '-mode', 'stdio'],
-    \ 'javascript': [expand('~/node_modules/javascript-typescript-langserver/lib/language-server.js')]
-    \ }
+let g:go_gocode_unimported_packages = 1
+set noexpandtab
+set tabstop=4
+set shiftwidth=4
 '''
 
 
@@ -224,7 +190,3 @@ on_ft = ['markdown', 'md']
 [[plugins]]
 repo = 'iamcco/markdown-preview.vim'
 on_ft = ['markdown', 'md']
-
-[[plugins]]
-repo = 'tbodt/deoplete-tabnine'
-build = 'install.sh'
