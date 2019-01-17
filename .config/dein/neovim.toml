@@ -146,12 +146,13 @@ depends = 'context_filetype.vim'
 on_event = 'InsertEnter'
 hook_source = '''
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#custom#option({
-    \ 'smart_case': v:true,
-    \ 'auto_complete_delay': 200,
-    \ 'smart_casel': v:true,
-    \ 'max_list': 1000
-\ })
+call deoplete#custom#option('async_timeout', 0)
+call deoplete#custom#option('auto_complete_delay', 0)
+call deoplete#custom#option('auto_refresh_delay', 10)
+call deoplete#custom#option('camel_case', v:true)
+call deoplete#custom#option('refresh_always', v:true)
+call deoplete#custom#option('skip_multibyte', v:true)
+call deoplete#custom#option('max_list', 1000)
 
 inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
