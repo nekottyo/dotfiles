@@ -128,6 +128,7 @@ if [ -z $TMUX ]; then
   eval "$(anyenv init - --no-rehash)"
 
   # go
+  export GO111MODULE=on
   export GOPATH=$HOME/.golang
   export GOROOT=$( go env GOROOT )
   export PATH=$GOPATH/bin:$PATH
