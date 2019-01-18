@@ -38,9 +38,10 @@ if dein#load_state(s:dein_cache_dir)
     let s:toml_dir = g:config_home . '/dein'
 
     call dein#load_toml(s:toml_dir . '/plugins.toml', {'lazy': 0})
+    call dein#load_toml(s:toml_dir . '/lsp.toml', {'lazy': 0})
     call dein#load_toml(s:toml_dir . '/lazy.toml', {'lazy': 1})
     if has('nvim')
-        call dein#load_toml(s:toml_dir . '/neovim.toml', {'lazy': 0})
+        call dein#load_toml(s:toml_dir . '/neovim.toml', {'lazy': 1})
     endif
 
     call dein#end()
@@ -60,9 +61,7 @@ set noswapfile
 
 " insertモードから抜ける
 inoremap <silent> jj <ESC>
-inoremap <silent> <C-j> j
 inoremap <silent> kk <ESC>
-inoremap <silent> <C-k> k
 
 " insert モードで Alt + hjkl でカーソル移動
 inoremap <A-h> <left>
@@ -80,7 +79,7 @@ set autoindent smartindent
 set expandtab
 set smarttab
 set smartcase
-set backup
+set termguicolors
 
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
