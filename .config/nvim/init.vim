@@ -96,5 +96,6 @@ autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd BufRead,BufNewFile *.gs setfiletype javascript
 autocmd FileType javascript,typescript setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 
 set clipboard+=unnamedplus

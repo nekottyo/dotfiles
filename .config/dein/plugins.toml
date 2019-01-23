@@ -336,39 +336,6 @@ repo = 'itchyny/vim-gitbranch'
 [[plugins]]
 repo = 'edkolev/tmuxline.vim'
 
-[[plugins]]
-repo = 'cohama/lexima.vim'
-hook_add = '''
-inoremap <C-f> <C-r>=lexima#insmode#leave(1, '<LT>C-G>U<LT>RIGHT>')<CR>
-
-" 後ろに文字がある時はタグ補完をしない
-call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:]', 'char': '{', 'input': '{'})
-call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:]', 'char': '[', 'input': '['})
-call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:]', 'char': '(', 'input': '('})
-
-call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:\{\[]', 'char': '"', 'input': '"'})
-call lexima#add_rule({'at': '[-0-9a-zA-Z_,:\}\]]\%#', 'char': '"', 'input': '"'})
-
-call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:\{\[]', 'char': "'", 'input': "'"})
-call lexima#add_rule({'at': '[-0-9a-zA-Z_,:\}\]]\%#', 'char': "'", 'input': "'"})
-
-" TAB で閉じカッコの後ろに行く
-call lexima#add_rule({'char': '<TAB>', 'at': '\%#)', 'leave': 1})
-call lexima#add_rule({'char': '<TAB>', 'at': '\%#"', 'leave': 1})
-call lexima#add_rule({'char': '<TAB>', 'at': "\%#'", 'leave': 1})
-call lexima#add_rule({'char': '<TAB>', 'at': '\%#]', 'leave': 1})
-call lexima#add_rule({'char': '<TAB>', 'at': '\%#}', 'leave': 1})
-
-" for erb
-call lexima#add_rule({'char': '<', 'input_after': '>', 'filetype': 'eruby'})
-call lexima#add_rule({'char': '>', 'at': '\%#>', 'leave': 1, 'filetype': 'eruby'})
-call lexima#add_rule({'char': '<BS>', 'at': '<\%#>', 'delete': 1, 'filetype': 'eruby'})
-
-call lexima#add_rule({'char': '%', 'input_after': '%', 'filetype': 'eruby'})
-call lexima#add_rule({'char': '%', 'at': '\%#%', 'leave': 1, 'filetype': 'eruby'})
-call lexima#add_rule({'char': '<BS>', 'at': '%\%#%', 'delete': 1, 'filetype': 'eruby'})
-'''
-
 # show diff
 [[plugins]]
 repo = 'airblade/vim-gitgutter'

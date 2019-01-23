@@ -42,7 +42,6 @@ set tabstop=4
 set shiftwidth=4
 '''
 
-
 # ruby local variable highlight
 [[plugins]]
 repo = 'todesking/ruby_hl_lvar.vim'
@@ -179,3 +178,42 @@ on_ft = ['markdown', 'md']
 [[plugins]]
 repo = 'iamcco/markdown-preview.vim'
 on_ft = ['markdown', 'md']
+
+[[plugins]]
+repo = 'slim-template/vim-slim'
+on_ft = 'slim'
+
+[[plugins]]
+repo = 'cohama/lexima.vim'
+on_i = 1
+hook_post_source = '''
+inoremap <C-f> <C-r>=lexima#insmode#leave(1, '<LT>C-G>U<LT>RIGHT>')<CR>
+let g:lexima_enable_newline_rules = 1
+
+" 後ろに文字がある時はタグ補完をしない
+call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:]', 'char': '{', 'input': '{'})
+call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:]', 'char': '[', 'input': '['})
+call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:]', 'char': '(', 'input': '('})
+
+call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:\{\[]', 'char': '"', 'input': '"'})
+call lexima#add_rule({'at': '[-0-9a-zA-Z_,:\}\]]\%#', 'char': '"', 'input': '"'})
+
+call lexima#add_rule({'at': '\%#[-0-9a-zA-Z_,:\{\[]', 'char': "'", 'input': "'"})
+call lexima#add_rule({'at': '[-0-9a-zA-Z_,:\}\]]\%#', 'char': "'", 'input': "'"})
+
+" TAB で閉じカッコの後ろに行く
+call lexima#add_rule({'char': '<TAB>', 'at': '\%#)', 'leave': 1})
+call lexima#add_rule({'char': '<TAB>', 'at': '\%#"', 'leave': 1})
+call lexima#add_rule({'char': '<TAB>', 'at': "\%#'", 'leave': 1})
+call lexima#add_rule({'char': '<TAB>', 'at': '\%#]', 'leave': 1})
+call lexima#add_rule({'char': '<TAB>', 'at': '\%#}', 'leave': 1})
+
+" for erb
+call lexima#add_rule({'char': '<', 'input_after': '>', 'filetype': 'eruby'})
+call lexima#add_rule({'char': '>', 'at': '\%#>', 'leave': 1, 'filetype': 'eruby'})
+call lexima#add_rule({'char': '<BS>', 'at': '<\%#>', 'delete': 1, 'filetype': 'eruby'})
+
+call lexima#add_rule({'char': '%', 'input_after': '%', 'filetype': 'eruby'})
+call lexima#add_rule({'char': '%', 'at': '\%#%', 'leave': 1, 'filetype': 'eruby'})
+call lexima#add_rule({'char': '<BS>', 'at': '%\%#%', 'delete': 1, 'filetype': 'eruby'})
+'''
