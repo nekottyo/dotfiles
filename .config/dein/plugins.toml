@@ -4,6 +4,13 @@ repo = 'Shougo/context_filetype.vim'
 [[plugins]]
 repo = 'osyo-manga/vim-precious'
 depends = ['context_filetype.vim']
+hook_add = '''
+let g:precious_enable_switchers = {
+\	"vue" : {
+\		"setfiletype" : 0
+\	},
+\}
+'''
 
 [[plugins]]
 repo = 'Shougo/dein.vim'
@@ -122,6 +129,7 @@ let g:ale_fixers = {
 \  'python': ['autopep8', 'yapf'],
 \  'javascript': ['prettier'],
 \  'typescript': ['prettier', 'tslint']
+"\  'vue': ['prettier']
 \}
 nmap <F3> <Plug>(ale_fix)
 '''
