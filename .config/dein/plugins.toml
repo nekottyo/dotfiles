@@ -17,7 +17,7 @@ repo = 'Shougo/dein.vim'
 
 [[plugins]] # status line
 repo = 'itchyny/lightline.vim'
-depends_on = 'lightline-ale'
+depends_on = ['lightline-ale', 'vim-fugitive']
 hook_add = '''
 let g:lightline = {
     \ 'colorscheme': 'tender',
@@ -253,11 +253,13 @@ hook_add = '''
 [[plugins]]
 repo = 'ntpeters/vim-better-whitespace'
 hook_add = '''
+let g:better_whitespace_enabled=1
+let g:strip_whitespace_on_save=1
 let g:better_whitespace_filetypes_blacklist=['diff', 'gitcommit', 'unite', 'qf', 'help', 'markdown']
 highlight ExtraWhitespace ctermbg=red
 autocmd BufEnter * EnableStripWhitespaceOnSave
-let g:better_whitespace_verbosity=1
 '''
+
 [[plugins]]
 repo = 'nathanaelkane/vim-indent-guides'
 hook_add = '''
@@ -381,7 +383,7 @@ nmap ga <Plug>(EasyAlign)
 repo = 'justincampbell/vim-eighties'
 hook_post_update = '''
 let g:eighties_enabled = 1
-let g:eighties_minimum_width = 80
+let g:eighties_minimum_width = 120
 let g:eighties_extra_width = 0 " Increase this if you want some extra room
 let g:eighties_compute = 1 " Disable this if you just want the minimum + extra
 let g:eighties_bufname_additional_patterns = [''] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.

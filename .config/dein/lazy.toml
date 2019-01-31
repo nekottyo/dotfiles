@@ -28,6 +28,7 @@ let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
 let g:go_fmt_command = "goimports"
+let g:go_fmt_fail_silently = 1
 let g:go_def_mapping_enabled = 0
 let g:go_doc_keywordprg_enabled = 0
 
@@ -37,6 +38,8 @@ let g:neomake_go_errcheck_maker = {
     \ 'errorformat': '%f:%l:%c:\ %m, %f:%l:%c\ %#%m',
     \ }
 let g:go_gocode_unimported_packages = 1
+
+nnoremap <silent> <C-g><C-g> :Denite decls<Return>
 set noexpandtab
 set tabstop=4
 set shiftwidth=4

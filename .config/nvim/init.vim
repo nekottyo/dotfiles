@@ -99,3 +99,8 @@ autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 
 set clipboard+=unnamedplus
+
+au FileType qf call AdjustWindowHeight(3, 10)
+function! AdjustWindowHeight(minheight, maxheight)
+  exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
+endfunction
