@@ -36,6 +36,7 @@ setopt prompt_subst
 setopt pushd_ignore_dups
 setopt share_history
 
+zstyle ':completion:*' use-cache true
 
 zplug "Jxck/dotfiles", \
   as:command, \
