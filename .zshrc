@@ -252,7 +252,7 @@ exists "kubectl"  && . <(kubectl completion zsh)
 exists "helm"     && . <(helm completion zsh)
 exists "stern"    && . <(stern --completion zsh)
 exists "minikube" && . <(minikube completion zsh)
-exists "direnv"   && eval "$(direnv hook zsh)"
+exists "direnv"   && . <(direnv hook zsh)
 
 alias mlcl=molecule
 
