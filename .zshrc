@@ -162,6 +162,8 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 export XDG_CONFIG_HOME=$HOME/.config
 
 ## PATH
+export PATH=/usr/local/bin:${PATH}
+
 ## for Mac OS
 if [[ $(uname) == "Darwin" ]]; then
     export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
@@ -169,7 +171,7 @@ fi
 
 if [ -z $TMUX ]; then
   # anyenv
-  export PATH="/usr/bin:$PATH"
+  export PATH="$PATH:/usr/bin"
   export PATH="$HOME/.anyenv/bin:$PATH"
   export PATH="$HOME/.local/bin/powerline:$PATH"
   eval "$(anyenv init - --no-rehash)"
