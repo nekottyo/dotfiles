@@ -9,7 +9,6 @@ function exists() {
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-
 zplug "Jxck/dotfiles", \
   as:command, \
   use:"bin/{histuniq,color}"
@@ -55,7 +54,7 @@ zplug "b4b4r07/httpstat", \
 
 
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
-zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 
 zplug "pinelibg/dircolors-solarized-zsh"
@@ -66,10 +65,10 @@ zplug "takaaki-kasai/git-foresta", \
 
 zplug "technosophos/glide-zsh"
 
-
 zplug "simonwhitaker/gibo", \
   as:command, \
   use:gibo
+
 zplug "simonwhitaker/gibo"
 
 zplug "yous/vanilli.sh"
@@ -83,7 +82,7 @@ zplug "docker/cli", \
   use:"cli/contrib/completion/zsh/_docker"
 
 zplug "github/hub", \
-  use: "hub/etc/hub.zsh_completion"
+  use:"hub/etc/hub.zsh_completion"
 
 zplug "zsh-users/zsh-autosuggestions"
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
@@ -103,12 +102,10 @@ zle -N fzf-z-search
 bindkey '^f' fzf-z-search
 
 # theme
-#setopt prompt_subst
-#zplug "adambiggs/zsh-theme", use:adambiggs.zsh-theme
-#zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
-zplug "fcamblor/oh-my-zsh-agnoster-fcamblor", use:agnoster-fcamblor.zsh-theme, as:theme
-#zplug "martinrotter/powerless", use:powerless.zsh, as:theme
-#zstyle ':prezto:module:prompt' theme 'paradox'
+zplug "mafredri/zsh-async", \
+  from:github
+
+zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
 
 
 # oh-my-zsh
@@ -119,13 +116,8 @@ zplug "plugins/ssh-agent",   from:oh-my-zsh
 zplug "plugins/vagrant",   from:oh-my-zsh
 zplug "plugins/tmux",   from:oh-my-zsh
 
-
-zplug check || zplug install
 zplug load
 
-
-autoload -U compinit
-compinit
 
 setopt always_last_prompt
 setopt auto_cd
@@ -199,9 +191,6 @@ if [ "${TMUX}" != "" ] ; then
   tmux pipe-pane 'cat | rotatelogs -L /var/log/tmux/tmux.lnk /var/log/tmux/%Y%m%d_#S:#I.#P.log 86400 540'
 fi
 
-if (which zprof > /dev/null) ;then
-  zprof | less
-fi
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/${USERNAME}/google-cloud-sdk/path.zsh.inc' ]; then source "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc"; fi
@@ -269,4 +258,8 @@ alias mlcl=molecule
 
 if [ $DOTFILES/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
+fi
+
+if (which zprof > /dev/null) ;then
+  zprof | less
 fi
