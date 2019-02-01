@@ -1,4 +1,5 @@
 source ~/.zplug/init.zsh
+[[ -f ~/.profile ]] && source ~/.profile
 
 
 function exists() {
@@ -8,35 +9,6 @@ function exists() {
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-
-setopt always_last_prompt
-setopt auto_cd
-setopt auto_list
-setopt auto_menu
-setopt auto_param_keys
-setopt auto_param_slash
-setopt auto_pushd
-setopt brace_ccl
-setopt correct
-setopt equals
-setopt globdots
-setopt hist_ignore_dups
-setopt hist_no_store
-setopt hist_reduce_blanks
-setopt hist_reduce_blanks
-setopt interactive_comments
-setopt list_packed
-setopt list_types
-setopt magic_equal_subst
-setopt mark_dirs
-setopt no_beep
-setopt no_tify
-setopt nolistbeep
-setopt prompt_subst
-setopt pushd_ignore_dups
-setopt share_history
-
-zstyle ':completion:*' use-cache true
 
 zplug "Jxck/dotfiles", \
   as:command, \
@@ -81,17 +53,12 @@ zplug "b4b4r07/httpstat", \
   use:'(*).sh', \
   rename-to:'$1'
 
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
+
+DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
+zplug "zsh-users/zsh-syntax-highlighting"
 
 
-# ##########
-# user setting
-# ##########
-source ~/.profile
-
-zplug "joel-porquet/zsh-dircolors-solarized", \
-  use:"zsh-dircolors-solarized.plugin.zsh", \
-  hook-load:"setupsolarized dircolors.256dark"
+zplug "pinelibg/dircolors-solarized-zsh"
 
 zplug "takaaki-kasai/git-foresta", \
   as:command, \
@@ -155,6 +122,41 @@ zplug "plugins/tmux",   from:oh-my-zsh
 
 zplug check || zplug install
 zplug load
+
+
+autoload -U compinit
+compinit
+
+setopt always_last_prompt
+setopt auto_cd
+setopt auto_list
+setopt auto_menu
+setopt auto_param_keys
+setopt auto_param_slash
+setopt auto_pushd
+setopt brace_ccl
+setopt correct
+setopt equals
+setopt globdots
+setopt hist_ignore_dups
+setopt hist_no_store
+setopt hist_reduce_blanks
+setopt hist_reduce_blanks
+setopt interactive_comments
+setopt list_packed
+setopt list_types
+setopt magic_equal_subst
+setopt mark_dirs
+setopt no_beep
+setopt no_tify
+setopt nolistbeep
+setopt prompt_subst
+setopt pushd_ignore_dups
+setopt share_history
+
+zstyle ':completion:*' use-cache true
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
 
 ## nvim
 export XDG_CONFIG_HOME=$HOME/.config
