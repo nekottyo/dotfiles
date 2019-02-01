@@ -251,16 +251,6 @@ hook_add = '''
 #'''
 
 [[plugins]]
-repo = 'ntpeters/vim-better-whitespace'
-hook_add = '''
-let g:better_whitespace_enabled=1
-let g:strip_whitespace_on_save=1
-let g:better_whitespace_filetypes_blacklist=['diff', 'gitcommit', 'unite', 'qf', 'help', 'markdown']
-highlight ExtraWhitespace ctermbg=red
-autocmd BufEnter * EnableStripWhitespaceOnSave
-'''
-
-[[plugins]]
 repo = 'nathanaelkane/vim-indent-guides'
 hook_add = '''
 let g:indent_guides_enable_on_vim_startup = 1
