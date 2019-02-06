@@ -45,6 +45,13 @@ set tabstop=4
 set shiftwidth=4
 '''
 
+[[plugins]]
+repo = 'sebdah/vim-delve'
+on_ft = 'go'
+hook_add = '''
+let g:delve_backend = "native"
+'''
+
 # ruby local variable highlight
 [[plugins]]
 repo = 'todesking/ruby_hl_lvar.vim'
@@ -221,13 +228,3 @@ call lexima#add_rule({'char': '%', 'at': '\%#%', 'leave': 1, 'filetype': 'eruby'
 call lexima#add_rule({'char': '<BS>', 'at': '%\%#%', 'delete': 1, 'filetype': 'eruby'})
 '''
 
-[[plugins]]
-repo = 'ntpeters/vim-better-whitespace'
-hook_add = '''
-let g:better_whitespace_enabled=1
-let g:strip_whitespace_on_save=1
-let g:strip_whitespace_confirm=0
-let g:better_whitespace_filetypes_blacklist=['diff', 'gitcommit', 'unite', 'qf', 'help', 'markdown']
-highlight ExtraWhitespace ctermbg=red
-autocmd BufEnter * EnableStripWhitespaceOnSave
-'''
