@@ -244,9 +244,11 @@ fstash() {
 ## kubectl completion
 if [[ -a ~/.kube/config ]]; then
   export KUBECONFIG=~/.kube/config
-  if [[ -a ~/.kube/config-*(.) ]]; then
-    export KUBECONFIG=${KUBECONFIG}:~/.kube/config-*(.)
-  fi
+fi
+if ls ~/.kube/config-* >/dev/null 2>&1; then
+  for f in ~/.kube/config-*; do
+    export KUBECONFIG=${KUBECONFIG}:${f}
+  done
 fi
 exists "kubectl"  && . <(kubectl completion zsh)
 exists "helm"     && . <(helm completion zsh)
@@ -256,7 +258,7 @@ exists "direnv"   && . <(direnv hook zsh)
 
 alias mlcl=molecule
 
-if [ $DOTFILES/.zshrc -nt ~/.zshrc.zwc ]; then
+if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
 fi
 
