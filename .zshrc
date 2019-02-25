@@ -137,6 +137,17 @@ fstash() {
   done
 }
 
+
+### Added by Zplugin's installer
+source '/home/staro/.zplugin/bin/zplugin.zsh'
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+zplugin cdclear -q
+## End of Zplugin's installer chunk
+
+autoload -Uz compinit
+compinit
+
 ## kubectl completion
 if [[ -a ~/.kube/config ]]; then
   export KUBECONFIG=~/.kube/config
@@ -152,15 +163,6 @@ exists "stern"    && . <(stern --completion zsh)
 exists "minikube" && . <(minikube completion zsh)
 exists "direnv"   && . <(direnv hook zsh)
 
-
-
-### Added by Zplugin's installer
-source '/home/staro/.zplugin/bin/zplugin.zsh'
-autoload -Uz _zplugin
-(( ${+_comps} )) && _comps[zplugin]=_zplugin
-zplugin cdclear -q
-### End of Zplugin's installer chunk
-#
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zplugin light zsh-users/zsh-syntax-highlighting
 
@@ -223,8 +225,6 @@ zplugin snippet OMZ::lib/clipboard.zsh if'[[ "$OSTYPE" == *darwin* ]]'
 zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
 zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
-zplugin snippet OMZ::plugins/vagrant/_vagrant
-
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
