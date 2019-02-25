@@ -1,14 +1,11 @@
 [[ -f ~/.profile ]] && source ~/.profile
 
-
 function exists() {
   (( ${+commands[$1]} ))
 }
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-
-autoload -Uz compinit
 
 setopt always_last_prompt
 setopt auto_cd
@@ -76,6 +73,14 @@ alias d="docker"
 alias dc="docker-compose"
 alias k="kubectl"
 alias vimdiff="nvim -d"
+alias mlcl=molecule
+
+alias ta='tmux attach -t'
+alias tad='tmux attach -d -t'
+alias ts='tmux new-session -s'
+alias tl='tmux list-sessions'
+alias tksv='tmux kill-server'
+alias tkss='tmux kill-session -t'
 
 
 if [ "${TMUX}" != "" ] ; then
@@ -147,33 +152,25 @@ exists "stern"    && . <(stern --completion zsh)
 exists "minikube" && . <(minikube completion zsh)
 exists "direnv"   && . <(direnv hook zsh)
 
-alias mlcl=molecule
-
-if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
-  zcompile ~/.zshrc
-fi
-
-if (which zprof > /dev/null) ;then
-  zprof | less
-fi
 
 
 ### Added by Zplugin's installer
 source '/home/staro/.zplugin/bin/zplugin.zsh'
 autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
+zplugin cdclear -q
 ### End of Zplugin's installer chunk
 #
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zplugin light zsh-users/zsh-syntax-highlighting
 
 zplugin load k4rthik/git-cal
-zplugin ice as"program" pick"bin/{histuniq,color}"; zplugin load "Jxck/dotfiles"
+zplugin ice as"program" pick"bin/{histuniq,color}"; zplugin light "Jxck/dotfiles"
 
-zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*"; zplugin load junegunn/fzf-bin
+zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*"; zplugin light junegunn/fzf-bin
 
 zplugin ice as"program" mmake; zplugin load jhawthorn/fzy
-zplugin ice as"program" pick"unhanced.sh"; zplugin load b4b4r07/enhancd
+zplugin ice as"program" pick"unhanced.sh"; zplugin light b4b4r07/enhancd
 
 zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
 zplugin light b4b4r07/httpstat
@@ -185,12 +182,12 @@ zplugin ice as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-fores
 zplugin ice as"program" pick"gibo"; zplugin light simonwhitaker/gibo
 
 zplugin ice as"program" pick"cli/contrib/completion/zsh/_docker"
-zplugin load docker/cli
+zplugin light docker/cli
 
 zplugin ice as"program" pick"hub/etc/hub.zsh_completion"
-zplugin load github/hub
+zplugin light github/hub
 
-zplugin load mafredri/zsh-async
+zplugin light mafredri/zsh-async
 
 zplugin ice pick"async.zsh" src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
 
@@ -227,4 +224,12 @@ zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
 zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
 zplugin snippet OMZ::plugins/vagrant/_vagrant
-zplugin snippet OMZ::plugins/tmux/tmux.plugin.zsh
+
+
+if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
+  zcompile ~/.zshrc
+fi
+
+if (which zprof > /dev/null) ;then
+  zprof | less
+fi

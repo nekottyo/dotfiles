@@ -73,8 +73,8 @@ depends = 'denite.nvim'
 [[plugins]]
 repo = 'Shougo/neopairs.vim'
 
-[[plugins]]
-repo = 'Shougo/echodoc.vim'
+#[[plugins]]
+#repo = 'Shougo/echodoc.vim'
 
 [[plugins]]
 repo = 'Shougo/neoinclude.vim'
