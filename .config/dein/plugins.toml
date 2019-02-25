@@ -337,8 +337,8 @@ repo = 'itchyny/vim-gitbranch'
 repo = 'edkolev/tmuxline.vim'
 
 # show diff
-[[plugins]]
-repo = 'airblade/vim-gitgutter'
+#[[plugins]]
+#repo = 'airblade/vim-gitgutter'
 
 # vim git
 [[plugins]]
