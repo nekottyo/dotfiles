@@ -152,11 +152,13 @@ compinit
 if [[ -a ~/.kube/config ]]; then
   export KUBECONFIG=~/.kube/config
 fi
-if ls ~/.kube/config-* >/dev/null 2>&1; then
+setopt nonomatch
+if ls ~/.kube/config-* 1>/dev/null 2>&1; then
   for f in ~/.kube/config-*; do
     export KUBECONFIG=${KUBECONFIG}:${f}
   done
 fi
+setopt nomatch
 exists "kubectl"  && . <(kubectl completion zsh)
 exists "helm"     && . <(helm completion zsh)
 exists "stern"    && . <(stern --completion zsh)
@@ -211,6 +213,7 @@ fzf-z-search() {
 
 zle -N fzf-z-search
 bindkey '^f' fzf-z-search
+bindkey '^[f' fzf-z-search
 
 zplugin light yous/vanilli.sh
 zplugin light zsh-users/zsh-completions
