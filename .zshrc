@@ -1,4 +1,3 @@
-source ~/.zplug/init.zsh
 [[ -f ~/.profile ]] && source ~/.profile
 
 
@@ -9,115 +8,7 @@ function exists() {
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-zplug "Jxck/dotfiles", \
-  as:command, \
-  use:"bin/{histuniq,color}"
-
-zplug "k4rthik/git-cal", \
-  as:command
-
-# Grab binaries from GitHub Releases
-# and rename with the "rename-to:" tag
-zplug "junegunn/fzf-bin", \
-  from:gh-r, \
-  as:command, \
-  rename-to:fzf, \
-  use:"*linux*amd64*"
-
-zplug "junegunn/fzf", \
-  as:command, \
-  use:"bin/fzf-tmux"
-
-# Supports oh-my-zsh plugins and the like
-zplug "plugins/git", \
-  from:oh-my-zsh
-
-# Load if "if" tag returns true
-zplug "lib/clipboard", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
-
-# Run a command after a plugin is installed/updated
-# Provided, it requires to set the variable like the following:
-zplug "jhawthorn/fzy", \
-  as:command, \
-  rename-to:fzy, \
-  hook-build:"make && sudo make install"
-
-# Supports checking out a specific branch/tag/commit
-zplug "b4b4r07/enhancd", use:enhancd.sh
-zplug "mollifier/anyframe"
-
-# Rename a command with the string captured with `use` tag
-zplug "b4b4r07/httpstat", \
-  as:command, \
-  use:'(*).sh', \
-  rename-to:'$1'
-
-
-DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-
-
-zplug "pinelibg/dircolors-solarized-zsh"
-
-zplug "takaaki-kasai/git-foresta", \
-  as:command, \
-  use:'git-foresta'
-
-zplug "technosophos/glide-zsh"
-
-zplug "simonwhitaker/gibo", \
-  as:command, \
-  use:gibo
-
-zplug "simonwhitaker/gibo"
-
-zplug "yous/vanilli.sh"
-zplug "zsh-users/zsh-completions"
-zplug "mollifier/anyframe"
-zplug "mafredri/zsh-async", from:github
-zplug "greymd/tmux-xpanes"
-zplug "mollifier/cd-gitroot"
-#zplug "pierpo/fzf-docker"
-zplug "docker/cli", \
-  use:"cli/contrib/completion/zsh/_docker"
-
-zplug "github/hub", \
-  use:"hub/etc/hub.zsh_completion"
-
-zplug "zsh-users/zsh-autosuggestions"
-ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
-
-zplug "rupa/z", use:z.sh
-fzf-z-search() {
-  local res=$(z | sort -rn | cut -c 12- | fzf)
-  if [ -n "$res" ]; then
-      BUFFER+="cd $res"
-      zle accept-line
-  else
-      return 1
-  fi
-}
-
-zle -N fzf-z-search
-bindkey '^f' fzf-z-search
-
-# theme
-zplug "mafredri/zsh-async", \
-  from:github
-
-zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
-
-
-# oh-my-zsh
-zplug "plugins/git",   from:oh-my-zsh
-zplug "plugins/common-aliases",   from:oh-my-zsh
-zplug "plugins/archlinux",   from:oh-my-zsh
-zplug "plugins/ssh-agent",   from:oh-my-zsh
-zplug "plugins/vagrant",   from:oh-my-zsh
-zplug "plugins/tmux",   from:oh-my-zsh
-
-zplug load
-
+autoload -Uz compinit
 
 setopt always_last_prompt
 setopt auto_cd
@@ -265,3 +156,75 @@ fi
 if (which zprof > /dev/null) ;then
   zprof | less
 fi
+
+
+### Added by Zplugin's installer
+source '/home/staro/.zplugin/bin/zplugin.zsh'
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+### End of Zplugin's installer chunk
+#
+DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
+zplugin light zsh-users/zsh-syntax-highlighting
+
+zplugin load k4rthik/git-cal
+zplugin ice as"program" pick"bin/{histuniq,color}"; zplugin load "Jxck/dotfiles"
+
+zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*"; zplugin load junegunn/fzf-bin
+
+zplugin ice as"program" mmake; zplugin load jhawthorn/fzy
+zplugin ice as"program" pick"unhanced.sh"; zplugin load b4b4r07/enhancd
+
+zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
+zplugin light b4b4r07/httpstat
+
+zplugin light pinelibg/dircolors-solarized-zsh
+
+zplugin ice as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-foresta
+
+zplugin ice as"program" pick"gibo"; zplugin light simonwhitaker/gibo
+
+zplugin ice as"program" pick"cli/contrib/completion/zsh/_docker"
+zplugin load docker/cli
+
+zplugin ice as"program" pick"hub/etc/hub.zsh_completion"
+zplugin load github/hub
+
+zplugin load mafredri/zsh-async
+
+zplugin ice pick"async.zsh" src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
+
+
+
+zplugin load zsh-users/zsh-autosuggestions
+ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
+
+zplugin ice as"program" src"z.sh"; zplugin load "rupa/z"
+fzf-z-search() {
+  local res=$(z | sort -rn | cut -c 12- | fzf)
+  if [ -n "$res" ]; then
+      BUFFER+="cd $res"
+      zle accept-line
+  else
+      return 1
+  fi
+}
+
+zle -N fzf-z-search
+bindkey '^f' fzf-z-search
+
+zplugin light yous/vanilli.sh
+zplugin light zsh-users/zsh-completions
+zplugin light mollifier/anyframe
+zplugin light greymd/tmux-xpanes
+zplugin light mollifier/cd-gitroot
+
+
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zplugin snippet OMZ::lib/clipboard.zsh if'[[ "$OSTYPE" == *darwin* ]]'
+
+zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
+zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
+zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
+zplugin snippet OMZ::plugins/vagrant/_vagrant
+zplugin snippet OMZ::plugins/tmux/tmux.plugin.zsh
