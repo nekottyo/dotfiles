@@ -3,7 +3,7 @@ DOTFILES_TARGET   := $(wildcard .??*)
 DOTFILES_DIR      := $(PWD)
 DOTFILES_FILES    := $(filter-out $(DOTFILES_EXCLUDES), $(DOTFILES_TARGET))
 CONFIG_DIR        := .config/
-CONFIG_TARGET     := $(addprefix $(CONFIG_DIR), dein nvim terminator tmux)
+CONFIG_TARGET     := $(addprefix $(CONFIG_DIR), dein nvim terminator tmux alacritty)
 
 deploy:
 	@$(foreach val, $(DOTFILES_FILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
