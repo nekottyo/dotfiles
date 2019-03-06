@@ -99,7 +99,7 @@ function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <CR>
   \ defx#do_action('open')
   nnoremap <silent><buffer><expr> o
-  \ defx#do_action('open')
+  \ defx#do_action('open_or_close_tree')
   nnoremap <silent><buffer><expr> V
   \ defx#do_action('open', 'vsplit')
   nnoremap <silent><buffer><expr> P
