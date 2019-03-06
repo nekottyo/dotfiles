@@ -1,0 +1,35 @@
+# test testify base
+snippet ttb
+abbr import () type testSuite {}
+    import (
+        "encoding/base64"
+        "testing"
+        "github.com/stretchr/testify/assert"
+        "github.com/stretchr/testify/suite"
+    )
+    type ${1:Package}TestSuite struct {
+        suite.Suite
+    }
+    func (s *$1TestSuite) Test${2}() {
+        ${0}
+    }
+    func Test$1TestSuite(t *testing.t) {
+        suite.run(t, new($1TestSuite))
+    }
+
+# test testify table snippet
+snippet ttf
+abbr var test = {...}{...} for {t.Run(){...}}
+    cases := []struct {
+        in        string
+        want      string
+        assertion assert.ErrorAssertionFunc
+    }{
+        {"${2}", "${3}", "${4}",},
+    }
+    for _, c := range cases {
+        actual, err := ${1:Function}(c.in)
+        assert.Equal(s.T(), c.want, actual)
+        c.assertion(s.T(), err)
+    }
+

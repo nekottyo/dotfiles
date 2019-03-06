@@ -13,6 +13,9 @@ let g:neosnippet#expand_word_boundary = 1
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
+hook_add = '''
+let g:neosnippet#snippets_directory = '$HOME/.config/nvim/snippets'
+'''
 
 [[plugins]]
 repo = 'honza/vim-snippets'
