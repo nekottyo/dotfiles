@@ -13,8 +13,8 @@ abbr import () type testSuite {}
     func (s *$1TestSuite) Test${2}() {
         ${0}
     }
-    func Test$1TestSuite(t *testing.t) {
-        suite.run(t, new($1TestSuite))
+    func Test$1TestSuite(t *testing.T) {
+        suite.Run(t, new($1TestSuite))
     }
 
 # test testify table snippet
