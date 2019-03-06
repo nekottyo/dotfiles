@@ -1,5 +1,6 @@
 [[ -f ~/.profile ]] && source ~/.profile
 
+
 function exists() {
   (( ${+commands[$1]} ))
 }
@@ -170,7 +171,7 @@ DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zplugin light zsh-users/zsh-syntax-highlighting
 
 zplugin load k4rthik/git-cal
-zplugin ice as"program" pick"bin/{histuniq,color}"; zplugin light "Jxck/dotfiles"
+zplugin ice as"program" pick"bin/color" pick"bin/histuniq"; zplugin load "Jxck/dotfiles"
 
 zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*"; zplugin light junegunn/fzf-bin
 
@@ -184,7 +185,8 @@ zplugin light pinelibg/dircolors-solarized-zsh
 
 zplugin ice as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-foresta
 
-zplugin ice as"program" pick"gibo"; zplugin light simonwhitaker/gibo
+zplugin ice as"program" pick"gibo"; zplugin load simonwhitaker/gibo
+
 
 zplugin ice as"program" pick"cli/contrib/completion/zsh/_docker"
 zplugin light docker/cli
