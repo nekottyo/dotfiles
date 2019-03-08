@@ -24,6 +24,7 @@ repo='prabirshrestha/async.vim'
 
 [[plugins]]
 repo='prabirshrestha/vim-lsp'
+rev = '3ee778a0c62'
 hook_add='''
 if executable('bingo')
     au User lsp_setup call lsp#register_server({

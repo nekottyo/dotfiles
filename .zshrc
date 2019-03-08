@@ -170,16 +170,17 @@ exists "direnv"   && . <(direnv hook zsh)
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zplugin light zsh-users/zsh-syntax-highlighting
 
-zplugin load k4rthik/git-cal
+zplugin ice as"program" pick"git-cal"; zplugin load k4rthik/git-cal
+
 zplugin ice as"program" pick"bin/color" pick"bin/histuniq"; zplugin load "Jxck/dotfiles"
 
 zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*"; zplugin light junegunn/fzf-bin
 
-zplugin ice as"program" mmake; zplugin load jhawthorn/fzy
+zplugin ice as"program" make; zplugin load jhawthorn/fzy
+
 zplugin ice as"program" pick"unhanced.sh"; zplugin light b4b4r07/enhancd
 
-zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
-zplugin light b4b4r07/httpstat
+zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"; zplugin light b4b4r07/httpstat
 
 zplugin light pinelibg/dircolors-solarized-zsh
 
@@ -189,16 +190,14 @@ zplugin ice as"program" pick"gibo"; zplugin load simonwhitaker/gibo
 
 
 zplugin ice as"program" pick"cli/contrib/completion/zsh/_docker"
+
 zplugin light docker/cli
 
-zplugin ice as"program" pick"hub/etc/hub.zsh_completion"
-zplugin light github/hub
+zplugin ice as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/hub
 
 zplugin light mafredri/zsh-async
 
 zplugin ice pick"async.zsh" src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
-
-
 
 zplugin load zsh-users/zsh-autosuggestions
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
