@@ -425,8 +425,8 @@ map fL <Plug>(easymotion-bd-jk)
 nmap fL <Plug>(easymotion-overwin-line)
 
 " Move to word
-" map  w <Plug>(easymotion-bd-w)
-" nmap w <Plug>(easymotion-overwin-w)
+map  <Leader>w <Plug>(easymotion-bd-wl)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 function! s:incsearch_config(...) abort
   return incsearch#util#deepextend(deepcopy({
@@ -452,6 +452,8 @@ function! s:config_easyfuzzymotion(...) abort
   \ }), get(a:, 1, {}))
 endfunction
 
+let g:EasyMotion_enter_jump_first = 1
+let g:EasyMotion_space_jump_first = 1
 noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
 '''
 
@@ -476,3 +478,11 @@ highlight ExtraWhitespace ctermbg=red
 
 [[plugins]]
 repo = 'simeji/winresizer'
+
+
+[[plugins]]
+repo = 'tyru/open-browser.vim'
+
+[[plugins]]
+repo = 'tyru/open-browser-github.vim'
+depends = ['open-browser.vim']
