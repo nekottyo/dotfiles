@@ -425,8 +425,8 @@ map fL <Plug>(easymotion-bd-jk)
 nmap fL <Plug>(easymotion-overwin-line)
 
 " Move to word
-map  w <Plug>(easymotion-bd-w)
-nmap w <Plug>(easymotion-overwin-w)
+" map  w <Plug>(easymotion-bd-w)
+" nmap w <Plug>(easymotion-overwin-w)
 
 function! s:incsearch_config(...) abort
   return incsearch#util#deepextend(deepcopy({
