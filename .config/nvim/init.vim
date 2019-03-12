@@ -44,6 +44,11 @@ if dein#load_state(s:dein_cache_dir)
         call dein#load_toml(s:toml_dir . '/neovim.toml', {'lazy': 1})
     endif
 
+    if !has('nvim')
+      call dein#add('roxma/nvim-yarp')
+      call dein#add('roxma/vim-hug-neovim-rpc')
+    endif
+
     call dein#end()
     call dein#save_state()
 endif
@@ -81,6 +86,7 @@ set smarttab
 set smartcase
 set termguicolors
 set scrolloff=3
+set autoread
 
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>

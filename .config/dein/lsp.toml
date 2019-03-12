@@ -13,6 +13,9 @@ let g:neosnippet#expand_word_boundary = 1
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
+hook_add = '''
+let g:neosnippet#snippets_directory = '$HOME/.config/nvim/snippets'
+'''
 
 [[plugins]]
 repo = 'honza/vim-snippets'
@@ -21,6 +24,7 @@ repo='prabirshrestha/async.vim'
 
 [[plugins]]
 repo='prabirshrestha/vim-lsp'
+rev = '3ee778a0c62'
 hook_add='''
 if executable('bingo')
     au User lsp_setup call lsp#register_server({
