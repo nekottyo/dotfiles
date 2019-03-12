@@ -55,7 +55,7 @@ endif
 
 
 " 行数
-set number
+set number relativenumber
 
 set noswapfile
 
@@ -80,6 +80,7 @@ set expandtab
 set smarttab
 set smartcase
 set termguicolors
+set scrolloff=3
 
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
