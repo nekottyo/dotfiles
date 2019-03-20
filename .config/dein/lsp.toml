@@ -34,6 +34,15 @@ if executable('bingo')
         \ })
 endif
 
+"if executable('gopls')
+"    au User lsp_setup call lsp#register_server({
+"        \ 'name': 'gopls',
+"        \ 'cmd': {server_info->['gopls']},
+"        \ 'whitelist': ['go'],
+"        \ })
+"endif
+"autocmd FileType go setlocal omnifunc=lsp#complete
+
 if executable('vls')
     au User lsp_setup call lsp#register_server({
         \ 'name': 'vls',
