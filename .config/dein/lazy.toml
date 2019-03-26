@@ -230,3 +230,9 @@ call lexima#add_rule({'char': '%', 'at': '\%#%', 'leave': 1, 'filetype': 'eruby'
 call lexima#add_rule({'char': '<BS>', 'at': '%\%#%', 'delete': 1, 'filetype': 'eruby'})
 '''
 
+[[plugins]]
+repo = 'kchmck/vim-coffee-script'
+on_ft = 'coffee'
+hook_add = '''
+au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
+'''
