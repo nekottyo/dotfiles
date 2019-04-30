@@ -1,4 +1,4 @@
-let g:python3_host_prog = '/usr/bin/python3'
+" let g:python3_host_prog = '/usr/bin/python3'
 "let g:ruby_host_prog = expand('/usr/lib/ruby/gems/2.5.0/gems/neovim-0.7.1/bin/neovim-ruby-host')
 let g:deoplete#enable_at_startup = 1
 
