@@ -74,9 +74,11 @@ alias hop="ssh hop"
 alias d="docker"
 alias dc="docker-compose"
 alias k="kubectl"
-if [[ -n "$PROXY" ]]; then
-  alias kubectl="https_proxy=${PROXY} kubectl"
-fi
+#if [[ -n "$PROXY" ]]; then
+#  alias kubectl="https_proxy=${PROXY} kubectl"
+#  alias skaffold="https_proxy=${PROXY} skaffold"
+#  alias stern="https_proxy=${PROXY} stern"
+#fi
 alias vimdiff="nvim -d"
 alias mlcl=molecule
 
@@ -164,11 +166,6 @@ fi
 #   done
 # fi
 #setopt nomatch
-exists "kubectl"  && . <(kubectl completion zsh)
-exists "helm"     && . <(helm completion zsh)
-exists "stern"    && . <(stern --completion zsh)
-exists "minikube" && . <(minikube completion zsh)
-exists "direnv"   && . <(direnv hook zsh)
 
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zplugin light zsh-users/zsh-syntax-highlighting
@@ -233,6 +230,15 @@ zplugin snippet OMZ::lib/clipboard.zsh if'[[ "$OSTYPE" == *darwin* ]]'
 zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
 zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
+
+
+exists "kubectl"  && . <(kubectl completion zsh)
+exists "helm"     && . <(helm completion zsh)
+exists "stern"    && . <(stern --completion zsh)
+exists "minikube" && . <(minikube completion zsh)
+exists "direnv"   && . <(direnv hook zsh)
+exists "skaffold" && . <(skaffold completion zsh)
+exists "bat"      && alias cat="bat --theme='OneHalfDark'"
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
