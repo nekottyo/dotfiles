@@ -52,16 +52,19 @@ fi
 
 if [ -z $TMUX ]; then
   # anyenv
-  export PATH="$PATH:/usr/bin"
-  export PATH="$HOME/.anyenv/bin:$PATH"
-  export PATH="$HOME/.local/bin/powerline:$PATH"
+  export PATH="${PATH}:/usr/bin"
+  export PATH="${HOME}/.anyenv/bin:${PATH}"
+  export PATH="${HOME}/.local/bin/powerline:${PATH}"
   eval "$(anyenv init - --no-rehash)"
 
   # go
   export GO111MODULE=auto
-  export GOPATH=$HOME/.golang
+  export GOPATH=${HOME}/.golang
   export GOROOT=$( go env GOROOT )
-  export PATH=$GOPATH/bin:$PATH
+  export PATH=${GOPATH}/bin:${PATH}
+
+  # user npm
+  export PATH=${PATH}:$(npm bin)
 fi
 
 

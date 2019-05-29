@@ -167,29 +167,29 @@ endfunction
 '''
 
 
-[[plugins]] # 補完
-repo = 'Shougo/deoplete.nvim'
-if = 'has("python3")'
-depends = 'context_filetype.vim'
-on_event = 'InsertEnter'
-hook_source = '''
-let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('async_timeout', 0)
-call deoplete#custom#option('auto_complete_delay', 0)
-call deoplete#custom#option('auto_refresh_delay', 10)
-call deoplete#custom#option('camel_case', v:true)
-call deoplete#custom#option('refresh_always', v:true)
-call deoplete#custom#option('skip_multibyte', v:true)
-call deoplete#custom#option('max_list', 1000)
-
-inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
-
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function() abort
-  return deoplete#close_popup() . "\<CR>"
-endfunction
-
-autocmd FileType go call deoplete#custom#option('auto_complete', v:false)
-'''
+#[[plugins]] # 補完
+#repo = 'Shougo/deoplete.nvim'
+#if = 'has("python3")'
+#depends = 'context_filetype.vim'
+#on_event = 'InsertEnter'
+#hook_source = '''
+#let g:deoplete#enable_at_startup = 1
+#call deoplete#custom#option('async_timeout', 0)
+#call deoplete#custom#option('auto_complete_delay', 0)
+#call deoplete#custom#option('auto_refresh_delay', 10)
+#call deoplete#custom#option('camel_case', v:true)
+#call deoplete#custom#option('refresh_always', v:true)
+#call deoplete#custom#option('skip_multibyte', v:true)
+#call deoplete#custom#option('max_list', 1000)
+#
+#inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
+#inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+#
+#" <CR>: close popup and save indent.
+#inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+#function! s:my_cr_function() abort
+#  return deoplete#close_popup() . "\<CR>"
+#endfunction
+#
+#autocmd FileType go call deoplete#custom#option('auto_complete', v:false)
+#'''

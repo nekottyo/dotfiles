@@ -19,12 +19,13 @@ let g:neosnippet#snippets_directory = '$HOME/.config/nvim/snippets'
 
 [[plugins]]
 repo = 'honza/vim-snippets'
+
+
 [[plugins]]
 repo='prabirshrestha/async.vim'
 
 [[plugins]]
 repo='prabirshrestha/vim-lsp'
-#rev = '3ee778a0c62'
 hook_add='''
 let g:lsp_virtual_text_enabled = 0
 if executable('gopls')
@@ -49,7 +50,31 @@ if executable('vls')
     \ })
 endif
 
-let g:lsp_async_completion = 1
+if executable('solargraph')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'solargraph',
+    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+    \ 'initialization_options': {"diagnostics": "true"},
+    \ 'whitelist': ['ruby'],
+    \ })
+endif
+
+if executable('yaml-language-server')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'yaml-language-server',
+    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'yaml-language-server --stdio']},
+    \ 'whitelist': ['yaml'],
+    \ })
+endif
+
+if executable('docker-langserver')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'docker-language-server',
+    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
+    \ 'whitelist': ['dockerfile'],
+    \ })
+endif
+
 let g:lsp_signs_enabled = 1     " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 
@@ -65,10 +90,14 @@ nmap <silent> <Leader>v :vsplit \| :LspDefinition <CR>
 '''
 
 [[plugins]]
-repo='prabirshrestha/asyncomplete.vim'
+repo = 'prabirshrestha/asyncomplete.vim'
 
 [[plugins]]
-repo='prabirshrestha/asyncomplete-lsp.vim'
+repo = 'prabirshrestha/asyncomplete-lsp.vim'
+hook_add = '''
+let g:lsp_async_completion = 1
+set shortmess+=c
+'''
 
 [[plugins]]
 repo='prabirshrestha/asyncomplete-neosnippet.vim'

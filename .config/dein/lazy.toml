@@ -62,12 +62,6 @@ let g:delve_backend = "native"
 repo = 'todesking/ruby_hl_lvar.vim'
 on_ft = 'ruby'
 
-# deoplete ruby
-[[plugins]]
-repo = 'fishbullet/deoplete-ruby'
-on_ft = 'ruby'
-depends = 'deoplete.nvim'
-
 # rdoc
 [[plugins]]
 repo = 'hallison/vim-rdoc'
@@ -91,10 +85,10 @@ nnoremap <silent> [rails]s :<C-u>Denite<Space>rails:spec<Return>
 au BufNewFile,BufRead *.json.jbuilder set ft=ruby
 '''
 
-[[plugins]]
-repo = '5t111111/denite-rails'
-on_ft = ['rails', 'ruby', 'eruby']
-depends = 'deoplete.nvim'
+#[[plugins]]
+#repo = '5t111111/denite-rails'
+#on_ft = ['rails', 'ruby', 'eruby']
+#depends = 'deoplete.nvim'
 
 [[plugins]]
 repo = 'tpope/vim-pathogen'
@@ -246,3 +240,7 @@ on_ft = 'json'
 hook_add = '''
 let g:vim_json_syntax_conceal = 0
 '''
+
+[[plugins]]
+repo =  'uarun/vim-protobuf'
+on_ft = 'proto'
