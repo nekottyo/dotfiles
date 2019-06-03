@@ -60,6 +60,26 @@ if executable('solargraph')
 endif
 
 if executable('yaml-language-server')
+  let settings = json_decode('
+  \{
+  \    "yaml": {
+  \        "completion": false,
+  \        "hover": true,
+  \        "validate": true,
+  \        "schemas": {
+  \            "Kubernetes": "/*"
+  \        },
+  \        "format": {
+  \            "enable": true
+  \        }
+  \    },
+  \    "http": {
+  \        "proxyStrictSSL": true
+  \    }
+  \}')
+
+  au User lsp_config call lsp#register_notifications(
+    \ 'workspace/didChangeConfiguration', {'settings': settings})
   au User lsp_setup call lsp#register_server({
     \ 'name': 'yaml-language-server',
     \ 'cmd': {server_info->[&shell, &shellcmdflag, 'yaml-language-server --stdio']},
