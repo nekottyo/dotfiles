@@ -61,7 +61,7 @@ if [ -z $TMUX ]; then
   export GO111MODULE=auto
   export GOPATH=${HOME}/.golang
   export GOROOT=$( go env GOROOT )
-  export PATH=${GOPATH}/bin:${PATH}
+  export PATH=${GOPATH}/bin:$(go env GOPATH)/bin:${PATH}
 
   # user npm
   export PATH=${PATH}:$(npm bin)
