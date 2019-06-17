@@ -70,8 +70,10 @@ fi
 
 ## aliases
 alias vim="nvim"
-alias ls="ls --color=auto"
-exists "exa" && alias ls="exa"
+
+# alias ls="ls --color=auto"
+# exists "exa" && alias ls="exa"
+alias ls="lsd"
 alias grep="grep --color=auto"
 alias hop="ssh hop"
 alias d="docker"
