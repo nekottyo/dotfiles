@@ -95,6 +95,7 @@ alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
 
 
+
 if [ "${TMUX}" != "" ] ; then
   tmux pipe-pane 'cat | rotatelogs -L /var/log/tmux/tmux.lnk /var/log/tmux/%Y%m%d_#S:#I.#P.log 86400 540'
 fi
@@ -244,6 +245,8 @@ exists "minikube" && . <(minikube completion zsh)
 exists "direnv"   && . <(direnv hook zsh)
 exists "skaffold" && . <(skaffold completion zsh)
 exists "bat"      && alias cat="bat --theme='OneHalfDark'"
+
+unalias fd # delete alias set in OMZ::common-aliases
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
