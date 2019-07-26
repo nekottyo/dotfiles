@@ -52,23 +52,28 @@ fi
 
 if [ -z $TMUX ]; then
   # anyenv
-  export PATH="$PATH:/usr/bin"
-  export PATH="$HOME/.anyenv/bin:$PATH"
-  export PATH="$HOME/.local/bin/powerline:$PATH"
+  export PATH="${PATH}:/usr/bin"
+  export PATH="${HOME}/.anyenv/bin:${PATH}"
+  export PATH="${HOME}/.local/bin/powerline:${PATH}"
   eval "$(anyenv init - --no-rehash)"
 
   # go
   export GO111MODULE=auto
-  export GOPATH=$HOME/.golang
+  export GOPATH=${HOME}/.golang
   export GOROOT=$( go env GOROOT )
-  export PATH=$GOPATH/bin:$PATH
+  export PATH=${GOPATH}/bin:$(go env GOPATH)/bin:${PATH}
+
+  # user npm
+  export PATH=${PATH}:$(npm bin)
 fi
 
 
 ## aliases
 alias vim="nvim"
-alias ls="ls --color=auto"
-exists "exa" && alias ls="exa"
+
+# alias ls="ls --color=auto"
+# exists "exa" && alias ls="exa"
+alias ls="lsd"
 alias grep="grep --color=auto"
 alias hop="ssh hop"
 alias d="docker"
@@ -88,6 +93,7 @@ alias ts='tmux new-session -s'
 alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
+
 
 
 if [ "${TMUX}" != "" ] ; then
@@ -239,6 +245,8 @@ exists "minikube" && . <(minikube completion zsh)
 exists "direnv"   && . <(direnv hook zsh)
 exists "skaffold" && . <(skaffold completion zsh)
 exists "bat"      && alias cat="bat --theme='OneHalfDark'"
+
+unalias fd # delete alias set in OMZ::common-aliases
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc

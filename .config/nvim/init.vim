@@ -108,7 +108,8 @@ autocmd FileType javascript,typescript setl tabstop=2 expandtab shiftwidth=2 sof
 autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 
-set clipboard+=unnamedplus
+set clipboard&
+set clipboard^=unnamedplus
 
 au FileType qf call AdjustWindowHeight(3, 10)
 function! AdjustWindowHeight(minheight, maxheight)
