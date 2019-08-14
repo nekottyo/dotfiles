@@ -39,18 +39,18 @@ zstyle ':completion:*' use-cache true
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 
-## nvim
-export XDG_CONFIG_HOME=$HOME/.config
-
-## PATH
-export PATH=/usr/local/bin:${PATH}
-
-## for Mac OS
-if [[ $(uname) == "Darwin" ]]; then
-    export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
-fi
-
 if [ -z $TMUX ]; then
+  ## nvim
+  export XDG_CONFIG_HOME=$HOME/.config
+
+  ## PATH
+  export PATH=/usr/local/bin:${PATH}
+
+  ## for Mac OS
+  if [[ $(uname) == "Darwin" ]]; then
+      export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
+  fi
+
   # anyenv
   export PATH="${PATH}:/usr/bin"
   export PATH="${HOME}/.anyenv/bin:${PATH}"
@@ -73,7 +73,6 @@ alias vim="nvim"
 
 # alias ls="ls --color=auto"
 # exists "exa" && alias ls="exa"
-alias ls="lsd"
 alias grep="grep --color=auto"
 alias hop="ssh hop"
 alias d="docker"
@@ -199,6 +198,10 @@ zplugin ice as"program" pick"cli/contrib/completion/zsh/_docker"
 
 zplugin light docker/cli
 
+zplugin ice as"program" pick"compose/contrib/completion/zsh"
+
+zplugin light docker/compose
+
 zplugin ice as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/hub
 
 zplugin light mafredri/zsh-async
@@ -245,6 +248,7 @@ exists "minikube" && . <(minikube completion zsh)
 exists "direnv"   && . <(direnv hook zsh)
 exists "skaffold" && . <(skaffold completion zsh)
 exists "bat"      && alias cat="bat --theme='OneHalfDark'"
+exists "lsd"      && alias ls="lsd"
 
 unalias fd # delete alias set in OMZ::common-aliases
 
@@ -255,3 +259,4 @@ fi
 if (which zprof > /dev/null) ;then
   zprof | less
 fi
+
