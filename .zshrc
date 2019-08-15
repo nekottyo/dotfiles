@@ -149,6 +149,15 @@ fstash() {
   done
 }
 
+fghq() {
+  local repo=$(ghq root)/$(ghq list | fzf)
+  BUFFER="cd ${repo}"
+  zle accept-line
+}
+zle -N fghq
+bindkey '^g' fghq
+
+
 
 ### Added by Zplugin's installer
 source "$HOME/.zplugin/bin/zplugin.zsh"
@@ -201,6 +210,7 @@ zplugin light docker/cli
 zplugin ice as"program" pick"compose/contrib/completion/zsh"
 
 zplugin light docker/compose
+export DOCKER_BUILDKIT=1
 
 zplugin ice as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/hub
 
