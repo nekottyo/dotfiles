@@ -1,5 +1,6 @@
 [[ -f ~/.profile ]] && source ~/.profile
 
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
 function exists() {
   (( ${+commands[$1]} ))
@@ -250,17 +251,30 @@ zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
 zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
 
+zplugin snippet OMZ::plugins/aws/aws.plugin.zsh
 
-exists "kubectl"  && . <(kubectl completion zsh)
-exists "helm"     && . <(helm completion zsh)
-exists "stern"    && . <(stern --completion zsh)
-exists "minikube" && . <(minikube completion zsh)
-exists "direnv"   && . <(direnv hook zsh)
-exists "skaffold" && . <(skaffold completion zsh)
-exists "bat"      && alias cat="bat --theme='OneHalfDark'"
-exists "lsd"      && alias ls="lsd"
+exists "kubectl"   && . <(kubectl completion zsh)
+exists "helm"      && . <(helm completion zsh)
+exists "stern"     && . <(stern --completion zsh)
+exists "minikube"  && . <(minikube completion zsh)
+exists "direnv"    && . <(direnv hook zsh)
+exists "skaffold"  && . <(skaffold completion zsh)
+exists "bat"       && alias cat="bat --theme='OneHalfDark'"
+exists "lsd"       && alias ls="lsd"
+exists "colordiff" && alias diff="colordiff"
 
 unalias fd # delete alias set in OMZ::common-aliases
+
+
+if exists "lsec2"; then
+  lssh() {
+    IP=$(lsec2 $@ | fzf | awk -F "\t" '{print $2}')
+    if [[ $? == 0 && "${IP}" != "" ]]; then
+        echo ">>> SSH to ${IP}"
+        ssh ${IP}
+    fi
+  }
+fi
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
