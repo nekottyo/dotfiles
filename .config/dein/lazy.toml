@@ -248,3 +248,10 @@ on_ft = 'proto'
 [[plugins]]
 repo = 'vim-ruby/vim-ruby'
 on_ft = ['ruby', 'eruby', 'erb']
+
+[[plugins]]
+repo = 'hashivim/vim-terraform'
+on_ft = ['tf', 'terraform']
+hook_add = '''
+let g:terraform_fmt_on_save=1
+'''
