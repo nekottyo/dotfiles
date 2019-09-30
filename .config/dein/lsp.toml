@@ -25,6 +25,9 @@ repo = 'honza/vim-snippets'
 repo='prabirshrestha/async.vim'
 
 [[plugins]]
+repo = 'ryanolsonx/vim-lsp-python'
+
+[[plugins]]
 repo='prabirshrestha/vim-lsp'
 hook_add='''
 let g:lsp_virtual_text_enabled = 0
@@ -93,6 +96,14 @@ if executable('docker-langserver')
     \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
     \ 'whitelist': ['dockerfile'],
     \ })
+endif
+
+if executable('pyls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
 endif
 
 let g:lsp_signs_enabled = 1     " enable signs

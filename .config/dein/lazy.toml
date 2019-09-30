@@ -255,3 +255,17 @@ on_ft = ['tf', 'terraform']
 hook_add = '''
 let g:terraform_fmt_on_save=1
 '''
+
+[[plugins]]
+repo = 'vim-syntastic/syntastic'
+on_ft = ['tf', 'terraform']
+
+[[plugins]]
+repo = 'juliosueiras/vim-terraform-completion'
+on_ft = ['tf', 'terraform']
+
+[[plugins]]
+repo = 'towolf/vim-helm'
+
+[[plugins]]
+repo = 'ddollar/golang-template.vim'

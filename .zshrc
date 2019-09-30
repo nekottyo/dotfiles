@@ -50,6 +50,7 @@ if [ -z $TMUX ]; then
   ## for Mac OS
   if [[ $(uname) == "Darwin" ]]; then
       export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
+      exists "gxargs" && alias xargs="gxargs"
   fi
 
   # anyenv
@@ -58,6 +59,7 @@ if [ -z $TMUX ]; then
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
   eval "$(anyenv init - --no-rehash)"
 
+
   # go
   export GO111MODULE=auto
   export GOPATH=${HOME}/.golang
@@ -65,7 +67,7 @@ if [ -z $TMUX ]; then
   export PATH=${GOPATH}/bin:$(go env GOPATH)/bin:${PATH}
 
   # user npm
-  export PATH=${PATH}:$(npm bin)
+  exists "npm" && export PATH=${PATH}:$(npm bin)
 fi
 
 
@@ -168,7 +170,7 @@ zplugin cdclear -q
 ## End of Zplugin's installer chunk
 
 autoload -Uz compinit
-compinit
+compinit -C
 
 ## kubectl completion
 if [[ -a ~/.kube/config ]]; then
@@ -189,7 +191,7 @@ zplugin ice as"program" pick"git-cal"; zplugin load k4rthik/git-cal
 
 zplugin ice as"program" pick"bin/color" pick"bin/histuniq"; zplugin load "Jxck/dotfiles"
 
-zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*"; zplugin light junegunn/fzf-bin
+# zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'; zplugin light junegunn/fzf-bin
 
 zplugin ice as"program" make; zplugin load jhawthorn/fzy
 
@@ -237,34 +239,31 @@ zle -N fzf-z-search
 bindkey '^f' fzf-z-search
 bindkey '^[f' fzf-z-search
 
-zplugin light yous/vanilli.sh
-zplugin light zsh-users/zsh-completions
-zplugin light mollifier/anyframe
-zplugin light greymd/tmux-xpanes
-zplugin light mollifier/cd-gitroot
+zplugin ice wait'0' silent; zplugin light yous/vanilli.sh
+zplugin ice wait'0' silent; zplugin light zsh-users/zsh-completions
+zplugin ice wait'0' silent; zplugin light greymd/tmux-xpanes
+zplugin ice wait'0' silent; zplugin light mollifier/cd-gitroot
 
 
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin snippet OMZ::lib/clipboard.zsh if'[[ "$OSTYPE" == *darwin* ]]'
 
 zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
-zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
-zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
-
-zplugin snippet OMZ::plugins/aws/aws.plugin.zsh
-
-exists "kubectl"   && . <(kubectl completion zsh)
-exists "helm"      && . <(helm completion zsh)
-exists "stern"     && . <(stern --completion zsh)
-exists "minikube"  && . <(minikube completion zsh)
-exists "direnv"    && . <(direnv hook zsh)
-exists "skaffold"  && . <(skaffold completion zsh)
-exists "bat"       && alias cat="bat --theme='OneHalfDark'"
-exists "lsd"       && alias ls="lsd"
-exists "colordiff" && alias diff="colordiff"
+# zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
+zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
+zplugin ice wait'0' silent; exists "kubectl"   && . <(kubectl completion zsh)
+zplugin ice wait'0' silent; exists "helm"      && . <(helm completion zsh)
+zplugin ice wait'0' silent; exists "stern"     && . <(stern --completion zsh)
+zplugin ice wait'0' silent; exists "minikube"  && . <(minikube completion zsh)
+zplugin ice wait'0' silent; exists "direnv"    && . <(direnv hook zsh)
+zplugin ice wait'0' silent; exists "skaffold"  && . <(skaffold completion zsh)
+# zplugin ice wait'0' silent; exists "eksctl"    && . <(eksctl completion zsh)
+zplugin ice wait'0' silent; exists "bat"       && alias cat="bat --theme='OneHalfDark'"
+zplugin ice wait'0' silent; exists "lsd"       && alias ls="lsd"
+zplugin ice wait'0' silent; exists "colordiff" && alias diff="colordiff"
+zplugin ice wait'0' silent; exists "hub"       && alias git="hub"
 
 unalias fd # delete alias set in OMZ::common-aliases
-
 
 if exists "lsec2"; then
   lssh() {
@@ -274,7 +273,25 @@ if exists "lsec2"; then
         ssh ${IP}
     fi
   }
+
+  xssh() {
+    IPS=$(lsec2 | fzf -m | awk -F "\t" '{print $2}')
+    if [[ $? == 0 && "${IPS}" != "" ]]; then
+      echo "$IPS" | xpanes --ssh
+    fi
+  }
 fi
+
+if exists "saml2aws"; then
+  SAML_LOGIN_CMD="saml2aws login --skip-prompt -a saml --force"
+
+  alias alogin="${SAML_LOGIN_CMD}"
+  alias aadmin="${SAML_LOGIN_CMD} --role=\"$SSO_ADMIN\""
+  alias asand="${SAML_LOGIN_CMD} --role=\"$SSO_SANDBOX_ADMIN\""
+fi
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /Users/shimizu-kotaro/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
