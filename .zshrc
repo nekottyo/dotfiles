@@ -291,7 +291,7 @@ if exists "saml2aws"; then
 fi
 
 autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /Users/shimizu-kotaro/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
+complete -o nospace -C ${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
