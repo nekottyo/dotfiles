@@ -40,35 +40,6 @@ zstyle ':completion:*' use-cache true
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 
-if [ -z $TMUX ]; then
-  ## nvim
-  export XDG_CONFIG_HOME=$HOME/.config
-
-  ## PATH
-  export PATH=/usr/local/bin:${PATH}
-
-  ## for Mac OS
-  if [[ $(uname) == "Darwin" ]]; then
-      export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
-      exists "gxargs" && alias xargs="gxargs"
-  fi
-
-  # anyenv
-  export PATH="${PATH}:/usr/bin"
-  export PATH="${HOME}/.anyenv/bin:${PATH}"
-  export PATH="${HOME}/.local/bin/powerline:${PATH}"
-  eval "$(anyenv init - --no-rehash)"
-
-
-  # go
-  export GO111MODULE=auto
-  export GOPATH=${HOME}/.golang
-  export GOROOT=$( go env GOROOT )
-  export PATH=${GOPATH}/bin:$(go env GOPATH)/bin:${PATH}
-
-  # user npm
-  exists "npm" && export PATH=${PATH}:$(npm bin)
-fi
 
 
 ## aliases
@@ -199,7 +170,7 @@ zplugin ice as"program" pick"unhanced.sh"; zplugin light b4b4r07/enhancd
 
 zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"; zplugin light b4b4r07/httpstat
 
-zplugin light pinelibg/dircolors-solarized-zsh
+zplugin ice wait'!0'; zplugin light pinelibg/dircolors-solarized-zsh
 
 zplugin ice as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-foresta
 
@@ -219,7 +190,7 @@ zplugin ice as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/h
 
 zplugin light mafredri/zsh-async
 
-zplugin ice pick"async.zsh" src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
+# zplugin ice pick"async.zsh" src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
 
 zplugin load zsh-users/zsh-autosuggestions
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
@@ -250,18 +221,50 @@ zplugin snippet OMZ::lib/clipboard.zsh if'[[ "$OSTYPE" == *darwin* ]]'
 
 zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 # zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
-zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
-zplugin ice wait'0' silent; exists "kubectl"   && . <(kubectl completion zsh)
-zplugin ice wait'0' silent; exists "helm"      && . <(helm completion zsh)
-zplugin ice wait'0' silent; exists "stern"     && . <(stern --completion zsh)
-zplugin ice wait'0' silent; exists "minikube"  && . <(minikube completion zsh)
-zplugin ice wait'0' silent; exists "direnv"    && . <(direnv hook zsh)
-zplugin ice wait'0' silent; exists "skaffold"  && . <(skaffold completion zsh)
-# zplugin ice wait'0' silent; exists "eksctl"    && . <(eksctl completion zsh)
-zplugin ice wait'0' silent; exists "bat"       && alias cat="bat --theme='OneHalfDark'"
-zplugin ice wait'0' silent; exists "lsd"       && alias ls="lsd"
-zplugin ice wait'0' silent; exists "colordiff" && alias diff="colordiff"
-zplugin ice wait'0' silent; exists "hub"       && alias git="hub"
+#
+if [ -z "$TMUX" ]; then
+  ## nvim
+  export XDG_CONFIG_HOME=$HOME/.config
+
+  ## PATH
+  export PATH=/usr/local/bin:${PATH}
+
+  ## for Mac OS
+  if [[ $(uname) == "Darwin" ]]; then
+      export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
+      exists "gxargs" && alias xargs="gxargs"
+  fi
+
+  # anyenv
+  export PATH="${PATH}:/usr/bin"
+  export PATH="${HOME}/.anyenv/bin:${PATH}"
+  export PATH="${HOME}/.local/bin/powerline:${PATH}"
+  eval "$(anyenv init - --no-rehash)"
+
+
+  # go
+  export GO111MODULE=auto
+  export GOPATH=${HOME}/.golang
+  export GOROOT=$( go env GOROOT )
+  export PATH=${GOPATH}/bin:$(go env GOPATH)/bin:${PATH}
+
+  # user npm
+  exists "npm" && export PATH=${PATH}:$(npm bin)
+fi
+
+  zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
+  zplugin ice wait'0' silent; exists "kubectl"   && . <(kubectl completion zsh)
+  zplugin ice wait'0' silent; exists "helm"      && . <(helm completion zsh)
+  zplugin ice wait'0' silent; exists "stern"     && . <(stern --completion zsh)
+  zplugin ice wait'0' silent; exists "minikube"  && . <(minikube completion zsh)
+  zplugin ice wait'0' silent; exists "direnv"    && . <(direnv hook zsh)
+  zplugin ice wait'0' silent; exists "skaffold"  && . <(skaffold completion zsh)
+  # zplugin ice wait'0' silent; exists "eksctl"    && . <(eksctl completion zsh)
+  zplugin ice wait'0' silent; exists "bat"       && alias cat="bat --theme='OneHalfDark'"
+  zplugin ice wait'0' silent; exists "lsd"       && alias ls="lsd"
+  zplugin ice wait'0' silent; exists "colordiff" && alias diff="colordiff"
+  zplugin ice wait'0' silent; exists "hub"       && alias git="hub"
+
 
 unalias fd # delete alias set in OMZ::common-aliases
 
@@ -292,6 +295,8 @@ fi
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C ${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
+eval "$(starship init zsh)"
+eval "$(pyenv init -)"
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc

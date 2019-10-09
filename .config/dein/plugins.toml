@@ -129,7 +129,7 @@ let g:ale_python_pylint_use_global = 1
 let g:ale_python_flake8_use_global = 1
 let g:ale_fixers = {
   \  'ruby': ['rubocop'],
-  \  'python': ['autopep8', 'yapf'],
+  \  'python': ['autopep8','yapf'],
   \  'javascript': ['prettier'],
   \  'typescript': ['prettier', 'tslint']
   "\  'vue': ['prettier']
