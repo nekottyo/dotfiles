@@ -17,7 +17,7 @@ prompt_order = [
     "nix_shell",
     "conda",
     "memory_usage",
-    "aws",
+    # "aws",
     "kubernetes",
     "env_var",
     "cmd_duration",
