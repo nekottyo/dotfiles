@@ -125,8 +125,13 @@ fstash() {
 }
 
 fghq() {
-  local repo=$(ghq root)/$(ghq list | fzf)
-  BUFFER="cd ${repo}"
+  local ghq_root=$(ghq root)
+  local repo=$(ghq list | fzf)
+  if [[ -z "$repo" ]]; then
+    zle accept-line
+    return
+  fi
+  BUFFER="cd ${ghq_root}/${repo}"
   zle accept-line
 }
 zle -N fghq
