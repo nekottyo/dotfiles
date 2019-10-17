@@ -162,7 +162,8 @@ fi
 #setopt nomatch
 
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
-zplugin light zsh-users/zsh-syntax-highlighting
+# zplugin light zsh-users/zsh-syntax-highlighting
+zplugin light zdharma/fast-syntax-highlighting
 
 zplugin ice as"program" pick"git-cal"; zplugin load k4rthik/git-cal
 
@@ -292,12 +293,19 @@ if exists "lsec2"; then
 fi
 
 if exists "saml2aws"; then
-  SAML_LOGIN_CMD="saml2aws login --skip-prompt -a saml --force"
+  SAML_LOGIN_CMD="saml2aws login --skip-prompt -a default --force"
 
   alias alogin="${SAML_LOGIN_CMD}"
   alias aadmin="${SAML_LOGIN_CMD} --role=\"$SSO_ADMIN\""
   alias asand="${SAML_LOGIN_CMD} --role=\"$SSO_SANDBOX_ADMIN\""
 fi
+
+eks-write-config() {
+  local cluster=$(eksctl get cluster | fzf | awk '{print $1}')
+  if [[ $cluster != '' ]]; then
+    eksctl utils write-kubeconfig --name "${cluster}"
+  fi
+}
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C ${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
