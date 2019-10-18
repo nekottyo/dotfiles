@@ -93,49 +93,6 @@ fbr() {
   git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
 }
 
-# fstash - easier way to deal with stashes
-# type fstash to get a list of your stashes
-# enter shows you the contents of the stash
-# ctrl-d shows a diff of the stash against your current HEAD
-# ctrl-b checks the stash out as a branch, for easier merging
-# https://www.reddit.com/r/zsh/comments/5ogkbt/fzf_help/
-fstash() {
-  emulate -L sh
-  local out q k sha
-  while out=$(
-    git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
-    fzf --ansi --no-sort --query="$q" --print-query \
-        --expect=ctrl-d,ctrl-b);
-  do
-    out=( "${(@f)out}" )
-    q="${out[0]}"
-    k="${out[1]}"
-    sha="${out[-1]}"
-    sha="${sha%% *}"
-    [[ -z "$sha" ]] && continue
-    if [[ "$k" == 'ctrl-d' ]]; then
-      git diff $sha
-    elif [[ "$k" == 'ctrl-b' ]]; then
-      git stash branch "stash-$sha" $sha
-      break;
-    else
-      git stash show -p $sha
-    fi
-  done
-}
-
-fghq() {
-  local ghq_root=$(ghq root)
-  local repo=$(ghq list | fzf)
-  if [[ -z "$repo" ]]; then
-    zle accept-line
-    return
-  fi
-  BUFFER="cd ${ghq_root}/${repo}"
-  zle accept-line
-}
-zle -N fghq
-bindkey '^g' fghq
 
 
 
@@ -203,19 +160,6 @@ zplugin load zsh-users/zsh-autosuggestions
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
 
 zplugin ice as"program" src"z.sh"; zplugin load "rupa/z"
-fzf-z-search() {
-  local res=$(z | sort -rn | cut -c 12- | fzf)
-  if [ -n "$res" ]; then
-      BUFFER+="cd $res"
-      zle accept-line
-  else
-      return 1
-  fi
-}
-
-zle -N fzf-z-search
-bindkey '^f' fzf-z-search
-bindkey '^[f' fzf-z-search
 
 zplugin ice wait'0' silent; zplugin light yous/vanilli.sh
 zplugin ice wait'0' silent; zplugin light zsh-users/zsh-completions
@@ -275,37 +219,16 @@ fi
 
 unalias fd # delete alias set in OMZ::common-aliases
 
-if exists "lsec2"; then
-  lssh() {
-    IP=$(lsec2 $@ | fzf | awk -F "\t" '{print $2}')
-    if [[ $? == 0 && "${IP}" != "" ]]; then
-        echo ">>> SSH to ${IP}"
-        ssh ${IP}
-    fi
-  }
-
-  xssh() {
-    IPS=$(lsec2 | fzf -m | awk -F "\t" '{print $2}')
-    if [[ $? == 0 && "${IPS}" != "" ]]; then
-      echo "$IPS" | xpanes --ssh
-    fi
-  }
-fi
 
 if exists "saml2aws"; then
-  SAML_LOGIN_CMD="saml2aws login --skip-prompt -a default --force"
+  SAML_LOGIN_CMD="saml2aws login --skip-prompt -a default --force --session-duration=10800"
 
   alias alogin="${SAML_LOGIN_CMD}"
   alias aadmin="${SAML_LOGIN_CMD} --role=\"$SSO_ADMIN\""
   alias asand="${SAML_LOGIN_CMD} --role=\"$SSO_SANDBOX_ADMIN\""
 fi
 
-eks-write-config() {
-  local cluster=$(eksctl get cluster | fzf | awk '{print $1}')
-  if [[ $cluster != '' ]]; then
-    eksctl utils write-kubeconfig --name "${cluster}"
-  fi
-}
+. ~/.config/zsh/utils.zsh
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C ${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
