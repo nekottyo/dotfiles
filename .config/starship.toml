@@ -20,13 +20,18 @@ prompt_order = [
     # "aws",
     "kubernetes",
     "env_var",
+    "time",
     "cmd_duration",
     "line_break",
     "jobs",
     "battery",
-    "time",
     "character",
 ]
 
 [kubernetes]
 disabled = false
+
+[time]
+disabled = false
+utc_time_offset = +5
+format = "[%T]"

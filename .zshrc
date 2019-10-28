@@ -201,6 +201,8 @@ if [ -z "$TMUX" ]; then
 
   # user npm
   exists "npm" && export PATH=${PATH}:$(npm bin)
+
+  export EDITOR=nvim
 fi
 
   zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
