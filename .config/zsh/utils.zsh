@@ -87,3 +87,10 @@ eks-write-config() {
     exists "kubens" && kubens
   fi
 }
+
+fdv () {
+  local file=$(fd | fzf)
+  if [[ "${file}" != '' ]]; then
+    vim ${file}
+  fi
+}

@@ -36,11 +36,21 @@ setopt prompt_subst
 setopt pushd_ignore_dups
 setopt share_history
 
+autoload colors
 zstyle ':completion:*' use-cache true
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-
-
+zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
+                             /usr/sbin /usr/bin /sbin /bin /usr/local/git/bin
+zstyle ':completion:*:default' menu select=1
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
+zstyle ':completion:*' insert-tab false
+zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list
+zstyle ':completion:*:messages' format '%F{YELLOW}%d'$DEFAULT
+zstyle ':completion:*:warnings' format '%F{RED}No matches for:''%F{YELLOW} %d'$DEFAULT
+zstyle ':completion:*:descriptions' format '%F{YELLOW}completing %B%d%b'$DEFAULT
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:descriptions' format '%F{yellow}Completing %B%d%b%f'$DEFAULT
 
 ## aliases
 alias vim="nvim"
@@ -67,8 +77,6 @@ alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
 alias kunset='kubectl config unset current-context'
-
-
 
 if [ "${TMUX}" != "" ] ; then
   tmux pipe-pane 'cat | rotatelogs -L /var/log/tmux/tmux.lnk /var/log/tmux/%Y%m%d_#S:#I.#P.log 86400 540'
@@ -154,6 +162,8 @@ zplugin ice as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/h
 
 zplugin light mafredri/zsh-async
 
+zplugin ice as"program" pick "contrib/completion/git-completion.zsh"; zplugin light git/git
+
 # zplugin ice pick"async.zsh" src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
 
 zplugin load zsh-users/zsh-autosuggestions
@@ -165,6 +175,7 @@ zplugin ice wait'0' silent; zplugin light yous/vanilli.sh
 zplugin ice wait'0' silent; zplugin light zsh-users/zsh-completions
 zplugin ice wait'0' silent; zplugin light greymd/tmux-xpanes
 zplugin ice wait'0' silent; zplugin light mollifier/cd-gitroot
+# zplugin ice wait'0' silent; zplugin light nnao45/zsh-kubectl-completion
 
 
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
