@@ -23,7 +23,7 @@ repo = 'itchyny/lightline.vim'
 depends_on = ['lightline-ale', 'vim-fugitive', 'lightline-gruvbox.vim']
 hook_add = '''
 let g:lightline = {
-  \ 'colorscheme': 'gruvbox',
+  \ 'colorscheme': 'onehalfdark',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \       [ 'gitbranch', 'readonly', 'filename','modified' ] ],
@@ -234,15 +234,15 @@ hook_add = '''
 #  au MyAutoCmd VimEnter * nested colorscheme tender
 #'''
 
-[[plugins]]
-repo = 'morhetz/gruvbox'
-hook_add = '''
-  if (has("termguicolors"))
-   set termguicolors
-  endif
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  au MyAutoCmd VimEnter * nested colorscheme gruvbox
-'''
+#[[plugins]]
+#repo = 'morhetz/gruvbox'
+#hook_add = '''
+#  if (has("termguicolors"))
+#   set termguicolors
+#  endif
+#  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+#  au MyAutoCmd VimEnter * nested colorscheme gruvbox
+#'''
 #[[plugins]]
 #repo = 'rakr/vim-one'
 #hook_add = '''
@@ -261,6 +261,17 @@ hook_add = '''
 #  let ayucolor="mirage"
 #  au MyAutoCmd VimEnter * nested colorscheme ayu
 #'''
+
+[[plugins]]
+repo = 'sonph/onehalf'
+rtp = 'vim'
+hook_add = '''
+  if (has("termguicolors"))
+   set termguicolors
+  endif
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  au MyAutoCmd VimEnter * nested colorscheme onehalfdark
+'''
 
 [[plugins]]
 repo = 'nathanaelkane/vim-indent-guides'
