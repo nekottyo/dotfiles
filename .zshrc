@@ -9,6 +9,9 @@ function exists() {
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+HISTSIZE=100000
+SAVEHIST=100000
+
 setopt always_last_prompt
 setopt auto_cd
 setopt auto_list
@@ -24,6 +27,9 @@ setopt hist_ignore_dups
 setopt hist_no_store
 setopt hist_reduce_blanks
 setopt hist_reduce_blanks
+setopt share_history
+setopt append_history
+setopt inc_append_history
 setopt interactive_comments
 setopt list_packed
 setopt list_types
@@ -34,7 +40,6 @@ setopt no_tify
 setopt nolistbeep
 setopt prompt_subst
 setopt pushd_ignore_dups
-setopt share_history
 
 autoload colors
 zstyle ':completion:*' use-cache true
@@ -185,17 +190,16 @@ zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 # zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
 #
 if [ -z "$TMUX" ]; then
+
+  if [[ $(uname) == "Darwin" ]]; then
+      export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
+  fi
   ## nvim
   export XDG_CONFIG_HOME=$HOME/.config
 
   ## PATH
   export PATH=/usr/local/bin:${PATH}
 
-  ## for Mac OS
-  if [[ $(uname) == "Darwin" ]]; then
-      export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
-      exists "gxargs" && alias xargs="gxargs"
-  fi
 
   # anyenv
   export PATH="${PATH}:/usr/bin"
@@ -228,6 +232,13 @@ fi
   zplugin ice wait'0' silent; exists "lsd"       && alias ls="lsd"
   zplugin ice wait'0' silent; exists "colordiff" && alias diff="colordiff"
   zplugin ice wait'0' silent; exists "hub"       && alias git="hub"
+
+## for Mac OS
+if [[ $(uname) == "Darwin" ]]; then
+    zplugin ice wait'0' silent; exists "gxargs" && alias xargs="gxargs"
+    zplugin ice wait'0' silent; exists "ggrep"  && alias grep="ggrep --color=auto"
+    zplugin ice wait'0' silent; exists "gsed"   && alias sed="gsed"
+fi
 
 
 unalias fd # delete alias set in OMZ::common-aliases
