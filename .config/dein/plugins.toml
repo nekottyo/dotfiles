@@ -23,7 +23,7 @@ repo = 'itchyny/lightline.vim'
 depends_on = ['lightline-ale', 'vim-fugitive', 'lightline-gruvbox.vim']
 hook_add = '''
 let g:lightline = {
-  \ 'colorscheme': 'onehalfdark',
+  \ 'colorscheme': 'onedark',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \       [ 'gitbranch', 'readonly', 'filename','modified' ] ],
@@ -43,7 +43,7 @@ let g:lightline = {
   \ }
 
 function! CocCurrentFunction()
-    return get(b:, 'coc_current_function', '')
+    return get(b:, 'coc_current_function', ' ')
 endfunction
 
 function! LightlineFilename()
@@ -56,7 +56,7 @@ function! Fugitive()
   try
     if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
       let _ = fugitive#head()
-      return strlen(_) ? ''._ : ''
+      return strlen(_) ? ' '._ : ''
     endif
   catch
   endtry
@@ -251,15 +251,25 @@ hook_add = '''
 #  au MyAutoCmd VimEnter * nested colorscheme ayu
 #'''
 
+#[[plugins]]
+#repo = 'sonph/onehalf'
+#rtp = 'vim'
+#hook_add = '''
+#  if (has("termguicolors"))
+#   set termguicolors
+#  endif
+#  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+#  au MyAutoCmd VimEnter * nested colorscheme onehalfdark
+#'''
+
 [[plugins]]
-repo = 'sonph/onehalf'
-rtp = 'vim'
+repo = 'joshdick/onedark.vim'
 hook_add = '''
   if (has("termguicolors"))
    set termguicolors
   endif
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  au MyAutoCmd VimEnter * nested colorscheme onehalfdark
+  au MyAutoCmd VimEnter * nested colorscheme onedark
 '''
 
 [[plugins]]

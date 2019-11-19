@@ -147,7 +147,7 @@ zplugin ice as"program" pick"unhanced.sh"; zplugin light b4b4r07/enhancd
 
 zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"; zplugin light b4b4r07/httpstat
 
-zplugin ice wait'!0'; zplugin light pinelibg/dircolors-solarized-zsh
+zplugin ice wait'!0' silent; zplugin light pinelibg/dircolors-solarized-zsh
 
 zplugin ice as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-foresta
 
@@ -219,6 +219,7 @@ if [ -z "$TMUX" ]; then
 
   export EDITOR=nvim
 fi
+
 
   zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
   zplugin ice wait'0' silent; exists "kubectl"   && . <(kubectl completion zsh)
