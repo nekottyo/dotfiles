@@ -162,6 +162,7 @@ zplugin ice as"program" pick"compose/contrib/completion/zsh"
 
 zplugin light docker/compose
 export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
 
 zplugin ice as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/hub
 
