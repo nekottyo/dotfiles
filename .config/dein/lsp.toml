@@ -1,145 +1,68 @@
 [[plugins]]
-repo = 'Shougo/neosnippet.vim'
-on_event = 'InsertCharPre'
-on_ft = 'snippet'
-hook_add = '''
-imap <C-k> <Plug>(neosnippet_jump_or_expand)
-smap <C-k> <Plug>(neosnippet_jump_or_expand)
-xmap <C-k> <Plug>(neosnippet_expand_target)
-let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#enable_completed_snippet = 1
-let g:neosnippet#expand_word_boundary = 1
-'''
-
-[[plugins]]
-repo = 'Shougo/neosnippet-snippets'
-hook_add = '''
-let g:neosnippet#snippets_directory = '$HOME/.config/nvim/snippets'
-'''
-
-[[plugins]]
-repo = 'honza/vim-snippets'
-
-
-[[plugins]]
-repo='prabirshrestha/async.vim'
-
-[[plugins]]
-repo = 'ryanolsonx/vim-lsp-python'
-
-[[plugins]]
-repo='prabirshrestha/vim-lsp'
+repo = 'neoclide/coc.nvim'
+rev = 'release'
 hook_add='''
-let g:lsp_virtual_text_enabled = 0
-if executable('gopls')
-  augroup LspGo
-    au!
-    autocmd User lsp_setup call lsp#register_server({
-      \ 'name': 'go-lang',
-      \ 'cmd': {server_info->['gopls']},
-      \ 'whitelist': ['go'],
-      \ })
-    autocmd FileType go setlocal omnifunc=lsp#complete
-    autocmd FileType go nmap <buffer> ,n <plug>(lsp-next-error)
-    autocmd FileType go nmap <buffer> ,p <plug>(lsp-previous-error)
-  augroup END
-endif
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-if executable('vls')
-  au User lsp_setup call lsp#register_server({
-    \ 'name': 'vls',
-    \ 'cmd': {server_info->['vls']},
-    \ 'whitelist': ['vue'],
-    \ })
-endif
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-if executable('solargraph')
-  au User lsp_setup call lsp#register_server({
-    \ 'name': 'solargraph',
-    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-    \ 'initialization_options': {"diagnostics": "true"},
-    \ 'whitelist': ['ruby'],
-    \ })
-endif
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 
-if executable('yaml-language-server')
-  let settings = json_decode('
-  \{
-  \    "yaml": {
-  \        "completion": false,
-  \        "hover": true,
-  \        "validate": true,
-  \        "schemas": {
-  \            "Kubernetes": "/*"
-  \        },
-  \        "format": {
-  \            "enable": true
-  \        }
-  \    },
-  \    "http": {
-  \        "proxyStrictSSL": true
-  \    }
-  \}')
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-  au User lsp_config call lsp#register_notifications(
-    \ 'workspace/didChangeConfiguration', {'settings': settings})
-  au User lsp_setup call lsp#register_server({
-    \ 'name': 'yaml-language-server',
-    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'yaml-language-server --stdio']},
-    \ 'whitelist': ['yaml'],
-    \ })
-endif
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-if executable('docker-langserver')
-  au User lsp_setup call lsp#register_server({
-    \ 'name': 'docker-language-server',
-    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
-    \ 'whitelist': ['dockerfile'],
-    \ })
-endif
+nmap <silent> <Leader>d <Plug>(coc-definition)
+nmap <silent> <Leader>t <Plug>(coc-type-definition)
+nmap <silent> <Leader>i <Plug>(coc-implementation)
+nmap <silent> <Leader>rf <Plug>(coc-references)
+nmap <silent> <Leader>r <Plug>(coc-rename)
+xmap <silent> <leader>fmt <Plug>(coc-format-selected)
+" xmap <silent> <leader>f <Plug>(coc-format-selected)
+" nmap <silent> <leader>f <Plug>(coc-format-selected)
 
-if executable('pyls')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
-endif
+nmap <leader>ca  <Plug>(coc-codeaction)
+nmap <leader>qf  <Plug>(coc-fix-current)
 
-let g:lsp_signs_enabled = 1     " enable signs
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+nnoremap <silent> <Leader>h :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_warning = {'text': '‼'}
-nmap <silent> <Leader>d :LspDefinition<CR>
-nmap <silent> <Leader>h :LspHover<CR>
-nmap <silent> <Leader>R :LspReferences<CR>
-nmap <silent> <Leader>r :LspRename<CR>
-nmap <silent> <Leader>i :LspImplementation<CR>
-nmap <silent> <Leader>s :split \| :LspDefinition <CR>
-nmap <silent> <Leader>v :vsplit \| :LspDefinition <CR>
-'''
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
-[[plugins]]
-repo = 'prabirshrestha/asyncomplete.vim'
-
-[[plugins]]
-repo = 'prabirshrestha/asyncomplete-lsp.vim'
-hook_add = '''
-let g:lsp_async_completion = 1
-set shortmess+=c
-'''
-
-[[plugins]]
-repo='prabirshrestha/asyncomplete-neosnippet.vim'
-depends = ['asyncomplete.vim']
-hook_add='''
-call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
-  \ 'name': 'neosnippet',
-  \ 'whitelist': ['*'],
-  \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
-  \ }))
-imap <C-k>   <Plug>(neosnippet_expand_or_jump)
-smap <C-k>   <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>   <Plug>(neosnippet_expand_target)
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 '''
