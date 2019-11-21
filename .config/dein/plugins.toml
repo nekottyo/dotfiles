@@ -23,7 +23,7 @@ repo = 'itchyny/lightline.vim'
 depends_on = ['lightline-ale', 'vim-fugitive', 'lightline-gruvbox.vim']
 hook_add = '''
 let g:lightline = {
-  \ 'colorscheme': 'onedark',
+  \ 'colorscheme': 'dracula',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \       [ 'gitbranch', 'readonly', 'filename','modified' ] ],
@@ -203,15 +203,15 @@ hook_add = '''
 '''
 
 # Colors
-#[[plugins]]
-#repo = 'dracula/vim'
-#hook_add = '''
-#  if (has("termguicolors"))
-#   set termguicolors
-#  endif
-#  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-#  au MyAutoCmd VimEnter * nested colorscheme dracula
-#'''
+[[plugins]]
+repo = 'dracula/vim'
+hook_add = '''
+  if (has("termguicolors"))
+   set termguicolors
+  endif
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  au MyAutoCmd VimEnter * nested colorscheme dracula
+'''
 
 #[[plugins]]
 #repo = 'jacoborus/tender.vim'
@@ -262,15 +262,15 @@ hook_add = '''
 #  au MyAutoCmd VimEnter * nested colorscheme onehalfdark
 #'''
 
-[[plugins]]
-repo = 'joshdick/onedark.vim'
-hook_add = '''
-  if (has("termguicolors"))
-   set termguicolors
-  endif
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  au MyAutoCmd VimEnter * nested colorscheme onedark
-'''
+#[[plugins]]
+#repo = 'joshdick/onedark.vim'
+#hook_add = '''
+#  if (has("termguicolors"))
+#   set termguicolors
+#  endif
+#  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+#  au MyAutoCmd VimEnter * nested colorscheme onedark
+#'''
 
 [[plugins]]
 repo = 'nathanaelkane/vim-indent-guides'
