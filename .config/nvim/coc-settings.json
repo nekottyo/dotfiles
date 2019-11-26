@@ -84,6 +84,11 @@
         "command": "terraform-lsp",
         "filetypes": ["terraform"],
         "initializationOptions": {}
+    },
+    "efm": {
+      "command": "efm-langserver",
+      "args": [],
+      "filetypes": ["markdown", "yaml"]
     }
   }
 }

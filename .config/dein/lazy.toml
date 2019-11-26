@@ -98,6 +98,13 @@ execute pathogen#infect()
 '''
 
 [[plugins]]
+repo = 'ruby-formatter/rufo-vim'
+on_ft = ['rails', 'ruby']
+hook_add = '''
+let g:rufo_auto_formatting = 1
+'''
+
+[[plugins]]
 repo = 'tpope/vim-rake'
 depends = 'vim-pathogen'
 

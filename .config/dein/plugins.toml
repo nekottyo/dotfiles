@@ -15,36 +15,30 @@ let g:precious_enable_switchers = {
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
-[[plugins]]
-repo = 'shinchu/lightline-gruvbox.vim'
-
 [[plugins]] # status line
 repo = 'itchyny/lightline.vim'
-depends_on = ['lightline-ale', 'vim-fugitive', 'lightline-gruvbox.vim']
+depends_on = ['vim-fugitive', 'vista.nvim', 'coc.nvim']
 hook_add = '''
 let g:lightline = {
   \ 'colorscheme': 'dracula',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
-  \       [ 'gitbranch', 'readonly', 'filename','modified' ] ],
-  \   'right': [['cocstatus', 'currentfunction'],
+  \       [ 'gitbranch', 'readonly', 'filename','modified', 'method' ] ],
+  \   'right': [
   \       [ 'lineinfo' ],
   \       [ 'percent' ],
-  \       [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ] ]
+  \       [ 'fileformat', 'fileencoding', 'filetype' ] ]
   \ },
   \ 'component_function': {
   \   'cocstatus': 'coc#status',
   \   'currentfunction': 'CocCurrentFunction',
   \   'filename': 'LightlineFilename',
-  \   'gitbranch': 'Fugitive'
+  \   'gitbranch': 'Fugitive',
+  \   'method': 'NearestMethodOrFunction'
   \ },
   \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
   \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
   \ }
-
-function! CocCurrentFunction()
-    return get(b:, 'coc_current_function', ' ')
-endfunction
 
 function! LightlineFilename()
   let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
@@ -62,10 +56,8 @@ function! Fugitive()
   endtry
   return ''
 endfunction
-'''
 
-[[plugins]]
-repo = 'maximbaz/lightline-ale'
+'''
 
 [[plugins]]
 repo = 'tpope/vim-fugitive'
@@ -105,32 +97,6 @@ endfunction
 autocmd BufReadPost *_test.rb call RSpecQuickrun()
 '''
 
-[[plugins]]
-repo = 'w0rp/ale'
-hook_add = '''
-let g:ale_fix_on_save = 0
-let g:ale_completion_enabled = 1
-let g:airline#extensions#ale#enabled = 1
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_python_pylint_use_global = 1
-let g:ale_python_flake8_use_global = 1
-let g:ale_fixers = {
-  \  'ruby': ['rubocop'],
-  \  'python': ['autopep8','yapf'],
-  \  'javascript': ['prettier'],
-  \  'typescript': ['prettier', 'tslint']
-  "\  'vue': ['prettier']
-  \}
-nmap <F3> <Plug>(ale_fix)
-'''
-
-[[plugins]]
-repo = 'jistr/vim-nerdtree-tabs'
-
-[[plugins]]
-repo = 'Xuyuanp/nerdtree-git-plugin'
 
 [[plugins]]
 repo = 'Shougo/vimshell.vim'
@@ -289,39 +255,86 @@ nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 '''
 
 [[plugins]]
-repo = 'ludovicchabant/vim-gutentags'
+repo = 'liuchengxu/vista.vim'
 hook_add = '''
-let g:gtentags_cache_dir = expand('~/.cache/gutentags')
-augroup MyGutentagsStatusLineRefresher
-  autocmd!
-  autocmd User GutentagsUpdating call lightline#update()
-  autocmd User GutentagsUpdated call lightline#update()
-augroup END
-'''
 
-[[plugins]]
-repo = 'nekottyo/tagbar'
-hook_add = '''
-autocmd VimEnter * nested :call tagbar#autoopen(1)
-autocmd BufWritePost *.rb !ripper-tags -R --exclude=vendor
-nmap <F8> :TagbarToggle<CR>
 
-if executable('ripper-tags')
-  let g:tagbar_type_ruby = {
-    \ 'kinds'    : ['m:modules',
-            \ 'c:classes',
-            \ 'C:constants',
-            \ 'F:singleton methods',
-            \ 'f:methods',
-            \ 'a:aliases'],
-    \ 'kind2scope' : { 'c' : 'class',
-             \ 'm' : 'class' },
-    \ 'scope2kind' : { 'class' : 'c' },
-    \ 'ctagsbin'   : 'ripper-tags',
-    \ 'ctagsargs'  : ['--exclude=vendor', '-f', '-']
-    \ }
-endif
+
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+
+autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+
+let g:vista_sidebar_width = 40
+let g:vista_echo_cursor_strategy = 'both'
+let g:vista_stay_on_open = 0
+
+"https://github.com/miiton/Cica/issues/45#issuecomment-505924698
+let g:vista_icon_indent = ["󳄀󳄂 ", "󳄁󳄂 "]
+let g:vista_default_executive = 'coc'
+let g:vista#renderer#icons = {
+            \ 'func':           "\Uff794",
+            \ 'function':       "\Uff794",
+            \ 'functions':      "\Uff794",
+            \ 'var':            "\Uff71b",
+            \ 'variable':       "\Uff71b",
+            \ 'variables':      "\Uff71b",
+            \ 'const':          "\Uff8ff",
+            \ 'constant':       "\Uff8ff",
+            \ 'method':         "\Uff6a6",
+            \ 'package':        "\Ufe612",
+            \ 'packages':       "\Ufe612",
+            \ 'enum':           "\Uff435",
+            \ 'enumerator':     "\Uff435",
+            \ 'module':         "\Uff668",
+            \ 'modules':        "\Uff668",
+            \ 'type':           "\Ufe22b",
+            \ 'typedef':        "\Ufe22b",
+            \ 'types':          "\Ufe22b",
+            \ 'field':          "\Uff93d",
+            \ 'fields':         "\Uff93d",
+            \ 'macro':          "\Uff8a3",
+            \ 'macros':         "\Uff8a3",
+            \ 'map':            "\Uffb44",
+            \ 'class':          "\Uff9a9",
+            \ 'augroup':        "\Uffb44",
+            \ 'struct':         "\Uffb44",
+            \ 'union':          "\Uffacd",
+            \ 'member':         "\Uff02b",
+            \ 'target':         "\Uff893",
+            \ 'property':       "\Uffab6",
+            \ 'interface':      "\Uffa52",
+            \ 'namespace':      "\Uff475",
+            \ 'subroutine':     "\Uff915",
+            \ 'implementation': "\Uff87a",
+            \ 'typeParameter':  "\Uff278",
+            \ 'default':        "\Uff29c"
+            \ }
 '''
+#[[plugins]]
+#repo = 'nekottyo/tagbar'
+#hook_add = '''
+#autocmd VimEnter * nested :call tagbar#autoopen(1)
+#autocmd BufWritePost *.rb !ripper-tags -R --exclude=vendor
+#nmap <F8> :TagbarToggle<CR>
+#
+#if executable('ripper-tags')
+#  let g:tagbar_type_ruby = {
+#    \ 'kinds'    : ['m:modules',
+#            \ 'c:classes',
+#            \ 'C:constants',
+#            \ 'F:singleton methods',
+#            \ 'f:methods',
+#            \ 'a:aliases'],
+#    \ 'kind2scope' : { 'c' : 'class',
+#             \ 'm' : 'class' },
+#    \ 'scope2kind' : { 'class' : 'c' },
+#    \ 'ctagsbin'   : 'ripper-tags',
+#    \ 'ctagsargs'  : ['--exclude=vendor', '-f', '-']
+#    \ }
+#endif
+#'''
 
 [[plugins]]
 repo = "ozelentok/denite-gtags"
@@ -508,3 +521,9 @@ repo = 'tyru/open-browser.vim'
 [[plugins]]
 repo = 'tyru/open-browser-github.vim'
 depends = ['open-browser.vim']
+
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+
+[[plugins]]
+repo = '~/.fzf'

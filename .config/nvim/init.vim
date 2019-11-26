@@ -89,6 +89,7 @@ set scrolloff=3
 set autoread
 set noshowmode
 set inccommand=split
+" set ambiwidth=double
 
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>

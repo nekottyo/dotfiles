@@ -84,7 +84,7 @@ alias tkss='tmux kill-session -t'
 alias kunset='kubectl config unset current-context'
 
 if [ "${TMUX}" != "" ] ; then
-  tmux pipe-pane 'cat | rotatelogs -L /var/log/tmux/tmux.lnk /var/log/tmux/%Y%m%d_#S:#I.#P.log 86400 540'
+  tmux pipe-pane 'cat | rotatelogs /var/log/tmux/%Y%m%d_%H-%M-%S_#S:#I.#P.log 86400 540'
 fi
 
 
@@ -216,7 +216,7 @@ if [ -z "$TMUX" ]; then
   export PATH=${GOPATH}/bin:$(go env GOPATH)/bin:${PATH}
 
   # user npm
-  exists "npm" && export PATH=${PATH}:$(npm bin)
+  exists "npm" && export PATH=${PATH}:$(npm bin):$(npm -g  bin)
 
   export EDITOR=nvim
 fi
