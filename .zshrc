@@ -98,16 +98,6 @@ if [ -f "/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc" ]; then source "
 export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
 export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
 
-# fbr - checkout git branch
-fbr() {
-  local branches branch
-  branches=$(git branch -vv) &&
-  branch=$(echo "$branches" | fzf +m) &&
-  git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
-}
-
-
-
 
 ### Added by Zplugin's installer
 source "$HOME/.zplugin/bin/zplugin.zsh"
@@ -139,7 +129,7 @@ zplugin ice as"program" pick"git-cal"; zplugin load k4rthik/git-cal
 
 zplugin ice as"program" pick"bin/color" pick"bin/histuniq"; zplugin load "Jxck/dotfiles"
 
-# zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'; zplugin light junegunn/fzf-bin
+zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'; zplugin light junegunn/fzf-bin
 
 zplugin ice as"program" make; zplugin load jhawthorn/fzy
 
@@ -177,17 +167,18 @@ ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
 
 zplugin ice as"program" src"z.sh"; zplugin load "rupa/z"
 
-zplugin ice wait'0' silent; zplugin light yous/vanilli.sh
-zplugin ice wait'0' silent; zplugin light zsh-users/zsh-completions
-zplugin ice wait'0' silent; zplugin light greymd/tmux-xpanes
-zplugin ice wait'0' silent; zplugin light mollifier/cd-gitroot
+zplugin ice wait'2' silent; zplugin light yous/vanilli.sh
+zplugin ice wait'2' silent; zplugin light zsh-users/zsh-completions
+zplugin ice wait'2' silent; zplugin light greymd/tmux-xpanes
+zplugin ice wait'2' silent; zplugin light mollifier/cd-gitroot
 # zplugin ice wait'0' silent; zplugin light nnao45/zsh-kubectl-completion
 
 
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin snippet OMZ::lib/clipboard.zsh if'[[ "$OSTYPE" == *darwin* ]]'
+zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zplugin ice wait'2' silent  if'[[ "$OSTYPE" == *darwin* ]]'; zplugin snippet OMZ::lib/clipboard.zsh
 
-zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
+zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
+zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
 # zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
 #
 if [ -z "$TMUX" ]; then
@@ -222,29 +213,30 @@ if [ -z "$TMUX" ]; then
 fi
 
 
-  zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
-  zplugin ice wait'0' silent; exists "kubectl"   && . <(kubectl completion zsh)
-  zplugin ice wait'0' silent; exists "helm"      && . <(helm completion zsh)
-  zplugin ice wait'0' silent; exists "stern"     && . <(stern --completion zsh)
-  zplugin ice wait'0' silent; exists "minikube"  && . <(minikube completion zsh)
-  zplugin ice wait'0' silent; exists "direnv"    && . <(direnv hook zsh)
-  zplugin ice wait'0' silent; exists "skaffold"  && . <(skaffold completion zsh)
-  # zplugin ice wait'0' silent; exists "eksctl"    && . <(eksctl completion zsh)
-  zplugin ice wait'0' silent; exists "bat"       && alias cat="bat --theme='OneHalfDark'"
-  zplugin ice wait'0' silent; exists "lsd"       && alias ls="lsd"
-  zplugin ice wait'0' silent; exists "colordiff" && alias diff="colordiff"
-  zplugin ice wait'0' silent; exists "hub"       && alias git="hub"
+exists "kubectl"   && . <(kubectl completion zsh)
+exists "helm"      && . <(helm completion zsh)
+exists "stern"     && . <(stern --completion zsh)
+exists "minikube"  && . <(minikube completion zsh)
+exists "direnv"    && . <(direnv hook zsh)
+exists "skaffold"  && . <(skaffold completion zsh)
+# zplugin ice wait'2' silent; exists "eksctl"    && . <(eksctl completion zsh)
+exists "bat"       && alias cat="bat --theme='OneHalfDark'"
+exists "lsd"       && alias ls="lsd"
+exists "colordiff" && alias diff="colordiff"
+exists "hub"       && alias git="hub"
+if exists "terraform"; then
+  alias t="terraform"
+  if [[ -f  "${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform" ]]; then
+    complete -o nospace -C ${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
+  fi
+fi
 
 ## for Mac OS
 if [[ $(uname) == "Darwin" ]]; then
-    zplugin ice wait'0' silent; exists "gxargs" && alias xargs="gxargs"
-    zplugin ice wait'0' silent; exists "ggrep"  && alias grep="ggrep --color=auto"
-    zplugin ice wait'0' silent; exists "gsed"   && alias sed="gsed"
+  exists "gxargs" && alias xargs="gxargs"
+  exists "ggrep"  && alias grep="ggrep --color=auto"
+  exists "gsed"   && alias sed="gsed"
 fi
-
-
-unalias fd # delete alias set in OMZ::common-aliases
-
 
 if exists "saml2aws"; then
   SAML_LOGIN_CMD="saml2aws login --skip-prompt -a default --force --session-duration=10800"
@@ -257,7 +249,6 @@ fi
 . ~/.config/zsh/utils.zsh
 
 autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C ${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
 eval "$(starship init zsh)"
 eval "$(pyenv init -)"
 
