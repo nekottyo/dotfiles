@@ -88,6 +88,7 @@ eks-write-config() {
   fi
 }
 
+# find current files and edit selected file
 fdv () {
   local file=$(fd | fzf)
   if [[ "${file}" != '' ]]; then
