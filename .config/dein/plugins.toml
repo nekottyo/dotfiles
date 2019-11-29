@@ -257,9 +257,6 @@ nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 [[plugins]]
 repo = 'liuchengxu/vista.vim'
 hook_add = '''
-
-
-
 function! NearestMethodOrFunction() abort
   return get(b:, 'vista_nearest_method_or_function', '')
 endfunction

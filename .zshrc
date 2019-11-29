@@ -177,7 +177,11 @@ zplugin ice wait'2' silent; zplugin light mollifier/cd-gitroot
 zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin ice wait'2' silent  if'[[ "$OSTYPE" == *darwin* ]]'; zplugin snippet OMZ::lib/clipboard.zsh
 
-zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
+zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
+# reset alias configured by common-aliases.plugin.zsh for rust fd
+unalias fd
+unalias ff
+
 zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
 # zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
 #
