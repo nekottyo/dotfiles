@@ -2,6 +2,7 @@
 
   "suggest.noselect": true,
   "suggest.preferCompleteThanJumpPlaceholder": true,
+  "solargraph.formatting": true,
   "languageserver": {
     "golang": {
         "command": "gopls",
