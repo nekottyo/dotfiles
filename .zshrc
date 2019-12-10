@@ -251,6 +251,7 @@ if exists "saml2aws"; then
 fi
 
 . ~/.config/zsh/utils.zsh
+. ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
 
 autoload -U +X bashcompinit && bashcompinit
 eval "$(starship init zsh)"
