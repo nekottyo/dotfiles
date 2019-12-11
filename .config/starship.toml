@@ -35,3 +35,6 @@ disabled = false
 disabled = false
 utc_time_offset = +5
 format = "[%T]"
+
+[directory]
+truncation_length = 5

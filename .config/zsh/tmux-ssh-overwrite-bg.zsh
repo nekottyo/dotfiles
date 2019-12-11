@@ -2,7 +2,7 @@
 #
 PRD_IP_PREFIX=${PRD_IP_PREFIX:-"prd-"}
 STG_IP_PREFIX=${STG_IP_PREFIX:-"stg-"}
-function ssh() {
+function tmux_bg_ssh() {
   # tmux起動時
   if [[ -n $(printenv TMUX) ]] ; then
       # 現在のペインIDを記録
@@ -23,3 +23,15 @@ function ssh() {
       command ssh $@
   fi
 }
+
+function _ssh() {
+  host_ip=$(echo ${1} | grep -Po "(?<=ip-)?(\d+-\d+-\d+-\d+)" | perl -pe 's/-/./g')
+
+  if [[  ! -z "${host_ip}" ]]; then
+    tmux_bg_ssh ${host_ip}
+  else
+    tmux_bg_ssh $@
+  fi
+}
+
+alias ssh=_ssh
