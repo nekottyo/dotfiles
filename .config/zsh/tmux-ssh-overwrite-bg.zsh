@@ -11,7 +11,7 @@ function tmux_bg_ssh() {
       if [[ $(echo "${1}" | grep -P "${PRD_IP_PREFIX}") ]] ; then
           tmux select-pane -P 'bg=colour125'
       elif [[ $(echo "${1}" | grep -P "${STG_IP_PREFIX}") ]] ; then
-          tmux select-pane -P 'bg=colour61'
+          tmux select-pane -P 'bg=colour23'
       fi
 
       # 通常通りssh続行
