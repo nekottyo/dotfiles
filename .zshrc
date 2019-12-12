@@ -250,8 +250,8 @@ if exists "saml2aws"; then
   alias asand="${SAML_LOGIN_CMD} --role=\"$SSO_SANDBOX_ADMIN\""
 fi
 
-. ~/.config/zsh/utils.zsh
 . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
+. ~/.config/zsh/utils.zsh
 
 autoload -U +X bashcompinit && bashcompinit
 eval "$(starship init zsh)"
