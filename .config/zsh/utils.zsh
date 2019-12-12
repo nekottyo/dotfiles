@@ -74,7 +74,7 @@ if exists "lsec2"; then
   xssh() {
     IPS=$(lsec2 | fzf -m | awk -F "\t" '{print $2}')
     if [[ $? == 0 && "${IPS}" != "" ]]; then
-      echo "$IPS" | xpanes --ssh
+      echo "$IPS" | xpanes -t -c 'ssh {}'
     fi
   }
 fi

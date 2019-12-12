@@ -6,19 +6,20 @@ function tmux_bg_ssh() {
   # tmux起動時
   if [[ -n $(printenv TMUX) ]] ; then
       # 現在のペインIDを記録
-      local pane_id=$(tmux display -p '#{pane_id}')
+      #  tmux display -p '#{pane_id} だと buffer がある pane id しか取れないので環境変数経由にする
+      local pane_id="${TMUX_PANE}"
       # 接続先ホスト名に応じて背景色を切り替え
       if [[ $(echo "${1}" | grep -P "${PRD_IP_PREFIX}") ]] ; then
-          tmux select-pane -P 'bg=colour125'
+          tmux select-pane -t "${pane_id}" -P 'bg=colour125'
       elif [[ $(echo "${1}" | grep -P "${STG_IP_PREFIX}") ]] ; then
-          tmux select-pane -P 'bg=colour23'
+          tmux select-pane -t "${pane_id}" -P 'bg=colour23'
       fi
 
       # 通常通りssh続行
       command ssh $@
 
       # デフォルトの背景色に戻す
-      tmux select-pane -t $pane_id -P 'default'
+      tmux select-pane -t "${pane_id}" -P 'default'
   else
       command ssh $@
   fi
