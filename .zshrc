@@ -122,10 +122,7 @@ fi
 #setopt nomatch
 
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
-# zplugin light zsh-users/zsh-syntax-highlighting
 zplugin light zdharma/fast-syntax-highlighting
-
-zplugin ice as"program" pick"git-cal"; zplugin load k4rthik/git-cal
 
 zplugin ice as"program" pick"bin/color" pick"bin/histuniq"; zplugin load "Jxck/dotfiles"
 
@@ -133,9 +130,7 @@ zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OST
 
 zplugin ice as"program" make; zplugin load jhawthorn/fzy
 
-zplugin ice as"program" pick"unhanced.sh"; zplugin light b4b4r07/enhancd
-
-zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"; zplugin light b4b4r07/httpstat
+# zplugin ice as"program" pick"unhanced.sh"; zplugin light b4b4r07/enhancd
 
 zplugin ice wait'!0' silent; zplugin light pinelibg/dircolors-solarized-zsh
 
@@ -143,14 +138,8 @@ zplugin ice as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-fores
 
 zplugin ice as"program" pick"gibo"; zplugin load simonwhitaker/gibo
 
-
-zplugin ice as"program" pick"cli/contrib/completion/zsh/_docker"
-
-zplugin light docker/cli
-
-zplugin ice as"program" pick"compose/contrib/completion/zsh"
-
-zplugin light docker/compose
+zplugin ice as"program" pick"cli/contrib/completion/zsh/_docker"; zplugin light docker/cli
+zplugin ice as"program" pick"compose/contrib/completion/zsh"; zplugin light docker/compose
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
@@ -212,22 +201,18 @@ if [ -z "$TMUX" ]; then
 
   # user npm
   exists "npm" && export PATH=${PATH}:$(npm bin):$(npm -g  bin)
-
-  export EDITOR=nvim
 fi
 
+export EDITOR=nvim
 
-exists "kubectl"   && . <(kubectl completion zsh)
-exists "helm"      && . <(helm completion zsh)
-exists "stern"     && . <(stern --completion zsh)
-exists "minikube"  && . <(minikube completion zsh)
-exists "direnv"    && . <(direnv hook zsh)
-exists "skaffold"  && . <(skaffold completion zsh)
-# zplugin ice wait'2' silent; exists "eksctl"    && . <(eksctl completion zsh)
 exists "bat"       && alias cat="bat --theme='OneHalfDark'"
 exists "lsd"       && alias ls="lsd"
 exists "colordiff" && alias diff="colordiff"
 exists "hub"       && alias git="hub"
+
+. ~/.config/zsh/lazy_completion.zsh
+
+
 if exists "terraform"; then
   alias t="terraform"
   if [[ -f  "${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform" ]]; then
@@ -237,9 +222,7 @@ fi
 
 ## for Mac OS
 if [[ $(uname) == "Darwin" ]]; then
-  exists "gxargs" && alias xargs="gxargs"
-  exists "ggrep"  && alias grep="ggrep --color=auto"
-  exists "gsed"   && alias sed="gsed"
+  . ~/.config/zsh/macos.zsh
 fi
 
 if exists "saml2aws"; then
