@@ -57,31 +57,6 @@ zstyle ':completion:*:descriptions' format '%F{YELLOW}completing %B%d%b'$DEFAULT
 zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:descriptions' format '%F{yellow}Completing %B%d%b%f'$DEFAULT
 
-## aliases
-alias vim="nvim"
-
-# alias ls="ls --color=auto"
-# exists "exa" && alias ls="exa"
-alias grep="grep --color=auto"
-alias hop="ssh hop"
-alias d="docker"
-alias dc="docker-compose"
-alias k="kubectl"
-#if [[ -n "$PROXY" ]]; then
-#  alias kubectl="https_proxy=${PROXY} kubectl"
-#  alias skaffold="https_proxy=${PROXY} skaffold"
-#  alias stern="https_proxy=${PROXY} stern"
-#fi
-alias vimdiff="nvim -d"
-alias mlcl=molecule
-
-alias ta='tmux attach -t'
-alias tad='tmux attach -d -t'
-alias ts='tmux new-session -s'
-alias tl='tmux list-sessions'
-alias tksv='tmux kill-server'
-alias tkss='tmux kill-session -t'
-alias kunset='kubectl config unset current-context'
 
 if [ "${TMUX}" != "" ] ; then
   tmux pipe-pane 'cat | rotatelogs /var/log/tmux/%Y%m%d_%H-%M-%S_#S:#I.#P.log 86400 540'
@@ -167,12 +142,10 @@ zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin ice wait'2' silent  if'[[ "$OSTYPE" == *darwin* ]]'; zplugin snippet OMZ::lib/clipboard.zsh
 
 
-zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
-# reset alias configured by common-aliases.plugin.zsh for rust fd
-unalias fd
-unalias ff
-
 zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
+
+zplugin light romkatv/zsh-defer
+
 # zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
 #
 if [ -z "$TMUX" ]; then
@@ -191,15 +164,11 @@ if [ -z "$TMUX" ]; then
   export PATH="${PATH}:/usr/bin"
   export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
-  . ~/.config/zsh/anyenv-defer.zsh
+  zsh-defer . ~/.config/zsh/anyenv-defer.zsh
 fi
 
 export EDITOR=nvim
 
-exists "bat"       && alias cat="bat --theme='OneHalfDark'"
-exists "lsd"       && alias ls="lsd"
-exists "colordiff" && alias diff="colordiff"
-exists "hub"       && alias git="hub"
 
 . ~/.config/zsh/lazy_completion.zsh
 
@@ -224,12 +193,13 @@ if exists "saml2aws"; then
   alias asand="${SAML_LOGIN_CMD} --role=\"$SSO_SANDBOX_ADMIN\""
 fi
 
-. ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
-. ~/.config/zsh/utils.zsh
+zsh-defer . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
+zsh-defer . ~/.config/zsh/utils.zsh
+zsh-defer . ~/.config/zsh/alias.zsh
 
 autoload -U +X bashcompinit && bashcompinit
 eval "$(starship init zsh)"
-eval "$(pyenv init -)"
+zsh-defer -c "$(pyenv init -)"
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
