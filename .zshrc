@@ -166,6 +166,7 @@ zplugin ice wait'2' silent; zplugin light mollifier/cd-gitroot
 zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin ice wait'2' silent  if'[[ "$OSTYPE" == *darwin* ]]'; zplugin snippet OMZ::lib/clipboard.zsh
 
+
 zplugin snippet OMZ::plugins/common-aliases/common-aliases.plugin.zsh
 # reset alias configured by common-aliases.plugin.zsh for rust fd
 unalias fd
@@ -190,17 +191,7 @@ if [ -z "$TMUX" ]; then
   export PATH="${PATH}:/usr/bin"
   export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
-  eval "$(anyenv init - --no-rehash)"
-
-
-  # go
-  export GO111MODULE=auto
-  export GOPATH=${HOME}/.golang
-  export GOROOT=$( go env GOROOT )
-  export PATH=${GOPATH}/bin:$(go env GOPATH)/bin:${PATH}
-
-  # user npm
-  exists "npm" && export PATH=${PATH}:$(npm bin):$(npm -g  bin)
+  . ~/.config/zsh/anyenv-defer.zsh
 fi
 
 export EDITOR=nvim
