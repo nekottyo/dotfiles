@@ -92,7 +92,7 @@ eks-write-config() {
 fdv () {
   local file=$(fd | fzf)
   if [[ "${file}" != '' ]]; then
-    vim ${file}
+    ${EDITOR} ${file}
   fi
 }
 

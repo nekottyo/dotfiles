@@ -193,9 +193,9 @@ if exists "saml2aws"; then
   alias asand="${SAML_LOGIN_CMD} --role=\"$SSO_SANDBOX_ADMIN\""
 fi
 
+zsh-defer . ~/.config/zsh/alias.zsh
 zsh-defer . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
 zsh-defer . ~/.config/zsh/utils.zsh
-zsh-defer . ~/.config/zsh/alias.zsh
 
 autoload -U +X bashcompinit && bashcompinit
 eval "$(starship init zsh)"
