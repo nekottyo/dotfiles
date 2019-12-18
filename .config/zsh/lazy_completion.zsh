@@ -1,4 +1,5 @@
-#exists "kubectl"   && . <(kubectl completion zsh)
+#completion zsh)
+ 46   $0 "$@"exists "kubectl"   && . <(kubectl completion zsh)
 #exists "helm"      && . <(helm completion zsh)
 #exists "stern"     && . <(stern --completion zsh)
 #exists "minikube"  && . <(minikube completion zsh)
@@ -43,6 +44,6 @@ function skaffold() {
 
 function eksctl() {
   unfunction "$0"
-  source <(eksctl completion zsh)
+  # source <(eksctl completion zsh)
   $0 "$@"
 }

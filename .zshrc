@@ -170,7 +170,7 @@ fi
 export EDITOR=nvim
 
 
-. ~/.config/zsh/lazy_completion.zsh
+zsh-defer . ~/.config/zsh/lazy_completion.zsh
 
 
 if exists "terraform"; then
@@ -182,7 +182,7 @@ fi
 
 ## for Mac OS
 if [[ $(uname) == "Darwin" ]]; then
-  . ~/.config/zsh/macos.zsh
+  zsh-defer . ~/.config/zsh/macos.zsh
 fi
 
 if exists "saml2aws"; then
@@ -194,7 +194,7 @@ if exists "saml2aws"; then
 fi
 
 zsh-defer . ~/.config/zsh/alias.zsh
-zsh-defer . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
+. ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
 zsh-defer . ~/.config/zsh/utils.zsh
 
 autoload -U +X bashcompinit && bashcompinit

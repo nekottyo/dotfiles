@@ -83,7 +83,7 @@ fi
 eks-write-config() {
   local cluster=$(eksctl get cluster | fzf | awk '{print $1}')
   if [[ $cluster != '' ]]; then
-    eksctl utils write-kubeconfig --name "${cluster}"
+    eksctl utils write-kubeconfig --cluster "${cluster}"
     exists "kubens" && kubens
   fi
 }
