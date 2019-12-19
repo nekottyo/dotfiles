@@ -77,12 +77,14 @@ export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
 ### Added by Zplugin's installer
 source "$HOME/.zplugin/bin/zplugin.zsh"
 autoload -Uz _zplugin
-(( ${+_comps} )) && _comps[zplugin]=_zplugin
-zplugin cdclear -q
+
+
+if [[ ! -f ${HOME}/.zplugin/bin/zplugin.zsh.zwc ]]; then
+    zplugin self-update
+fi
 ## End of Zplugin's installer chunk
 
-autoload -Uz compinit
-compinit -C
+
 
 ## kubectl completion
 if [[ -a ~/.kube/config ]]; then
@@ -96,56 +98,76 @@ fi
 # fi
 #setopt nomatch
 
+zplugin light romkatv/zsh-defer
+
+
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
+zplugin ice wait lucid
+zplugin light pinelibg/dircolors-solarized-zsh
+
+zplugin ice wait lucid as"program" src"z.sh"
+zplugin load "rupa/z"
+
+zplugin ice wait lucid from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'
+zplugin light junegunn/fzf-bin
+
+ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
+zplugin ice wait'0c' lucid atload'_zsh_autosuggest_start'
+zplugin load zsh-users/zsh-autosuggestions
+
+zplugin ice wait'1' lucid atinit"ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay"
 zplugin light zdharma/fast-syntax-highlighting
 
-zplugin ice wait'0' silent as"program" pick"bin/color" pick"bin/histuniq"; zplugin load "Jxck/dotfiles"
+zplugin ice wait'1' lucid as"program" pick"bin/color" pick"bin/histuniq"
+zplugin load "Jxck/dotfiles"
 
-zplugin ice wait'0' silent from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'; zplugin light junegunn/fzf-bin
 
-zplugin ice wait'0' silent as"program" make; zplugin load jhawthorn/fzy
+zplugin ice wait'1' lucid as"program" make
+zplugin load jhawthorn/fzy
 
-# zplugin ice as"program" pick"unhanced.sh"; zplugin light b4b4r07/enhancd
+zplugin ice wait'1' lucid as"program" pick"hub/etc/hub.zsh_completion"
+zplugin light github/hub
 
-zplugin ice wait'!0' silent; zplugin light pinelibg/dircolors-solarized-zsh
+zplugin ice wait'1' lucid
+zplugin light zsh-users/zsh-completions
 
-zplugin ice wait'0' silent as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-foresta
+zplugin ice wait lucid
+zplugin light mafredri/zsh-async
 
-zplugin ice wait'0' silent as"program" pick"gibo"; zplugin load simonwhitaker/gibo
+zplugin ice wait'2' lucid as"program" pick "contrib/completion/git-completion.zsh"
+zplugin light git/git
 
-zplugin ice wait'0' silent as"program" pick"cli/contrib/completion/zsh/_docker"; zplugin light docker/cli
-zplugin ice wait'0' silent as"program" pick"compose/contrib/completion/zsh"; zplugin light docker/compose
+zplugin ice wait'2' lucid
+zplugin light yous/vanilli.sh
+
+zplugin ice wait'2' lucid
+zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
+
+zplugin ice wait'3' lucid as"program" pick"git-foresta"
+zplugin light takaaki-kasai/git-foresta
+
+zplugin ice wait'3' lucid as"program" pick"cli/contrib/completion/zsh/_docker"
+zplugin light docker/cli
+
+zplugin ice wait'3' lucid as"program" pick"compose/contrib/completion/zsh"
+zplugin light docker/compose
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
-zplugin ice wait'0' silent as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/hub
+zplugin ice wait'3' lucid
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zplugin cdclear -q
+setopt promptsubst
 
-zplugin light mafredri/zsh-async
+zplugin ice wait'3' lucid
+zplugin light greymd/tmux-xpanes
 
-zplugin ice wait'0' silent as"program" pick "contrib/completion/git-completion.zsh"; zplugin light git/git
-
-zplugin ice wait lucid atload'_zsh_autosuggest_start'; zplugin load zsh-users/zsh-autosuggestions
-ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
-
-zplugin ice wait'0' silent as"program" src"z.sh"; zplugin load "rupa/z"
-
-zplugin ice wait'0' silent; zplugin light yous/vanilli.sh
-zplugin ice wait'0' silent; zplugin light zsh-users/zsh-completions
-zplugin ice wait'0' silent; zplugin light greymd/tmux-xpanes
-zplugin ice wait'0' silent; zplugin light mollifier/cd-gitroot
-# zplugin ice wait'0' silent; zplugin light nnao45/zsh-kubectl-completion
+zplugin ice wait'3' lucid as"program" pick"gibo"
+zplugin load simonwhitaker/gibo
+zplugin ice wait'3' lucid
+zplugin light mollifier/cd-gitroot
 
 
-zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin ice wait'0' silent  if'[[ "$OSTYPE" == *darwin* ]]'; zplugin snippet OMZ::lib/clipboard.zsh
-
-
-zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
-
-zplugin light romkatv/zsh-defer
-
-# zplugin snippet OMZ::plugins/archlinux/archlinux.plugin.zsh
-#
 if [ -z "$TMUX" ]; then
 
   if [[ $(uname) == "Darwin" ]]; then
