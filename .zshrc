@@ -99,50 +99,48 @@ fi
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zplugin light zdharma/fast-syntax-highlighting
 
-zplugin ice as"program" pick"bin/color" pick"bin/histuniq"; zplugin load "Jxck/dotfiles"
+zplugin ice wait'0' silent as"program" pick"bin/color" pick"bin/histuniq"; zplugin load "Jxck/dotfiles"
 
-zplugin ice from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'; zplugin light junegunn/fzf-bin
+zplugin ice wait'0' silent from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'; zplugin light junegunn/fzf-bin
 
-zplugin ice as"program" make; zplugin load jhawthorn/fzy
+zplugin ice wait'0' silent as"program" make; zplugin load jhawthorn/fzy
 
 # zplugin ice as"program" pick"unhanced.sh"; zplugin light b4b4r07/enhancd
 
 zplugin ice wait'!0' silent; zplugin light pinelibg/dircolors-solarized-zsh
 
-zplugin ice as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-foresta
+zplugin ice wait'0' silent as"program" pick"git-foresta"; zplugin light takaaki-kasai/git-foresta
 
-zplugin ice as"program" pick"gibo"; zplugin load simonwhitaker/gibo
+zplugin ice wait'0' silent as"program" pick"gibo"; zplugin load simonwhitaker/gibo
 
-zplugin ice as"program" pick"cli/contrib/completion/zsh/_docker"; zplugin light docker/cli
-zplugin ice as"program" pick"compose/contrib/completion/zsh"; zplugin light docker/compose
+zplugin ice wait'0' silent as"program" pick"cli/contrib/completion/zsh/_docker"; zplugin light docker/cli
+zplugin ice wait'0' silent as"program" pick"compose/contrib/completion/zsh"; zplugin light docker/compose
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
-zplugin ice as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/hub
+zplugin ice wait'0' silent as"program" pick"hub/etc/hub.zsh_completion"; zplugin light github/hub
 
 zplugin light mafredri/zsh-async
 
-zplugin ice as"program" pick "contrib/completion/git-completion.zsh"; zplugin light git/git
+zplugin ice wait'0' silent as"program" pick "contrib/completion/git-completion.zsh"; zplugin light git/git
 
-# zplugin ice pick"async.zsh" src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
-
-zplugin load zsh-users/zsh-autosuggestions
+zplugin ice wait lucid atload'_zsh_autosuggest_start'; zplugin load zsh-users/zsh-autosuggestions
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
 
-zplugin ice as"program" src"z.sh"; zplugin load "rupa/z"
+zplugin ice wait'0' silent as"program" src"z.sh"; zplugin load "rupa/z"
 
-zplugin ice wait'2' silent; zplugin light yous/vanilli.sh
-zplugin ice wait'2' silent; zplugin light zsh-users/zsh-completions
-zplugin ice wait'2' silent; zplugin light greymd/tmux-xpanes
-zplugin ice wait'2' silent; zplugin light mollifier/cd-gitroot
+zplugin ice wait'0' silent; zplugin light yous/vanilli.sh
+zplugin ice wait'0' silent; zplugin light zsh-users/zsh-completions
+zplugin ice wait'0' silent; zplugin light greymd/tmux-xpanes
+zplugin ice wait'0' silent; zplugin light mollifier/cd-gitroot
 # zplugin ice wait'0' silent; zplugin light nnao45/zsh-kubectl-completion
 
 
-zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin ice wait'2' silent  if'[[ "$OSTYPE" == *darwin* ]]'; zplugin snippet OMZ::lib/clipboard.zsh
+zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zplugin ice wait'0' silent  if'[[ "$OSTYPE" == *darwin* ]]'; zplugin snippet OMZ::lib/clipboard.zsh
 
 
-zplugin ice wait'2' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
+zplugin ice wait'0' silent; zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
 
 zplugin light romkatv/zsh-defer
 
@@ -193,9 +191,9 @@ if exists "saml2aws"; then
   alias asand="${SAML_LOGIN_CMD} --role=\"$SSO_SANDBOX_ADMIN\""
 fi
 
-zsh-defer . ~/.config/zsh/alias.zsh
+. ~/.config/zsh/alias.zsh
 . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
-zsh-defer . ~/.config/zsh/utils.zsh
+. ~/.config/zsh/utils.zsh
 
 autoload -U +X bashcompinit && bashcompinit
 eval "$(starship init zsh)"

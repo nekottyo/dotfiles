@@ -9,9 +9,9 @@ function tmux_bg_ssh() {
       #  tmux display -p '#{pane_id} だと buffer がある pane id しか取れないので環境変数経由にする
       local pane_id="${TMUX_PANE}"
       # 接続先ホスト名に応じて背景色を切り替え
-      if [[ $(echo "${1}" | grep -P "${PRD_IP_PREFIX}") ]] ; then
+      if [[ $(echo "${1}" | ggrep -P "${PRD_IP_PREFIX}") ]] ; then
           tmux select-pane -t "${pane_id}" -P 'bg=colour125'
-      elif [[ $(echo "${1}" | grep -P "${STG_IP_PREFIX}") ]] ; then
+      elif [[ $(echo "${1}" | ggrep -P "${STG_IP_PREFIX}") ]] ; then
           tmux select-pane -t "${pane_id}" -P 'bg=colour23'
       fi
 
@@ -26,7 +26,7 @@ function tmux_bg_ssh() {
 }
 
 function _ssh() {
-  host_ip=$(echo ${1} | grep -Po "(?<=ip-)?(\d+-\d+-\d+-\d+)" | perl -pe 's/-/./g')
+  host_ip=$(echo ${1} | ggrep -Po "(?<=ip-)?(\d+-\d+-\d+-\d+)" | perl -pe 's/-/./g')
 
   if [[  ! -z "${host_ip}" ]]; then
     tmux_bg_ssh ${host_ip}
