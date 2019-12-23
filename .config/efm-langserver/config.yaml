@@ -1,0 +1,14 @@
+languages:
+  yaml:
+    lint-command: 'yamllint -f parsable -'
+    lint-stdin: true
+    lint-formats:
+      - '%f:%l:%c: %m'
+    env:
+      - 'PYTHONIOENCODING=UTF-8'
+
+  markdown:
+    lint-command: 'markdownlint -s'
+    lint-stdin: true
+    lint-formats:
+      - '%f: %l: %m'

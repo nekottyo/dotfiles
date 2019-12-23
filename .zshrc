@@ -58,10 +58,13 @@ zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:descriptions' format '%F{yellow}Completing %B%d%b%f'$DEFAULT
 
 
-if [ "${TMUX}" != "" ] ; then
-  tmux pipe-pane 'cat | rotatelogs /var/log/tmux/%Y%m%d_%H-%M-%S_#S:#I.#P.log 86400 540'
+if [[ "${TMUX}" != "" ]] ; then
+  TMUX_LOG_PATH="~/.logs/tmux"
+  if [[ ! -d "${TMUX_LOG_PATH}" ]]; then
+    mkdir -p "${TMUX_LOG_PATH}"
+  fi
+  tmux pipe-pane "cat | rotatelogs ${TMUX_LOG_PATH}/%Y%m%d_%H-%M-%S_#S:#I.#P.log 86400 540"
 fi
-
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc" ]; then source "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc"; fi
@@ -100,6 +103,7 @@ fi
 
 zplugin light romkatv/zsh-defer
 
+zplugin light greymd/tmux-xpanes
 
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zplugin ice wait lucid
@@ -121,9 +125,6 @@ zplugin light zdharma/fast-syntax-highlighting
 zplugin ice wait'1' lucid as"program" pick"bin/color" pick"bin/histuniq"
 zplugin load "Jxck/dotfiles"
 
-
-zplugin ice wait'1' lucid as"program" make
-zplugin load jhawthorn/fzy
 
 zplugin ice wait'1' lucid as"program" pick"hub/etc/hub.zsh_completion"
 zplugin light github/hub
@@ -159,8 +160,6 @@ zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin cdclear -q
 setopt promptsubst
 
-zplugin ice wait'3' lucid
-zplugin light greymd/tmux-xpanes
 
 zplugin ice wait'3' lucid as"program" pick"gibo"
 zplugin load simonwhitaker/gibo
@@ -184,7 +183,7 @@ if [ -z "$TMUX" ]; then
   export PATH="${PATH}:/usr/bin"
   export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
-  zsh-defer . ~/.config/zsh/anyenv-defer.zsh
+  zsh-defer -t 2 . ~/.config/zsh/anyenv-defer.zsh
 fi
 
 export EDITOR=nvim
@@ -217,7 +216,6 @@ fi
 . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
 . ~/.config/zsh/utils.zsh
 
-autoload -U +X bashcompinit && bashcompinit
 eval "$(starship init zsh)"
 zsh-defer -c "$(pyenv init -)"
 
