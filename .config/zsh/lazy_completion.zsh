@@ -1,5 +1,5 @@
-#completion zsh)
- 46   $0 "$@"exists "kubectl"   && . <(kubectl completion zsh)
+#completion zsh
+#exists "kubectl"   && . <(kubectl completion zsh)
 #exists "helm"      && . <(helm completion zsh)
 #exists "stern"     && . <(stern --completion zsh)
 #exists "minikube"  && . <(minikube completion zsh)
