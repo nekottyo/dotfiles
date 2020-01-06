@@ -1,9 +1,15 @@
 # dotfiles
+install
 
 ```bash
 $ git clone https://github.com/nekottyo/dotfiles.git ~/dotfiles
 $ cd ~/dotfiles
-$ make
+$ make install
+$ make deploy
+```
+update
+```bash
+$ make update
 ```
 
 Font: [HackGen](https://github.com/yuru7/HackGen)
