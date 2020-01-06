@@ -51,6 +51,7 @@ libmagic
 libmpc
 budougumi0617/lsas/lsas
 lsd
+mackerelio/mackerel-agent/mackerel-agent
 minikube
 mysql
 mysql-client

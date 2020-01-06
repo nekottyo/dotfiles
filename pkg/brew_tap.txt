@@ -1,5 +1,6 @@
 budougumi0617/lsas
 homebrew/core
+mackerelio/mackerel-agent
 tkengo/highway
 versent/taps
 weaveworks/tap
