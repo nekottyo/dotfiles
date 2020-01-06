@@ -1,4 +1,7 @@
 # dotfiles
+
+[![Actions Status](https://github.com/nekottyo/dotfiles/workflows/test%20brew%20install/badge.svg)](https://github.com/nekottyo/dotfiles/actions)
+
 install
 
 ```bash
