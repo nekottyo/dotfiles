@@ -8,6 +8,8 @@ jobs:
     runs-on: macos-latest
 
     steps:
+    - name: uninstall brew
+      run: echo y | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)" || true
     - uses: actions/checkout@v1
     - name: Run make install
       run: make install
