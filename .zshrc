@@ -59,7 +59,7 @@ zstyle ':completion:*:descriptions' format '%F{yellow}Completing %B%d%b%f'$DEFAU
 
 
 if [[ "${TMUX}" != "" ]] ; then
-  TMUX_LOG_PATH="~/.logs/tmux"
+  TMUX_LOG_PATH="${HOME}/.logs/tmux"
   if [[ ! -d "${TMUX_LOG_PATH}" ]]; then
     mkdir -p "${TMUX_LOG_PATH}"
   fi
@@ -183,7 +183,7 @@ if [ -z "$TMUX" ]; then
   export PATH="${PATH}:/usr/bin"
   export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
-  zsh-defer -t 2 . ~/.config/zsh/anyenv-defer.zsh
+  . ~/.config/zsh/anyenv-defer.zsh
 fi
 
 export EDITOR=nvim
