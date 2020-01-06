@@ -1,4 +1,6 @@
-versent/homebrew-taps
 budougumi0617/lsas
+homebrew/core
 tkengo/highway
+versent/taps
 weaveworks/tap
+yudai/gotty
