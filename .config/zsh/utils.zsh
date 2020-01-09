@@ -103,3 +103,8 @@ fbr() {
   branch=$(echo "$branches" | fzf +m) &&
   git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
 }
+
+ggrok() {
+  tmux split-window "tmux select-pane -U; gotty -p 8080 tmux attach -t $@"
+  ngrok http 8080
+}
