@@ -176,7 +176,7 @@ if [ -z "$TMUX" ]; then
   export XDG_CONFIG_HOME=$HOME/.config
 
   ## PATH
-  export PATH=/usr/local/bin:${PATH}
+  export PATH=${PATH}:/usr/local/bin
 
 
   # anyenv
@@ -208,8 +208,8 @@ if exists "saml2aws"; then
   SAML_LOGIN_CMD="saml2aws login --skip-prompt -a default --force --session-duration=10800"
 
   alias alogin="${SAML_LOGIN_CMD}"
-  alias aadmin="${SAML_LOGIN_CMD} --role=\"$SSO_ADMIN\""
-  alias asand="${SAML_LOGIN_CMD} --role=\"$SSO_SANDBOX_ADMIN\""
+  alias aadmin="${SAML_LOGIN_CMD} --role=\"${SSO_ADMIN}\""
+  alias asand="${SAML_LOGIN_CMD} --role=\"${SSO_SANDBOX_ADMIN}\""
 fi
 
 . ~/.config/zsh/alias.zsh
