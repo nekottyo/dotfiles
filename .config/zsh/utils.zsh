@@ -105,6 +105,7 @@ fbr() {
 }
 
 ggrok() {
-  tmux split-window "tmux select-pane -U; gotty -p 8080 tmux attach -t $@"
+  TMUX_SESSION=${1:-0}
+  tmux split-window "tmux select-pane -U; gotty -p 8080 tmux attach -t ${TMUX_SESSION}"
   ngrok http 8080
 }
