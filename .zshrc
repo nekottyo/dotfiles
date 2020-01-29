@@ -77,6 +77,10 @@ export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
 export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
 
 
+# module
+module_path+=( "${HOME}/.zinit/bin/zmodules/Src" )
+zmodload zdharma/zplugin
+
 ### Added by zinit's installer
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
