@@ -163,8 +163,15 @@ setopt promptsubst
 
 zplugin ice wait'3' lucid as"program" pick"gibo"
 zplugin load simonwhitaker/gibo
+
 zplugin ice wait'3' lucid
 zplugin light mollifier/cd-gitroot
+
+zplugin ice wait'3' lucid
+zplugin load zdharma/history-search-multi-word
+
+zplugin ice wait'3' lucid as"program" pick"bin/git-dsf"
+zplugin light zdharma/zsh-diff-so-fancy
 
 
 if [ -z "$TMUX" ]; then
