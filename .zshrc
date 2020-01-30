@@ -230,6 +230,10 @@ fi
 eval "$(starship init zsh)"
 zsh-defer -c "$(pyenv init -)"
 
+autoload -Uz compinit
+compinit
+zinit cdreplay -q
+
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
 fi
