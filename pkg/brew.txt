@@ -12,7 +12,6 @@ coreutils
 ctop
 dfu-programmer
 dfu-util
-diff-so-fancy
 docker-compose
 docutils
 weaveworks/tap/eksctl
@@ -58,6 +57,7 @@ mysql-client
 neovim
 nkf
 packer
+protobuf@3.7
 py2cairo
 pyenv-virtualenv
 python-yq

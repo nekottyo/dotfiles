@@ -1,4 +1,5 @@
 budougumi0617/lsas
+homebrew/cask
 homebrew/core
 mackerelio/mackerel-agent
 tkengo/highway
