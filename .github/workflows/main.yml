@@ -1,4 +1,4 @@
-name: test brew install
+name: test
 
 on: [pull_request]
 
@@ -30,5 +30,9 @@ jobs:
       run: make deploy
 
     - name: run zsh
-      run: zsh
+      run: zsh --rcs ~/.zshrc
 
+    - name: check zinit
+      run: |
+        zinit status
+        zinit times
