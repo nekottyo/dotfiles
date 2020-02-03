@@ -14,18 +14,6 @@ jobs:
     - name: Run make install
       run: make install
 
-  zinit:
-
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v1
-
-    - run: brew install zsh
-
-    - name: install zinit
-      run: sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
-
     - name: copy dotfiles
       run: make deploy
 
