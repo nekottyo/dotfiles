@@ -77,15 +77,19 @@ export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
 export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
 
 
-### Added by Zplugin's installer
-source "$HOME/.zplugin/bin/zplugin.zsh"
-autoload -Uz _zplugin
+# module
+module_path+=( "${HOME}/.zinit/bin/zmodules/Src" )
+zmodload zdharma/zplugin
+
+### Added by zinit's installer
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
 
 
-if [[ ! -f ${HOME}/.zplugin/bin/zplugin.zsh.zwc ]]; then
-    zplugin self-update
+if [[ ! -f ${HOME}/.zinit/bin/zinit.zsh.zwc ]]; then
+    zinit self-update
 fi
-## End of Zplugin's installer chunk
+## End of zinit's installer chunk
 
 
 
@@ -101,70 +105,77 @@ fi
 # fi
 #setopt nomatch
 
-zplugin light romkatv/zsh-defer
+zinit light romkatv/zsh-defer
 
-zplugin light greymd/tmux-xpanes
+zinit light greymd/tmux-xpanes
 
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
-zplugin ice wait lucid
-zplugin light pinelibg/dircolors-solarized-zsh
+zinit ice wait lucid
+zinit light pinelibg/dircolors-solarized-zsh
 
-zplugin ice wait lucid as"program" src"z.sh"
-zplugin load "rupa/z"
+zinit ice wait lucid as"program" src"z.sh"
+zinit load "rupa/z"
 
-zplugin ice wait lucid from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'
-zplugin light junegunn/fzf-bin
+zinit ice wait lucid from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'
+zinit light junegunn/fzf-bin
 
 ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
-zplugin ice wait'0c' lucid atload'_zsh_autosuggest_start'
-zplugin load zsh-users/zsh-autosuggestions
+zinit ice wait'0c' lucid atload'_zsh_autosuggest_start'
+zinit load zsh-users/zsh-autosuggestions
 
-zplugin ice wait'1' lucid atinit"ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay"
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice wait'1' lucid
+zinit light zdharma/fast-syntax-highlighting
 
-zplugin ice wait'1' lucid as"program" pick"bin/color" pick"bin/histuniq"
-zplugin load "Jxck/dotfiles"
+zinit ice wait'1' lucid as"program" pick"bin/color" pick"bin/histuniq"
+zinit load "Jxck/dotfiles"
 
 
-zplugin ice wait'1' lucid as"program" pick"hub/etc/hub.zsh_completion"
-zplugin light github/hub
+zinit ice wait'1' lucid as"program" pick"hub/etc/hub.zsh_completion"
+zinit light github/hub
 
-zplugin ice wait'1' lucid
-zplugin light zsh-users/zsh-completions
+zinit ice wait'1' lucid
+zinit light zsh-users/zsh-completions
 
-zplugin ice wait lucid
-zplugin light mafredri/zsh-async
+zinit ice wait lucid
+zinit light mafredri/zsh-async
 
-zplugin ice wait'2' lucid as"program" pick "contrib/completion/git-completion.zsh"
-zplugin light git/git
+zinit ice wait'2' lucid as"program" pick "contrib/completion/git-completion.zsh"
+zinit light git/git
 
-zplugin ice wait'2' lucid
-zplugin light yous/vanilli.sh
+zinit ice wait'2' lucid
+zinit light yous/vanilli.sh
 
-zplugin ice wait'2' lucid
-zplugin snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
+zinit ice wait'2' lucid
+zinit snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
 
-zplugin ice wait'3' lucid as"program" pick"git-foresta"
-zplugin light takaaki-kasai/git-foresta
+zinit ice wait'3' lucid as"program" pick"git-foresta"
+zinit light takaaki-kasai/git-foresta
 
-zplugin ice wait'3' lucid as"program" pick"cli/contrib/completion/zsh/_docker"
-zplugin light docker/cli
+zinit ice wait'3' lucid as"program" pick"cli/contrib/completion/zsh/_docker"
+zinit light docker/cli
 
-zplugin ice wait'3' lucid as"program" pick"compose/contrib/completion/zsh"
-zplugin light docker/compose
+zinit ice wait'3' lucid as"program" pick"compose/contrib/completion/zsh"
+zinit light docker/compose
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
-zplugin ice wait'3' lucid
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin cdclear -q
+zinit ice wait'3' lucid
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit cdclear -q
 setopt promptsubst
 
 
-zplugin ice wait'3' lucid as"program" pick"gibo"
-zplugin load simonwhitaker/gibo
-zplugin ice wait'3' lucid
-zplugin light mollifier/cd-gitroot
+zinit ice wait'3' lucid as"program" pick"gibo"
+zinit load simonwhitaker/gibo
+
+zinit ice wait'3' lucid
+zinit light mollifier/cd-gitroot
+
+zinit ice wait'3' lucid
+zinit load zdharma/history-search-multi-word
+
+zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
+zinit light zdharma/zsh-diff-so-fancy
 
 
 if [ -z "$TMUX" ]; then
@@ -218,6 +229,10 @@ fi
 
 eval "$(starship init zsh)"
 zsh-defer -c "$(pyenv init -)"
+
+autoload -Uz compinit
+compinit
+zinit cdreplay -q
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc

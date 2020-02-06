@@ -12,7 +12,6 @@ coreutils
 ctop
 dfu-programmer
 dfu-util
-diff-so-fancy
 docker-compose
 docutils
 weaveworks/tap/eksctl
@@ -53,11 +52,12 @@ budougumi0617/lsas/lsas
 lsd
 mackerelio/mackerel-agent/mackerel-agent
 minikube
-mysql
 mysql-client
 neovim
 nkf
 packer
+protobuf
+protobuf@3.7
 py2cairo
 pyenv-virtualenv
 python-yq

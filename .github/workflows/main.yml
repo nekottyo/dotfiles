@@ -1,4 +1,4 @@
-name: test brew install
+name: test
 
 on: [pull_request]
 
@@ -13,3 +13,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Run make install
       run: make install
+
+    - name: copy dotfiles
+      run: make deploy
