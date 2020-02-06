@@ -16,11 +16,3 @@ jobs:
 
     - name: copy dotfiles
       run: make deploy
-
-    - name: run zsh
-      run: zsh --rcs ~/.zshrc
-
-    - name: check zinit
-      run: |
-        zinit status
-        zinit times
