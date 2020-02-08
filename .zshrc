@@ -58,19 +58,12 @@ zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:descriptions' format '%F{yellow}Completing %B%d%b%f'$DEFAULT
 
 
-if [[ "${TMUX}" != "" ]] ; then
-  TMUX_LOG_PATH="${HOME}/.logs/tmux"
-  if [[ ! -d "${TMUX_LOG_PATH}" ]]; then
-    mkdir -p "${TMUX_LOG_PATH}"
-  fi
-  tmux pipe-pane "cat | rotatelogs ${TMUX_LOG_PATH}/%Y%m%d_%H-%M-%S_#S:#I.#P.log 86400 540"
-fi
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc" ]; then source "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc"; fi
+# if [ -f "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc" ]; then source "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f "/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc" ]; then source "/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc"; fi
+# if [ -f "/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc" ]; then source "/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc"; fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
@@ -146,12 +139,20 @@ fpath=($XDG_CONFIG_HOME/zsh/functions/ $fpath)
 . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
 . ~/.config/zsh/utils.zsh
 
-eval "$(starship init zsh)"
+zsh-defer eval "$(starship init zsh)"
 zsh-defer -c "$(pyenv init -)"
 
 autoload -Uz compinit
 compinit
 zinit cdreplay -q
+
+if [[ "${TMUX}" != "" ]] ; then
+  TMUX_LOG_PATH="${HOME}/.logs/tmux"
+  if [[ ! -d "${TMUX_LOG_PATH}" ]]; then
+    mkdir -p "${TMUX_LOG_PATH}"
+  fi
+  zsh-defer tmux pipe-pane "cat | rotatelogs ${TMUX_LOG_PATH}/%Y%m%d_%H-%M-%S_#S:#I.#P.log 86400 540"
+fi
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
@@ -160,4 +161,5 @@ fi
 if (which zprof > /dev/null) ;then
   zprof | less
 fi
+
 

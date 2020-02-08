@@ -56,14 +56,11 @@ zinit light yous/vanilli.sh
 zinit ice wait'2' lucid
 zinit snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
 
-zinit ice wait'3' lucid as"program" pick"git-foresta"
-zinit light takaaki-kasai/git-foresta
-
-zinit ice wait'3' lucid as"program" pick"cli/contrib/completion/zsh/_docker"
-zinit light docker/cli
-
-zinit ice wait'3' lucid as"program" pick"compose/contrib/completion/zsh"
-zinit light docker/compose
+#zinit ice wait'3' lucid as"program" pick"cli/contrib/completion/zsh/_docker"
+#zinit light docker/cli
+#
+#zinit ice wait'3' lucid as"program" pick"compose/contrib/completion/zsh"
+#zinit light docker/compose
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
@@ -71,10 +68,6 @@ zinit ice wait'3' lucid
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit cdclear -q
 setopt promptsubst
-
-
-zinit ice wait'3' lucid as"program" pick"gibo"
-zinit load simonwhitaker/gibo
 
 zinit ice wait'3' lucid
 zinit light mollifier/cd-gitroot
@@ -84,3 +77,6 @@ zinit load zdharma/history-search-multi-word
 
 zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
 zinit light zdharma/zsh-diff-so-fancy
+
+zinit ice wait'4' lucid as"program" pick"gibo"
+zinit load simonwhitaker/gibo
