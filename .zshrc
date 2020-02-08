@@ -1,4 +1,5 @@
 [[ -f ~/.profile ]] && source ~/.profile
+. ~/.config/zsh/p10k.zsh
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
@@ -83,6 +84,7 @@ fi
 #setopt nomatch
 
 source ~/.config/zsh/zinit.zsh
+zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 if [ -z "$TMUX" ]; then
 
@@ -130,29 +132,19 @@ if exists "saml2aws"; then
 fi
 
 
-fpath=($XDG_CONFIG_HOME/zsh/functions/ $fpath)
-
 . ~/.config/zsh/utils.zsh
-
-
 . ~/.config/zsh/alias.zsh
 . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
 . ~/.config/zsh/utils.zsh
 
-zsh-defer eval "$(starship init zsh)"
+# zsh-defer eval "$(starship init zsh)"
 zsh-defer -c "$(pyenv init -)"
 
 autoload -Uz compinit
 compinit
 zinit cdreplay -q
 
-if [[ "${TMUX}" != "" ]] ; then
-  TMUX_LOG_PATH="${HOME}/.logs/tmux"
-  if [[ ! -d "${TMUX_LOG_PATH}" ]]; then
-    mkdir -p "${TMUX_LOG_PATH}"
-  fi
-  zsh-defer tmux pipe-pane "cat | rotatelogs ${TMUX_LOG_PATH}/%Y%m%d_%H-%M-%S_#S:#I.#P.log 86400 540"
-fi
+zsh-defer source ~/.config/zsh/logging_tmux_pane.zsh
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
@@ -162,4 +154,5 @@ if (which zprof > /dev/null) ;then
   zprof | less
 fi
 
-
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
