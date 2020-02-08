@@ -1,0 +1,5 @@
+# find current files and edit selected file
+local file=$(fd | fzf)
+if [[ "${file}" != '' ]]; then
+  ${EDITOR} ${file}
+fi

@@ -1,0 +1,11 @@
+# vim: set ft=zsh
+
+# cd to repository managed by ghq
+local ghq_root=$(ghq root)
+local repo=$(ghq list | fzf)
+if [[ -z "$repo" ]]; then
+  zle accept-line
+  return
+fi
+BUFFER="cd ${ghq_root}/${repo}"
+zle accept-line
