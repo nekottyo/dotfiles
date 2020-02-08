@@ -223,6 +223,12 @@ if exists "saml2aws"; then
   alias asand="${SAML_LOGIN_CMD} --role=\"${SSO_SANDBOX_ADMIN}\""
 fi
 
+
+fpath=($XDG_CONFIG_HOME/zsh/functions/ $fpath)
+
+. ~/.config/zsh/utils.zsh
+
+
 . ~/.config/zsh/alias.zsh
 . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
 . ~/.config/zsh/utils.zsh
