@@ -20,6 +20,7 @@ fd
 findutils
 fzf
 gdb
+github/gh/gh
 ghq
 git
 git-secrets
@@ -61,7 +62,6 @@ protobuf@3.7
 py2cairo
 pyenv-virtualenv
 python-yq
-python@2
 versent/taps/saml2aws
 sops
 starship
