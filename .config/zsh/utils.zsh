@@ -12,8 +12,8 @@ bindkey '^f' fzf-z-search
 bindkey '^[f' fzf-z-search
 
 if exists "lsec2"; then
-  autoload -Uz lssh
-  autoload -Uz xssh
+  autoload -z lssh
+  autoload -z xssh
 fi
 
 autoload -Uz eks-write-config
