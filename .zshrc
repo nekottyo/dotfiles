@@ -97,8 +97,11 @@ if [ -z "$TMUX" ]; then
   ## PATH
   export PATH=${PATH}:/usr/local/bin
 
+  ## krew
+  ### https://github.com/kubernetes-sigs/krew
+  export PATH="${PATH}:${HOME}/.krew/bin"
 
-  # anyenv
+  ## anyenv
   export PATH="${PATH}:/usr/bin"
   export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
