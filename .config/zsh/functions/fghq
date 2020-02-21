@@ -2,7 +2,7 @@
 
 # cd to repository managed by ghq
 local ghq_root=$(ghq root)
-local repo=$(ghq list | fzf)
+local repo=$(ghq list | fzf-tmux)
 if [[ -z "$repo" ]]; then
   zle accept-line
   return
