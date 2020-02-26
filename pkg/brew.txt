@@ -3,6 +3,7 @@ anyenv
 automake
 avrdude
 awscli
+bash
 bat
 binutils
 bmon
@@ -70,6 +71,7 @@ tcpdump
 telnet
 terraformer
 terraforming
+tflint
 tig
 tmux
 tmux-mem-cpu-load

@@ -25,7 +25,7 @@ function tmux_bg_ssh() {
   fi
 }
 
-function _ssh() {
+function ssh() {
   host_ip=$(echo ${1} | ggrep -Po "(?<=ip-)?(\d+-\d+-\d+-\d+)" | perl -pe 's/-/./g')
 
   if [[  ! -z "${host_ip}" ]]; then
@@ -35,4 +35,4 @@ function _ssh() {
   fi
 }
 
-alias ssh=_ssh
+alias ssh=ssh
