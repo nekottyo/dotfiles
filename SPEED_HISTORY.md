@@ -1,4 +1,19 @@
 # history of zsh startup time
+## 2020/02/26-2
+https://github.com/nekottyo/dotfiles/pull/12
+```console
+❯ for i in {1..10} ; do time ( zsh -i -c exit ); done
+( zsh -i -c exit; )  0.13s user 0.12s system 95% cpu 0.258 total
+( zsh -i -c exit; )  0.13s user 0.11s system 92% cpu 0.257 total
+( zsh -i -c exit; )  0.13s user 0.11s system 93% cpu 0.262 total
+( zsh -i -c exit; )  0.13s user 0.11s system 91% cpu 0.257 total
+( zsh -i -c exit; )  0.13s user 0.11s system 92% cpu 0.253 total
+( zsh -i -c exit; )  0.13s user 0.11s system 95% cpu 0.253 total
+( zsh -i -c exit; )  0.13s user 0.11s system 94% cpu 0.254 total
+( zsh -i -c exit; )  0.13s user 0.11s system 93% cpu 0.251 total
+( zsh -i -c exit; )  0.13s user 0.10s system 90% cpu 0.256 total
+( zsh -i -c exit; )  0.13s user 0.11s system 94% cpu 0.256 total
+```
 
 ## 2020/02/26
 https://github.com/nekottyo/dotfiles/pull/11
