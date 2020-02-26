@@ -86,7 +86,7 @@ zsh -i -c exit  0.34s user 0.12s system 112% cpu 0.403 total
 ```
 
 ## ~2019/2/25
-```
+```console
 ➜ for i in $(seq 1 10); do time zsh -i -c exit; done
 
 zsh -i -c exit  0.71s user 0.31s system 117% cpu 0.865 total
