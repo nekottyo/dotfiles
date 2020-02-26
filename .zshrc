@@ -1,5 +1,4 @@
 [[ -f ~/.profile ]] && source ~/.profile
-. ~/.config/zsh/p10k.zsh
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
@@ -61,29 +60,10 @@ zstyle ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$
 
 
 
-# The next line updates PATH for the Google Cloud SDK.
-# if [ -f "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc" ]; then source "/home/${USERNAME}/google-cloud-sdk/path.zsh.inc"; fi
-
-# The next line enables shell command completion for gcloud.
-# if [ -f "/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc" ]; then source "/home/${USERNAME}/google-cloud-sdk/completion.zsh.inc"; fi
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
-export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
-
-
 ## kubectl completion
 if [[ -a ~/.kube/config ]]; then
   export KUBECONFIG=~/.kube/config
 fi
-#setopt nonomatch
-# if ls ~/.kube/config-* 1>/dev/null 2>&1; then
-#   for f in ~/.kube/config-*; do
-#     export KUBECONFIG=${KUBECONFIG}:${f}
-#   done
-# fi
-#setopt nomatch
-
 
 if [ -z "$TMUX" ]; then
 
@@ -106,9 +86,12 @@ if [ -z "$TMUX" ]; then
   . ~/.config/zsh/anyenv-defer.zsh
 fi
 
+source ~/.config/zsh/zinit.zsh
 export EDITOR=nvim
 
-source ~/.config/zsh/zinit.zsh
+[ -f ~/.fzf.zsh ] && zsh-defer . ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
+export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
 
 zsh-defer . ~/.config/zsh/lazy_completion.zsh
 
@@ -133,10 +116,6 @@ fi
 # zsh-defer eval "$(starship init zsh)"
 zsh-defer -c "$(pyenv init -)"
 
-autoload -Uz compinit
-compinit
-zinit cdreplay -q
-
 zsh-defer source ~/.config/zsh/logging_tmux_pane.zsh
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
@@ -146,6 +125,3 @@ fi
 if (which zprof > /dev/null) ;then
   zprof | less
 fi
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
