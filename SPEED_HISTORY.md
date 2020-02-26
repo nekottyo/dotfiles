@@ -1,5 +1,6 @@
 # history of zsh startup time
 ## 2020/02/26-2
+https://github.com/nekottyo/dotfiles/pull/12
 ```console
 ❯ for i in {1..10} ; do time ( zsh -i -c exit ); done
 ( zsh -i -c exit; )  0.13s user 0.12s system 95% cpu 0.258 total
