@@ -2,6 +2,7 @@ exists "bat"       && alias cat="bat --theme='OneHalfDark'"
 exists "lsd"       && alias ls="lsd"
 exists "colordiff" && alias diff="colordiff"
 exists "hub"       && alias git="hub"
+exists "terraform" && alias t="terraform"
 
 ## aliases
 alias vim="nvim"

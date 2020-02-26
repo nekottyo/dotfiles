@@ -84,8 +84,6 @@ fi
 # fi
 #setopt nomatch
 
-source ~/.config/zsh/zinit.zsh
-zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 if [ -z "$TMUX" ]; then
 
@@ -96,14 +94,13 @@ if [ -z "$TMUX" ]; then
   export XDG_CONFIG_HOME=$HOME/.config
 
   ## PATH
-  export PATH=${PATH}:/usr/local/bin
+  export PATH="/usr/local/bin:/usr/bin:/bin:${PATH}"
 
   ## krew
   ### https://github.com/kubernetes-sigs/krew
   export PATH="${PATH}:${HOME}/.krew/bin"
 
   ## anyenv
-  export PATH="${PATH}:/usr/bin"
   export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
   . ~/.config/zsh/anyenv-defer.zsh
@@ -111,16 +108,9 @@ fi
 
 export EDITOR=nvim
 
+source ~/.config/zsh/zinit.zsh
 
 zsh-defer . ~/.config/zsh/lazy_completion.zsh
-
-
-if exists "terraform"; then
-  alias t="terraform"
-  if [[ -f  "${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform" ]]; then
-    complete -o nospace -C ${HOME}/.anyenv/envs/tfenv/versions/0.11.14/terraform terraform
-  fi
-fi
 
 ## for Mac OS
 if [[ $(uname) == "Darwin" ]]; then
@@ -136,7 +126,6 @@ if exists "saml2aws"; then
 fi
 
 
-. ~/.config/zsh/utils.zsh
 . ~/.config/zsh/alias.zsh
 . ~/.config/zsh/tmux-ssh-overwrite-bg.zsh
 . ~/.config/zsh/utils.zsh
