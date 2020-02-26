@@ -12,6 +12,8 @@ if [[ ! -f ${HOME}/.zinit/bin/zinit.zsh.zwc ]]; then
 fi
 ## End of zinit's installer chunk
 
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
 
 zinit light romkatv/zsh-defer
 
@@ -80,3 +82,6 @@ zinit light zdharma/zsh-diff-so-fancy
 
 zinit ice wait'4' lucid as"program" pick"gibo"
 zinit load simonwhitaker/gibo
+
+zinit ice wait'4' lucid as"completion"
+zinit snippet OMZ::plugins/terraform/_terraform
