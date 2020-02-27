@@ -30,8 +30,7 @@ zinit load "rupa/z"
 zinit ice wait lucid from"gh-r" as"program" mv"fzf-bin -> fzf" bpick"*linux*" if'[[ "$OSTYPE" != *darwin* ]]'
 zinit light junegunn/fzf-bin
 
-ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd
-zinit ice wait'0c' lucid atload'_zsh_autosuggest_start'
+zinit ice wait'0c' lucid atload'_zsh_autosuggest_start; ZSH_AUTOSUGGEST_STRATEGY=match_prev_cmd'
 zinit load zsh-users/zsh-autosuggestions
 
 zinit ice wait'1' lucid
@@ -55,18 +54,15 @@ zinit light yous/vanilli.sh
 zinit ice wait'2' lucid
 zinit snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
 
-zinit ice wait'3' lucid as"program" pick"cli/contrib/completion/zsh/_docker"
+zinit ice wait'3' lucid as"program" pick"cli/contrib/completion/zsh/_docker" atload"export DOCKER_BUILDKIT=1"
 zinit light docker/cli
 
-zinit ice wait'3' lucid as"program" pick"compose/contrib/completion/zsh"
+zinit ice wait'3' lucid as"program" pick"compose/contrib/completion/zsh" atload"export COMPOSE_DOCKER_CLI_BUILD=1"
 zinit light docker/compose
-export DOCKER_BUILDKIT=1
-export COMPOSE_DOCKER_CLI_BUILD=1
 
 zinit ice wait'3' lucid
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit cdclear -q
-setopt promptsubst
 
 zinit ice wait'3' lucid
 zinit light mollifier/cd-gitroot
@@ -82,6 +78,9 @@ zinit load simonwhitaker/gibo
 
 zinit ice wait'4' lucid as"completion"
 zinit snippet OMZ::plugins/terraform/_terraform
+
+zinit ice wait'4' lucid as"program" pick"src/batman.sh" atload"alias man=batman.sh"
+zinit light eth-p/bat-extras
 
 zsh-defer -t 1 -c 'autoload -Uz compinit && compinit && zinit cdreplay -q'
 # autoload -Uz compinit && compinit && zinit cdreplay -q
