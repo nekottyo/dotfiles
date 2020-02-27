@@ -17,8 +17,8 @@ zinit light romkatv/powerlevel10k
 
 zinit light romkatv/zsh-defer
 
-zinit ice wait lucid for \
-  greymd/tmux-xpanes
+zinit ice wait lucid
+zinit light greymd/tmux-xpanes
 
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zinit ice wait lucid
