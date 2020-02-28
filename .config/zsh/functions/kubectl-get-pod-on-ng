@@ -15,6 +15,7 @@ if [[ -n "${opthash[(i)-h]}" ]]; then
   "
   exit
 fi
+
 grep_invert=""
 if [[ -n "${opthash[(i)-v]}" ]]; then
   grep_invert="-v"
