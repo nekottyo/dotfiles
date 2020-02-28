@@ -20,3 +20,4 @@ autoload -Uz eks-write-config
 autoload -Uz fdv
 autoload -Uz fbr
 autoload -Uz ggrok
+autoload -z kubectl-get-pod-on-ng
