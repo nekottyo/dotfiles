@@ -1,0 +1,28 @@
+# vim: ft=zsh
+
+local -A opthash
+zparseopts -D -M -A opthash -- \
+  v \
+  h -help=h \
+  n: -node-group:=n
+
+if [[ -n "${opthash[(i)-h]}" ]]; then
+  echo "kubectl-get-pod-on-on [-hv] (-n|--nodegroup) <nodegroup> ...
+
+    -v              invert
+    -h --help       show help
+    -n --node-group set target nodegroup"
+  return
+fi
+
+grep_invert=""
+if [[ -n "${opthash[(i)-v]}" ]]; then
+  grep_invert="-v"
+fi
+
+if [[ -n "${opthash[(i)-n]}" ]]; then
+  nodegroup="${opthash[-n]}"
+fi
+
+kubectl get po -o wide $@ \
+  | grep ${grep_invert} --color=never $(kubectl get no -o jsonpath="{.items[*].metadata.name}" -l alpha.eksctl.io/nodegroup-name=nodegroup3 | xargs -n1 | xargs -n1 -I{} echo -n '-e {} ')
