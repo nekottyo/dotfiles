@@ -11,9 +11,8 @@ if [[ -n "${opthash[(i)-h]}" ]]; then
 
     -v              invert
     -h --help       show help
-    -n --node-group set target nodegroup
-  "
-  exit
+    -n --node-group set target nodegroup"
+  return
 fi
 
 grep_invert=""
@@ -27,4 +26,3 @@ fi
 
 kubectl get po -o wide $@ \
   | grep ${grep_invert} --color=never $(kubectl get no -o jsonpath="{.items[*].metadata.name}" -l alpha.eksctl.io/nodegroup-name=nodegroup3 | xargs -n1 | xargs -n1 -I{} echo -n '-e {} ')
-
