@@ -2,6 +2,7 @@ ansible-lint
 anyenv
 automake
 avrdude
+aws/tap/aws-sam-cli
 awscli
 bash
 bat
@@ -36,6 +37,7 @@ grep
 gsar
 helm@2
 helmfile
+hexyl
 hey
 tkengo/highway/highway
 htop
@@ -64,6 +66,7 @@ py2cairo
 pyenv-virtualenv
 python-yq
 versent/taps/saml2aws
+shellcheck
 sops
 starship
 stern

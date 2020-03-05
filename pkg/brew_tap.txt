@@ -1,3 +1,4 @@
+aws/tap
 budougumi0617/lsas
 github/gh
 homebrew/cask
