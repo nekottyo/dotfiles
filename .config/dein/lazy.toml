@@ -280,3 +280,7 @@ repo = 'ddollar/golang-template.vim'
 [[plugins]]
 repo = 'zinit-zsh/zinit-vim-syntax'
 on_ft = ['zsh']
+
+[[plugins]]
+repo = 'towolf/vim-helm''
+on_ft = ['helm']
