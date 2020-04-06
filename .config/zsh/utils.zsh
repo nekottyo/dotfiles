@@ -21,3 +21,4 @@ autoload -Uz fdv
 autoload -Uz fbr
 autoload -Uz ggrok
 autoload -z kubectl-get-pod-on-ng
+autoload -z aws-list-tg-health
