@@ -19,5 +19,5 @@ fi
 aws elbv2 describe-target-groups \
   | jq  -r ".TargetGroups[] | select(.TargetGroupName | test(\"$1\")) | .TargetGroupName , .TargetGroupArn" \
   | xargs -n2 \
-  | xargs -n1 -I{} zsh -c "echo  {} | cut -d ' ' -f1; (echo {} | cut -d ' ' -f2 | xargs aws elbv2 describe-target-health --target-group-arn | jq '.TargetHealthDescriptions[] | .Target.Id, .TargetHealth.State, .TargetHealth.Description')  | xargs -n3 | tr -d null" \
+  | xargs -n1 -I{} zsh -c "echo  {} | cut -d ' ' -f1; (echo {} | cut -d ' ' -f2 | xargs aws elbv2 describe-target-health --target-group-arn | jq '.TargetHealthDescriptions[] | .Target.Id, .TargetHealth.State, .TargetHealth.Description')  | xargs -n3 | perl -pe 's/null//g'" \
 return 0
