@@ -48,6 +48,7 @@ ipcalc
 iproute2mac
 isl
 jid
+robscott/tap/kube-capacity
 kubectx
 libglade
 libmagic
@@ -55,8 +56,8 @@ libmpc
 budougumi0617/lsas/lsas
 lsd
 mackerelio/mackerel-agent/mackerel-agent
+mariadb
 minikube
-mysql-client
 neovim
 nkf
 packer
@@ -80,6 +81,7 @@ tmux
 tmux-mem-cpu-load
 tree
 util-linux
+vault
 watch
 wget
 z

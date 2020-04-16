@@ -4,6 +4,7 @@ github/gh
 homebrew/cask
 homebrew/core
 mackerelio/mackerel-agent
+robscott/tap
 tkengo/highway
 versent/taps
 weaveworks/tap
