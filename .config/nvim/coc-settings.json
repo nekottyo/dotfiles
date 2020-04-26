@@ -15,6 +15,13 @@
         "rootPatterns": ["go.mod"],
         "filetypes": ["go"]
     },
+    "golangci-lint-languageserver": {
+      "command": "golangci-lint-langserver",
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "command": ["golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json"]
+      }
+    },
     "dockerfile": {
         "command": "docker-langserver",
         "filetypes": ["dockerfile"],
