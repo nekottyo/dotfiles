@@ -61,6 +61,7 @@ minikube
 neovim
 nkf
 packer
+pinentry-mac
 protobuf
 protobuf@3.7
 py2cairo
