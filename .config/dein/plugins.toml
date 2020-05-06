@@ -20,7 +20,7 @@ repo = 'itchyny/lightline.vim'
 depends_on = ['vim-fugitive', 'vista.nvim', 'coc.nvim']
 hook_add = '''
 let g:lightline = {
-  \ 'colorscheme': 'dracula',
+  \ 'colorscheme': 'iceberg',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \       [ 'gitbranch', 'readonly', 'filename','modified', 'method' ] ],
@@ -170,14 +170,24 @@ hook_add = '''
 
 # Colors
 [[plugins]]
-repo = 'dracula/vim'
+repo = 'cocopon/iceberg.vim'
 hook_add = '''
   if (has("termguicolors"))
    set termguicolors
   endif
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  au MyAutoCmd VimEnter * nested colorscheme dracula
+  au MyAutoCmd VimEnter * nested colorscheme iceberg
 '''
+
+# [[plugins]]
+# repo = 'dracula/vim'
+# hook_add = '''
+#   if (has("termguicolors"))
+#    set termguicolors
+#   endif
+#   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+#   au MyAutoCmd VimEnter * nested colorscheme dracula
+# '''
 
 #[[plugins]]
 #repo = 'jacoborus/tender.vim'
