@@ -1,4 +1,22 @@
 # history of zsh startup time
+
+## 2020/05/08
+
+いつの間にか早くなっていた
+```console
+❯ for i in {1..10} ; do time ( zsh -i -c exit ); done
+( zsh -i -c exit; )  0.06s user 0.08s system 84% cpu 0.171 total
+( zsh -i -c exit; )  0.06s user 0.08s system 84% cpu 0.169 total
+( zsh -i -c exit; )  0.06s user 0.08s system 84% cpu 0.167 total
+( zsh -i -c exit; )  0.06s user 0.09s system 89% cpu 0.168 total
+( zsh -i -c exit; )  0.06s user 0.08s system 89% cpu 0.165 total
+( zsh -i -c exit; )  0.07s user 0.09s system 86% cpu 0.183 total
+( zsh -i -c exit; )  0.06s user 0.08s system 86% cpu 0.168 total
+( zsh -i -c exit; )  0.06s user 0.09s system 89% cpu 0.169 total
+( zsh -i -c exit; )  0.07s user 0.09s system 89% cpu 0.172 total
+( zsh -i -c exit; )  0.07s user 0.09s system 87% cpu 0.177 total
+```
+
 ## 2020/02/26-2
 https://github.com/nekottyo/dotfiles/pull/12
 ```console
