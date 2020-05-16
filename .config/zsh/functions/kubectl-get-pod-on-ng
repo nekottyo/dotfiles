@@ -4,14 +4,14 @@ local -A opthash
 zparseopts -D -M -A opthash -- \
   v \
   h -help=h \
-  n: -node-group:=n
+  N: -node-group:=N
 
 if [[ -n "${opthash[(i)-h]}" ]]; then
-  echo "kubectl-get-pod-on-on [-hv] (-n|--nodegroup) <nodegroup> ...
+  echo "kubectl-get-pod-on-on [-hv] (-N|--nodegroup) <nodegroup> [kubectl options...]
 
     -v              invert
     -h --help       show help
-    -n --node-group set target nodegroup"
+    -N --node-group set target nodegroup"
   return
 fi
 
@@ -20,8 +20,8 @@ if [[ -n "${opthash[(i)-v]}" ]]; then
   grep_invert="-v"
 fi
 
-if [[ -n "${opthash[(i)-n]}" ]]; then
-  nodegroup="${opthash[-n]}"
+if [[ -n "${opthash[(i)-N]}" ]]; then
+  nodegroup="${opthash[-N]}"
 fi
 
 kubectl get po -o wide $@ \
