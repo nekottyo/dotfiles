@@ -1,4 +1,4 @@
-# vim: set ft=zsh
+# vim: ft=zsh
 
 local -A opthash
 zparseopts -D -M -A opthash -- \
