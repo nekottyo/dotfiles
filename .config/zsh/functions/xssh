@@ -1,3 +1,4 @@
+# vim: set ft=zsh
 # ssh to multiple ec2 instance
 IPS=$(lsec2 | fzf-tmux -m | awk -F "\t" '{print $2}')
 if [[ $? == 0 && "${IPS}" != "" ]]; then
