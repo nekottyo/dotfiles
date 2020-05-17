@@ -1,6 +1,7 @@
 aws/tap
 budougumi0617/lsas
 github/gh
+golangci/tap
 homebrew/cask
 homebrew/core
 mackerelio/mackerel-agent

@@ -1,24 +1,24 @@
-# [functions](./functions)
+# functions
 
-# aws-list-tg-health
+## aws-list-tg-health
 target group を元に正規表現で health 引くやつ
-# eks-write-config
+## eks-write-config
 eks 経由で write-kubeconfig するやつ
-# fbr
+## fbr
 git branch with fzf
-# fdv
+## fdv
 fd with fzf
-# fghq
+## fghq
 ghq wit hfzf
-# fstash
+## fstash
 git stash with fzf
-# fzf-z-search
+## fzf-z-search
 z with fzf
-# ggrok
+## ggrok
 grork + gotty
-# kubectl-get-pod-on-ng
+## kubectl-get-pod-on-ng
 list pod with nodegroup
-# lssh
+## lssh
 lsec2 ssh with fzf
-# xssh
+## xssh
 lsec2 ssh to multiple hosts with fzf

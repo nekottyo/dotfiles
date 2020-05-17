@@ -30,6 +30,7 @@ global
 gnu-getopt
 gnu-sed
 gnupg
+golangci/tap/golangci-lint
 gomplate
 yudai/gotty/gotty
 graphviz
@@ -63,7 +64,6 @@ nkf
 packer
 pinentry-mac
 protobuf
-protobuf@3.7
 py2cairo
 pyenv-virtualenv
 python-yq
