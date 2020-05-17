@@ -1,3 +1,4 @@
+# vim: ft=zsh
 # search recently used directory with fzf
 local res=$(z | sort -rn | cut -c 12- | fzf-tmux)
 if [ -n "$res" ]; then

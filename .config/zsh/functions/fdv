@@ -1,3 +1,4 @@
+# vim: ft=zsh
 # find current files and edit selected file
 local file=$(fd | fzf)
 if [[ "${file}" != '' ]]; then

@@ -1,3 +1,4 @@
+# vim: ft=zsh
 # fbr - checkout git branch
 local branches branch
 branches=$(git branch -vv) &&

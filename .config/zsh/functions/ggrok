@@ -1,3 +1,4 @@
+# vim: ft=zsh
 # stream tmux session with ngrok
 TMUX_SESSION=${1:-0}
 tmux split-window "tmux select-pane -U; gotty -p 8080 tmux attach -t ${TMUX_SESSION}"

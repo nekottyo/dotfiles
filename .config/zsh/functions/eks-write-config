@@ -1,3 +1,4 @@
+# vim: ft=zsh
 # set context and switch namespace
 local cluster=$(eksctl get cluster | fzf-tmux | awk '{print $1}')
 if [[ $cluster != '' ]]; then
