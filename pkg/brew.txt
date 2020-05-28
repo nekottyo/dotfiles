@@ -74,6 +74,7 @@ starship
 stern
 tcpdump
 telnet
+terraform-docs
 terraformer
 terraforming
 tflint

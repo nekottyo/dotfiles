@@ -5,6 +5,7 @@ golangci/tap
 homebrew/cask
 homebrew/core
 mackerelio/mackerel-agent
+qmk/qmk
 robscott/tap
 tkengo/highway
 versent/taps
