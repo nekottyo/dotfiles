@@ -17,6 +17,9 @@ zinit light romkatv/powerlevel10k
 
 zinit light romkatv/zsh-defer
 
+# zinit ice wait lucid
+# zinit load zdharma/history-search-multi-word
+
 zinit ice wait lucid
 zinit light greymd/tmux-xpanes
 
@@ -66,9 +69,6 @@ zinit cdclear -q
 
 zinit ice wait'3' lucid
 zinit light mollifier/cd-gitroot
-
-zinit ice wait'3' lucid
-zinit load zdharma/history-search-multi-word
 
 zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
 zinit light zdharma/zsh-diff-so-fancy
