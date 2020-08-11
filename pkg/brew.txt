@@ -4,7 +4,6 @@ automake
 avrdude
 aws/tap/aws-sam-cli
 awscli
-bash
 bat
 binutils
 bmon
@@ -36,6 +35,7 @@ yudai/gotty/gotty
 graphviz
 grep
 gsar
+guile
 helm@2
 helmfile
 hexyl
@@ -50,6 +50,7 @@ iproute2mac
 isl
 jid
 robscott/tap/kube-capacity
+aylei/tap/kubectl-debug
 kubectx
 libglade
 libmagic
@@ -63,6 +64,8 @@ neovim
 nkf
 packer
 pinentry-mac
+pipes-sh
+procs
 protobuf
 py2cairo
 pyenv-virtualenv
@@ -86,5 +89,6 @@ util-linux
 vault
 watch
 wget
+cjbassi/ytop/ytop
 z
 zsh
