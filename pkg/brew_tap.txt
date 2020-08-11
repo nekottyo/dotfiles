@@ -1,5 +1,7 @@
 aws/tap
+aylei/tap
 budougumi0617/lsas
+cjbassi/ytop
 github/gh
 golangci/tap
 homebrew/cask
