@@ -11,7 +11,7 @@ alias vim="nvim"
 # exists "exa" && alias ls="exa"
 alias d="docker"
 alias dc="docker-compose"
-alias k="kubectl"
+alias k="kubecolor"
 #if [[ -n "$PROXY" ]]; then
 #  alias kubectl="https_proxy=${PROXY} kubectl"
 #  alias skaffold="https_proxy=${PROXY} skaffold"
