@@ -101,7 +101,9 @@
 	    "terraform",
         "tf"
 	  ],
-	  "initializationOptions": {},
+	  "initializationOptions": {
+          "rootModulePaths": ["./"]
+      },
 	  "settings": {}
     },
     "efm": {
