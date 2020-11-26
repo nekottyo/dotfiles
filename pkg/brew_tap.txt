@@ -2,10 +2,13 @@ aws/tap
 aylei/tap
 budougumi0617/lsas
 cjbassi/ytop
+dty1er/tap
 github/gh
 golangci/tap
+hashicorp/tap
 homebrew/cask
 homebrew/core
+ladicle/kubectl-bindrole
 mackerelio/mackerel-agent
 qmk/qmk
 robscott/tap

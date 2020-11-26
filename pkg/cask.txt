@@ -1,4 +1,5 @@
 gimp
 keycastr
 ngrok
+visual-studio-code
 wireshark
