@@ -1,7 +1,7 @@
 # vim: ft=zsh
 # set context and switch namespace
-local cluster=$(eksctl get cluster | fzf-tmux | awk '{print $1}')
+local cluster=$(aws eks list-clusters --output json | jq -r '.clusters[]' | fzf)
 if [[ $cluster != '' ]]; then
-  eksctl utils write-kubeconfig --cluster "${cluster}"
+  aws eks update-kubeconfig --name "${cluster}"
   exists "kubens" && kubens
 fi
