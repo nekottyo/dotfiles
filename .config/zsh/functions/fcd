@@ -1,0 +1,9 @@
+# vim: ft=zsh
+# cd with fzf
+local res=$(fd -td | fzf-tmux)
+if [ -n "$res" ]; then
+    BUFFER+="cd $res"
+    zle accept-line
+else
+    return 1
+fi

@@ -11,6 +11,10 @@ zle -N fzf-z-search
 bindkey '^f' fzf-z-search
 bindkey '^[f' fzf-z-search
 
+autoload -Uz fcd
+zle -N fcd
+bindkey '^t' fcd
+
 if exists "lsec2"; then
   autoload -z lssh
   autoload -z xssh

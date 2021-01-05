@@ -20,15 +20,15 @@ autocmd FileType python noremap <buffer> <S-f> :call Autopep8()<CR>
 repo = 'fatih/vim-go'
 on_ft = 'go'
 hook_add = '''
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_types = 1
+" let g:go_highlight_functions = 1
+" let g:go_highlight_methods = 1
+" let g:go_highlight_fields = 1
+" let g:go_highlight_types = 1
 let g:go_term_enabled = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_extra_types = 1
+" let g:go_highlight_operators = 1
+" let g:go_highlight_build_constraints = 1
+" let g:go_highlight_function_calls = 1
+" let g:go_highlight_extra_types = 1
 let g:go_template_autocreate = 0
 
 let g:go_fmt_command = "goimports"
@@ -272,9 +272,6 @@ let g:terraform_fmt_on_save=1
 # on_ft = ['tf', 'terraform']
 
 [[plugins]]
-repo = 'towolf/vim-helm'
-
-[[plugins]]
 repo = 'ddollar/golang-template.vim'
 
 [[plugins]]
@@ -284,3 +281,9 @@ on_ft = ['zsh']
 [[plugins]]
 repo = 'towolf/vim-helm''
 on_ft = ['helm']
+
+[[plugin]]
+repo = 'skanehira/preview-uml.vim'
+hook_add = '''
+let g:preview_uml_url='http://localhost:8888'
+'''
