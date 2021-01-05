@@ -1,3 +1,4 @@
+act
 ansible-lint
 anyenv
 argocd
@@ -17,6 +18,7 @@ coreutils
 ctop
 dfu-programmer
 dfu-util
+dive
 docker-compose
 docutils
 dty1er/tap/kubecolor
@@ -35,6 +37,7 @@ gnu-sed
 gnupg
 golangci/tap/golangci-lint
 gomplate
+goreleaser
 graphviz
 grep
 gsar
@@ -46,23 +49,29 @@ hey
 htop
 httpd
 hub
+icdiff
 iftop
 ipcalc
 iproute2mac
 isl
+istioctl
 jid
 k9s
 kubectx
+kustomize
 ladicle/kubectl-bindrole/kubectl-rolesum
 libglade
 libmagic
 libmpc
+libtermkey
+libuv
+libvterm
 lsd
+luajit
 luarocks
 mackerelio/mackerel-agent/mackerel-agent
 mariadb
 minikube
-neovim
 nkf
 packer
 pinentry-mac
@@ -75,6 +84,7 @@ python-yq
 python@3.7
 robscott/tap/kube-capacity
 shellcheck
+skaffold
 starship
 stern
 tcpdump
@@ -88,6 +98,7 @@ tkengo/highway/highway
 tmux
 tmux-mem-cpu-load
 tree
+tree-sitter
 util-linux
 vault
 versent/taps/saml2aws

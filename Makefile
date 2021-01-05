@@ -18,4 +18,4 @@ install:
 update:
 	brew tap > pkg/brew_tap.txt
 	brew leaves > pkg/brew.txt
-	brew cask list > pkg/cask.txt
+	brew list --cask > pkg/cask.txt
