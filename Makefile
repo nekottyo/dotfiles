@@ -13,7 +13,7 @@ install:
 	/usr/bin/ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	cat pkg/brew_tap.txt | xargs -n1 brew tap
 	cat pkg/brew.txt | xargs brew install || true
-	cat pkg/cask.txt | xargs brew cask install
+	cat pkg/cask.txt | xargs brew install --cask
 
 update:
 	brew tap > pkg/brew_tap.txt
