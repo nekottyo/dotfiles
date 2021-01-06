@@ -8,6 +8,7 @@ golangci/tap
 hashicorp/tap
 homebrew/cask
 homebrew/core
+jason0x43/neovim-nightly
 ladicle/kubectl-bindrole
 mackerelio/mackerel-agent
 qmk/qmk
