@@ -1,5 +1,7 @@
+docker
 gimp
 keycastr
+neovim-nightly
 ngrok
 visual-studio-code
 wireshark

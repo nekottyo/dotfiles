@@ -145,10 +145,6 @@ nnoremap sQ :<C-u>bd<CR>
 repo  = 'cespare/vim-toml'
 on_ft = 'toml'
 
-[[plugins]] # Json
-repo = 'elzr/vim-json'
-on_ft = 'json'
-
 [[plugins]] # ansible
 repo = 'pearofducks/ansible-vim'
 on_ft =  ['ansible', 'yaml', 'yml']
@@ -534,3 +530,23 @@ repo = 'junegunn/fzf.vim'
 
 [[plugins]]
 repo = '~/.fzf'
+
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+hook_add = '''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = {
+      'lua',
+      'ruby',
+      'toml',
+      'c_sharp',
+      'vue',
+    }
+  },
+  ensure_installed = 'all'
+}
+EOF
+'''
