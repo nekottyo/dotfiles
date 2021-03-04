@@ -55,6 +55,7 @@ ipcalc
 iproute2mac
 isl
 istioctl
+jansson
 jid
 k9s
 kubectx
