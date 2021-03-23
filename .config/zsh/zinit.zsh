@@ -73,6 +73,9 @@ zinit light mollifier/cd-gitroot
 zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
 zinit light zdharma/zsh-diff-so-fancy
 
+zinit ice wait'3' lucid
+zinit light kubermatic/fubectl
+
 zinit ice wait'4' lucid as"program" pick"gibo"
 zinit load simonwhitaker/gibo
 

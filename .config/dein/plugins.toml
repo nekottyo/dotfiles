@@ -20,31 +20,22 @@ repo = 'itchyny/lightline.vim'
 depends_on = ['vim-fugitive', 'vista.nvim', 'coc.nvim']
 hook_add = '''
 let g:lightline = {
-  \ 'colorscheme': 'iceberg',
-  \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ],
-  \       [ 'gitbranch', 'readonly', 'filename','modified', 'method' ] ],
-  \   'right': [
-  \       [ 'lineinfo' ],
-  \       [ 'percent' ],
-  \       [ 'fileformat', 'fileencoding', 'filetype' ] ]
-  \ },
-  \ 'component_function': {
-  \   'cocstatus': 'coc#status',
-  \   'currentfunction': 'CocCurrentFunction',
-  \   'filename': 'LightlineFilename',
-  \   'gitbranch': 'Fugitive',
-  \   'method': 'NearestMethodOrFunction'
-  \ }
-  "\ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
-  "\ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
-  \ }
-
-function! LightlineFilename()
-  let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
-  let modified = &modified ? ' +' : ''
-  return filename . modified
-endfunction
+ \ 'colorscheme': 'iceberg',
+ \ 'active': {
+ \   'left': [ [ 'mode', 'paste' ],
+ \       [ 'gitbranch', 'readonly', 'filename','modified', 'method' ] ],
+ \   'right': [
+ \       [ 'lineinfo' ],
+ \       [ 'percent' ],
+ \       [ 'fileformat', 'fileencoding', 'filetype' ] ]
+ \ },
+ \ 'component_function': {
+ \   'cocstatus': 'coc#status',
+ \   'currentfunction': 'CocCurrentFunction',
+ \   'gitbranch': 'Fugitive',
+ \   'method': 'NearestMethodOrFunction',
+ \ }
+ \ }
 
 function! Fugitive()
   try
@@ -56,7 +47,6 @@ function! Fugitive()
   endtry
   return ''
 endfunction
-
 '''
 
 [[plugins]]
