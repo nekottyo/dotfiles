@@ -1,7 +1,7 @@
 # vim: ft=zsh
 # cd to repository managed by ghq
 local ghq_root=$(ghq root)
-local repo=$(ghq list | fzf-tmux)
+local repo=$(ghq list | fzf-tmux -p 80%,90%)
 if [[ -z "$repo" ]]; then
   zle accept-line
   return

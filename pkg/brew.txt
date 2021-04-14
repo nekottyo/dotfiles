@@ -30,6 +30,7 @@ gdb
 gh
 ghq
 git
+git-delta
 git-secrets
 global
 gnu-getopt
@@ -69,6 +70,7 @@ libuv
 libvterm
 lsd
 luajit
+luajit-openresty
 luarocks
 mackerelio/mackerel-agent/mackerel-agent
 mariadb
