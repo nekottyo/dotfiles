@@ -1,6 +1,6 @@
 # vim: ft=zsh
 # ssh to multiple ec2 instance
-IPS=$(lsec2 | fzf-tmux -m | awk -F "\t" '{print $2}')
+IPS=$(lsec2 | fzf-tmux -m -p 80%,90% | awk -F "\t" '{print $2}')
 if [[ $? == 0 && "${IPS}" != "" ]]; then
   echo "$IPS" | xpanes -t -c 'ssh {}'
 fi
