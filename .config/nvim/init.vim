@@ -90,6 +90,8 @@ set autoread
 set noshowmode
 set inccommand=split
 set ambiwidth=double
+set undodir=~/.cache/nvim/undo
+set undofile
 
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
