@@ -287,3 +287,14 @@ repo = 'skanehira/preview-uml.vim'
 hook_add = '''
 let g:preview_uml_url='http://localhost:8888'
 '''
+
+[[plugin]]
+repo = 'tsandall/vim-rego'
+on_ft = ['rego']
+hook_add = '''
+let g:formatdef_rego = '"opa fmt"'
+let g:formatters_rego = ['rego']
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
+au BufWritePre *.rego Autoformat
+'''
