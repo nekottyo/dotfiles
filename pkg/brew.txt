@@ -26,7 +26,9 @@ docker
 docker-compose
 docutils
 dty1er/tap/kubecolor
+efm-langserver
 expect
+fairwindsops/tap/pluto
 fd
 findutils
 fzf

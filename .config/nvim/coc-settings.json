@@ -102,17 +102,23 @@
 	  "args": ["serve"],
 	  "filetypes": [
 	    "terraform",
-        "tf"
+            "tf"
 	  ],
 	  "initializationOptions": {
-          "rootModulePaths": ["./"]
-      },
+            "rootModulePaths": ["./"]
+          },
 	  "settings": {}
     },
     "efm": {
       "command": "efm-langserver",
       "args": [],
       "filetypes": ["markdown", "yaml"]
+    },
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "ignoredRootPaths": ["~"]
     }
   }
 }
