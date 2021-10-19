@@ -280,7 +280,6 @@ on_ft = ['zsh']
 
 [[plugins]]
 repo = 'towolf/vim-helm''
-on_ft = ['helm']
 
 [[plugin]]
 repo = 'skanehira/preview-uml.vim'
