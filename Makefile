@@ -25,10 +25,10 @@ update:
 test.tap: install-brew
 	cat pkg/brew_tap.txt | xargs -n1 brew tap
 
-test.brew: install-brew
+test.brew: install-brew test.tap
 	cat pkg/brew.txt | xargs brew install || true
 
-test.cask: install-brew
+test.cask: install-brew test.tap
 	cat pkg/cask.txt | xargs brew install --cask
 
 test.deploy: deploy
