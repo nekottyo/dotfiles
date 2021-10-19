@@ -27,7 +27,7 @@ test.init:
 	gsplit -n 3 -d -a1 pkg/brew.txt brew-
 
 test.tap: install-brew
-	cat pkg/brew_tap.txt | xargs -n1 brew tap
+	cat pkg/brew_tap.txt | xargs -t -n1 brew tap
 
 test.brew.0: install-brew test.init test.tap
 	cat brew-0 | xargs -t brew install || true
@@ -39,6 +39,6 @@ test.brew.2: install-brew test.init test.tap
 	cat brew-2 | xargs -t brew install || true
 
 test.cask: install-brew test.tap
-	cat pkg/cask.txt | xargs brew install --cask
+	cat pkg/cask.txt | xargs -t brew install --cask
 
 test.deploy: deploy
