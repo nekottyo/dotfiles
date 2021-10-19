@@ -1,5 +1,23 @@
 # history of zsh startup time
 
+## 2021/10/19
+久しぶりに測ったけどあんまり変わってなかった
+
+```console
+❯ for i in {1..10} ; do time ( zsh -i -c exit ); done
+( zsh -i -c exit; )  0.08s user 0.07s system 90% cpu 0.167 total
+( zsh -i -c exit; )  0.08s user 0.07s system 93% cpu 0.157 total
+( zsh -i -c exit; )  0.07s user 0.06s system 94% cpu 0.148 total
+( zsh -i -c exit; )  0.07s user 0.07s system 94% cpu 0.149 total
+( zsh -i -c exit; )  0.08s user 0.06s system 94% cpu 0.149 total
+( zsh -i -c exit; )  0.08s user 0.07s system 94% cpu 0.153 total
+( zsh -i -c exit; )  0.08s user 0.07s system 94% cpu 0.151 total
+( zsh -i -c exit; )  0.08s user 0.07s system 94% cpu 0.154 total
+( zsh -i -c exit; )  0.07s user 0.07s system 94% cpu 0.148 total
+( zsh -i -c exit; )  0.07s user 0.06s system 93% cpu 0.149 total
+```
+
+
 ## 2020/05/08
 
 いつの間にか早くなっていた
