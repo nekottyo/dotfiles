@@ -528,15 +528,27 @@ lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
-    disable = {
+  },
+  ignore_install = {
       'lua',
       'ruby',
       'toml',
       'c_sharp',
       'vue',
-    }
+      'c',
+      'rust',
+      'haskell'
   },
-  ensure_installed = 'all'
+  indent = {
+    enable = true
+  },
+  rainbow = {
+    enable = true
+  },
+  ensure_installed = 'maintained'
 }
 EOF
 '''
+
+[[plugins]]
+repo = 'p00f/nvim-ts-rainbow'
