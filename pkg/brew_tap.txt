@@ -4,6 +4,7 @@ aylei/tap
 budougumi0617/lsas
 cjbassi/ytop
 dty1er/tap
+fairwindsops/tap
 github/gh
 golangci/tap
 hashicorp/tap
