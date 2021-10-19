@@ -30,13 +30,13 @@ test.tap: install-brew
 	cat pkg/brew_tap.txt | xargs -n1 brew tap
 
 test.brew.0: install-brew test.init test.tap
-	cat brew-0 | xargs brew install || true
+	cat brew-0 | xargs -t brew install || true
 
 test.brew.1: install-brew test.init test.tap
-	cat brew-1 | xargs brew install || true
+	cat brew-1 | xargs -t brew install || true
 
 test.brew.2: install-brew test.init test.tap
-	cat brew-2 | xargs brew install || true
+	cat brew-2 | xargs -t brew install || true
 
 test.cask: install-brew test.tap
 	cat pkg/cask.txt | xargs brew install --cask

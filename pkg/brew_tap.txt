@@ -4,6 +4,7 @@ aylei/tap
 budougumi0617/lsas
 cjbassi/ytop
 dty1er/tap
+fairwindsops/tap
 github/gh
 golangci/tap
 hashicorp/tap
@@ -11,7 +12,6 @@ homebrew/cask
 homebrew/core
 jason0x43/neovim-nightly
 ladicle/kubectl-bindrole
-mackerelio/mackerel-agent
 qmk/qmk
 robscott/tap
 tkengo/highway
