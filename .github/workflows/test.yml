@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        target: [tap, brew, cask, deploy]
+        target: [tap, brew.0, brew.1, brew.2, cask, deploy]
 
     steps:
     - name: uninstall brew
