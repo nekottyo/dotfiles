@@ -81,7 +81,6 @@ lsd
 luajit
 luajit-openresty
 luarocks
-mackerelio/mackerel-agent/mackerel-agent
 mariadb
 minikube
 nkf

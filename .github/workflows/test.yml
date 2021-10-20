@@ -3,16 +3,18 @@ name: test
 on: [pull_request]
 
 jobs:
-  build:
-
+  test:
     runs-on: macos-latest
+
+    strategy:
+      matrix:
+        target: [tap, brew.0, brew.1, brew.2, cask, deploy]
 
     steps:
     - name: uninstall brew
       run: echo y | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)" || true
-    - uses: actions/checkout@v1
-    - name: Run make install
-      run: make install
 
-    - name: copy dotfiles
-      run: make deploy
+    - uses: actions/checkout@v1
+
+    - name: Run test
+      run: make test.${{ matrix.target }}
