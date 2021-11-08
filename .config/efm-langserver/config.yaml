@@ -1,5 +1,6 @@
-languages:
-  yaml:
+version: 2
+tools:
+  yamllint: &yamllint
     lint-command: 'yamllint -f parsable -'
     lint-stdin: true
     lint-formats:
@@ -7,8 +8,23 @@ languages:
     env:
       - 'PYTHONIOENCODING=UTF-8'
 
-  markdown:
+  markdownlint: &markdownlint
     lint-command: 'markdownlint -s'
     lint-stdin: true
     lint-formats:
       - '%f: %l: %m'
+
+  markdown-textlint: &markdown-textlint
+    lint-command: 'npx --no-install textlint -f unix --stdin --stdin-filename ${INPUT}'
+    lint-ignore-exit-code: true
+    lint-stdin: true
+    lint-formats:
+      - '%f:%l:%c: %m [%trror/%r]'
+    root-markers:
+      - .textlintrc
+languages:
+  markdown:
+    - <<: *markdown-textlint
+    - <<: *markdownlint
+  yaml:
+    - <<: *yamllint
