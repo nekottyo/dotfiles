@@ -107,7 +107,9 @@
 	  "initializationOptions": {
             "rootModulePaths": ["./"]
           },
-	  "settings": {}
+	  "settings": {
+            "validateOnSave": true
+          }
     },
     "efm": {
       "command": "efm-langserver",

@@ -279,7 +279,7 @@ repo = 'zinit-zsh/zinit-vim-syntax'
 on_ft = ['zsh']
 
 [[plugins]]
-repo = 'towolf/vim-helm''
+repo = 'towolf/vim-helm'
 
 [[plugin]]
 repo = 'skanehira/preview-uml.vim'
