@@ -106,7 +106,7 @@ autocmd FileType html,vue setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType vim setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType toml setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
-autocmd FileType terraform setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+" autocmd FileType terraform setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 
 autocmd BufRead,BufNewFile *.gs setfiletype javascript
 autocmd FileType javascript,typescript setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
