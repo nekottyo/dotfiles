@@ -18,7 +18,7 @@ zinit light romkatv/powerlevel10k
 zinit light romkatv/zsh-defer
 
 # zinit ice wait lucid
-# zinit load zdharma/history-search-multi-word
+# zinit load zdharma-continuum/history-search-multi-word
 
 zinit ice wait lucid
 zinit light greymd/tmux-xpanes
@@ -37,7 +37,7 @@ zinit ice wait'0c' lucid atload'_zsh_autosuggest_start; ZSH_AUTOSUGGEST_STRATEGY
 zinit load zsh-users/zsh-autosuggestions
 
 zinit ice wait'1' lucid
-zinit light zdharma/fast-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 
 zinit ice wait'1' lucid as"program" pick"bin/color" pick"bin/histuniq"
 zinit load "Jxck/dotfiles"
@@ -71,7 +71,7 @@ zinit ice wait'3' lucid
 zinit light mollifier/cd-gitroot
 
 zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
-zinit light zdharma/zsh-diff-so-fancy
+zinit light zdharma-continuum/zsh-diff-so-fancy
 
 zinit ice wait'3' lucid
 zinit light kubermatic/fubectl

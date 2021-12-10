@@ -48,6 +48,8 @@ nnoremap <silent> <C-g><C-g> :Denite decls<Return>
 set noexpandtab
 set tabstop=4
 set shiftwidth=4
+
+autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 '''
 
 [[plugins]]
@@ -273,10 +275,6 @@ let g:terraform_fmt_on_save=1
 
 [[plugins]]
 repo = 'ddollar/golang-template.vim'
-
-[[plugins]]
-repo = 'zinit-zsh/zinit-vim-syntax'
-on_ft = ['zsh']
 
 [[plugins]]
 repo = 'towolf/vim-helm'
