@@ -491,8 +491,6 @@ hook_add = '''
 let g:diminactive_enable_focus = 1
 '''
 
-[[plugins]]
-repo = 'junegunn/fzf'
 
 [[plugins]]
 repo = 'ntpeters/vim-better-whitespace'
@@ -515,11 +513,15 @@ repo = 'tyru/open-browser.vim'
 repo = 'tyru/open-browser-github.vim'
 depends = ['open-browser.vim']
 
-[[plugins]]
-repo = 'junegunn/fzf.vim'
 
-[[plugins]]
-repo = '~/.fzf'
+# [[plugins]]
+# repo = 'junegunn/fzf'
+
+# [[plugins]]
+# repo = 'junegunn/fzf.vim'
+#
+# [[plugins]]
+# repo = '~/.fzf'
 
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'

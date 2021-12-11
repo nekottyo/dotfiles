@@ -1,6 +1,12 @@
+alfred
+bettertouchtool
+font-hackgen-nerd
 gimp
 keycastr
 neovim-nightly
 ngrok
+skitch
+slack
+tg-pro
 visual-studio-code
 wireshark

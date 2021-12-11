@@ -9,6 +9,7 @@ github/gh
 golangci/tap
 hashicorp/tap
 homebrew/cask
+homebrew/cask-fonts
 homebrew/core
 jason0x43/neovim-nightly
 ladicle/kubectl-bindrole
