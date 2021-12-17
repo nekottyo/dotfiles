@@ -1,5 +1,21 @@
 # history of zsh startup time
 
+## 2021/12/11
+MBP M1 Pro 16GB
+```console
+❯ for i in {1..10} ; do time ( zsh -i -c exit ); done
+( zsh -i -c exit; )  0.06s user 0.05s system 92% cpu 0.121 total
+( zsh -i -c exit; )  0.05s user 0.04s system 92% cpu 0.101 total
+( zsh -i -c exit; )  0.05s user 0.04s system 91% cpu 0.099 total
+( zsh -i -c exit; )  0.05s user 0.04s system 90% cpu 0.101 total
+( zsh -i -c exit; )  0.05s user 0.04s system 90% cpu 0.101 total
+( zsh -i -c exit; )  0.05s user 0.04s system 90% cpu 0.100 total
+( zsh -i -c exit; )  0.05s user 0.04s system 93% cpu 0.098 total
+( zsh -i -c exit; )  0.05s user 0.04s system 91% cpu 0.099 total
+( zsh -i -c exit; )  0.05s user 0.04s system 94% cpu 0.095 total
+( zsh -i -c exit; )  0.05s user 0.04s system 93% cpu 0.096 total
+```
+
 ## 2021/10/19
 久しぶりに測ったけどあんまり変わってなかった
 

@@ -15,4 +15,4 @@ update
 $ make update
 ```
 
-Font: [HackGen](https://github.com/yuru7/HackGen)
+Font: [MesloLGS NF](https://github.com/romkatv/powerlevel10k-media)

@@ -6,6 +6,7 @@ argocd
 argoproj/tap/kubectl-argo-rollouts
 automake
 avrdude
+aws-iam-authenticator
 awscli
 aylei/tap/kubectl-debug
 bat
@@ -16,6 +17,7 @@ circleci
 cjbassi/ytop/ytop
 clusterctl
 cmake
+colima
 colordiff
 commitizen
 coreutils
@@ -33,9 +35,9 @@ fairwindsops/tap/pluto
 fd
 findutils
 fzf
-gdb
 gh
 ghq
+gibo
 git
 git-delta
 git-secrets
@@ -45,6 +47,7 @@ gnu-sed
 gnupg
 golangci/tap/golangci-lint
 gomplate
+gopls
 goreleaser
 graphviz
 grep
@@ -77,16 +80,16 @@ libmpc
 libtermkey
 libuv
 libvterm
-lima
 lsd
-luajit
 luajit-openresty
 luarocks
 mariadb
 minikube
 nkf
+node-build
 openjdk@11
 packer
+php
 pinentry-mac
 pipes-sh
 procs
@@ -94,10 +97,11 @@ protobuf
 py2cairo
 pyenv-virtualenv
 python-yq
-python@3.7
 robscott/tap/kube-capacity
+saml2aws
 shellcheck
 skaffold
+sops
 starship
 stern
 tcpdump
@@ -114,10 +118,7 @@ tree
 tree-sitter
 util-linux
 vault
-versent/taps/saml2aws
 watch
-weaveworks/tap/eksctl
 wget
-yudai/gotty/gotty
 z
 zsh

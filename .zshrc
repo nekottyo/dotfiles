@@ -1,6 +1,15 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 [[ -f ~/.profile ]] && source ~/.profile
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+[[ -d /opt/homebrew/bin ]] && export PATH=$PATH:/opt/homebrew/bin
 
 function exists() {
   (( ${+commands[$1]} ))
@@ -83,6 +92,11 @@ if [ -z "$TMUX" ]; then
   ## anyenv
   export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
+
+  if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
+    export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+  fi
+
   . ~/.config/zsh/anyenv-defer.zsh
 fi
 
@@ -125,3 +139,16 @@ fi
 if (which zprof > /dev/null) ;then
   zprof | less
 fi
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+
+### End of Zinit's installer chunk
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
