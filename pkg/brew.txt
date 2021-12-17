@@ -6,6 +6,7 @@ argocd
 argoproj/tap/kubectl-argo-rollouts
 automake
 avrdude
+aws-iam-authenticator
 awscli
 aylei/tap/kubectl-debug
 bat
@@ -118,7 +119,6 @@ tree-sitter
 util-linux
 vault
 watch
-weaveworks/tap/eksctl
 wget
 z
 zsh

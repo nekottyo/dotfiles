@@ -17,5 +17,4 @@ qmk/qmk
 robscott/tap
 tkengo/highway
 versent/taps
-weaveworks/tap
 yudai/gotty
