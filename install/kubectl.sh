@@ -12,7 +12,7 @@
 )
 
 
-for k in tree neat resource-capacity rolesum; do
+for k in tree neat resource-capacity rolesum iexec; do
   kubectl krew install "${k}"
 done
 
