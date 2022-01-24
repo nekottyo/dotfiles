@@ -4,3 +4,13 @@ tags
 .DS_Store
 node_modules/
 bower_components/
+
+.config/**
+!.config/alacritty
+!.config/dein
+!.config/efm-langserver
+!.config/nvim
+!.config/starship.toml
+!.config/terminator
+!.config/tmux
+!.config/zsh

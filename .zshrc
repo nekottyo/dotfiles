@@ -140,6 +140,9 @@ if (which zprof > /dev/null) ;then
   zprof | less
 fi
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
 zinit light-mode for \
@@ -150,5 +153,3 @@ zinit light-mode for \
 
 ### End of Zinit's installer chunk
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
