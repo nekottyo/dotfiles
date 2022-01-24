@@ -1,7 +1,11 @@
 #!/bin/zsh
+#
+
 mkdir -p $(anyenv root)/plugins
 git clone https://github.com/znz/anyenv-update.git $(anyenv root)/plugins/anyenv-update
 
+
+anyenv install --init
 
 for e in goenv rbenv nodenv tfenv pyenv; do
   anyenv install "${e}"
