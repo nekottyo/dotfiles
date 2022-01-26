@@ -7,6 +7,7 @@ dty1er/tap
 fairwindsops/tap
 github/gh
 golangci/tap
+goldeneggg/tap
 hashicorp/tap
 homebrew/cask
 homebrew/cask-fonts
