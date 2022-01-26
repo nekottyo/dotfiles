@@ -1,6 +1,6 @@
 # vim: ft=zsh
 # ssh to ec2 instance
-IP=$(lsec2 $@ | fzf-tmux -p 80%,90% | awk -F "\t" '{print $2}')
+IP=$(lsec2 $@ | fzf-tmux -p 80%,90% | awk '{print $2}')
 if [[ $? == 0 && "${IP}" != "" ]]; then
     echo ">>> SSH to ${IP}"
     ssh ${IP}

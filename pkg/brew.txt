@@ -46,6 +46,7 @@ gnu-getopt
 gnu-sed
 gnupg
 golangci/tap/golangci-lint
+goldeneggg/tap/lsec2
 gomplate
 gopls
 goreleaser
