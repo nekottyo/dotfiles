@@ -279,13 +279,13 @@ repo = 'ddollar/golang-template.vim'
 [[plugins]]
 repo = 'towolf/vim-helm'
 
-[[plugin]]
+[[plugins]]
 repo = 'skanehira/preview-uml.vim'
 hook_add = '''
 let g:preview_uml_url='http://localhost:8888'
 '''
 
-[[plugin]]
+[[plugins]]
 repo = 'tsandall/vim-rego'
 on_ft = ['rego']
 hook_add = '''
@@ -295,3 +295,11 @@ let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 au BufWritePre *.rego Autoformat
 '''
+
+[[plugins]]
+repo = 'previm/previm'
+on_ft = ['rst']
+
+[[plugins]]
+repo = 'stsewd/sphinx.nvim'
+on_ft = ['rst']
