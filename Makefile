@@ -24,6 +24,7 @@ update:
 	brew tap > pkg/brew_tap.txt
 	brew leaves > pkg/brew.txt
 	brew list --cask > pkg/cask.txt
+	bash ./hack/goinstall.sh show > pkg/gopkg.txt
 
 test.init:
 	brew install coreutils
