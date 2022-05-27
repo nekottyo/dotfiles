@@ -47,3 +47,9 @@ function eksctl() {
   # source <(eksctl completion zsh)
   $0 "$@"
 }
+
+function istioctl() {
+  unfunction "$0"
+  source <(istioctl completion zsh)
+  $0 "$@"
+}
