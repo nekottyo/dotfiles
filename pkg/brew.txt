@@ -20,7 +20,9 @@ cmake
 colima
 colordiff
 commitizen
+conftest
 coreutils
+ctags
 ctop
 dfu-programmer
 dfu-util
@@ -28,7 +30,6 @@ dive
 docker
 docker-compose
 docutils
-dty1er/tap/kubecolor
 efm-langserver
 expect
 fairwindsops/tap/pluto
@@ -46,7 +47,6 @@ gnu-getopt
 gnu-sed
 gnupg
 golangci/tap/golangci-lint
-goldeneggg/tap/lsec2
 gomplate
 gopls
 goreleaser
@@ -67,7 +67,6 @@ ipcalc
 iproute2mac
 isl
 istioctl
-jansson
 jid
 k6
 k9s
@@ -90,6 +89,7 @@ nkf
 node-build
 openjdk@11
 packer
+pandoc
 php
 pinentry-mac
 pipes-sh
@@ -121,5 +121,7 @@ util-linux
 vault
 watch
 wget
+wimlib
+yj
 z
 zsh
