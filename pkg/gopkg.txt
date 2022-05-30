@@ -1,0 +1,5 @@
+github.com/nametake/golangci-lint-langserver@latest
+github.com/client9/misspell/cmd/misspell@latest
+github.com/teamon/hclq@latest
+github.com/rhysd/actionlint/cmd/actionlint@latest
+github.com/FeLvi-zzz/tentez/cmd/tentez@latest
