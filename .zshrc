@@ -9,7 +9,8 @@ fi
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
-[[ -d /opt/homebrew/bin ]] && export PATH=$PATH:/opt/homebrew/bin
+[[ -d /opt/homebrew/bin ]] && export PATH="$PATH:/opt/homebrew/bin"
+[[ -d /opt/homebrew/opt/grep/libexec/gnubin ]] && export  PATH="/opt/homebrew/opt/grep/libexec/gnubin:$PATH"
 
 function exists() {
   (( ${+commands[$1]} ))
