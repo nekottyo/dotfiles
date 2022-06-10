@@ -6,13 +6,13 @@ argocd
 argoproj/tap/kubectl-argo-rollouts
 automake
 avrdude
-aws-iam-authenticator
 awscli
 aylei/tap/kubectl-debug
 bat
 binutils
 bmon
 budougumi0617/lsas/lsas
+chart-testing
 circleci
 cjbassi/ytop/ytop
 clusterctl
@@ -31,6 +31,7 @@ docker
 docker-compose
 docutils
 efm-langserver
+eksctl
 expect
 fairwindsops/tap/pluto
 fd
