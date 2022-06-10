@@ -303,3 +303,6 @@ on_ft = ['rst']
 [[plugins]]
 repo = 'stsewd/sphinx.nvim'
 on_ft = ['rst']
+
+[[plugins]]
+repo = 'skanehira/translate.vim'
