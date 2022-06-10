@@ -25,6 +25,7 @@ update:
 	brew leaves > pkg/brew.txt
 	brew list --cask > pkg/cask.txt
 	bash ./hack/goinstall.sh show > pkg/gopkg.txt
+	zsh ./hack/update-local.zsh
 
 test.init:
 	brew install coreutils
