@@ -298,7 +298,7 @@ au BufWritePre *.rego Autoformat
 
 [[plugins]]
 repo = 'previm/previm'
-on_ft = ['rst']
+on_ft = ['rst', 'markdown', 'md']
 
 [[plugins]]
 repo = 'stsewd/sphinx.nvim'
@@ -306,3 +306,6 @@ on_ft = ['rst']
 
 [[plugins]]
 repo = 'skanehira/translate.vim'
+
+[[plugins]]
+repo = 'jiangmiao/auto-pairs'

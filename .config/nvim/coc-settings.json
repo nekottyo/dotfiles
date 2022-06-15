@@ -1,5 +1,4 @@
 {
-
   "suggest.noselect": true,
   "suggest.preferCompleteThanJumpPlaceholder": true,
   "solargraph.diagnostics": true,
@@ -9,6 +8,15 @@
   "solargraph.hover": true,
   "solargraph.rename": true,
   "coc.preferences.formatOnSaveFiletypes": ["ruby"],
+  "yaml.schemas": {
+    "http://json.schemastore.org/kustomization": [ "kustomization.yaml" ],
+    "https://raw.githubusercontent.com/GoogleContainerTools/skaffold/master/docs/content/en/schemas/v2beta28.json": [ "skaffold.yaml" ],
+    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.1-standalone/all.json": [ "/*.yaml" ]
+  },
+  "yaml.format.enable": true,
+  "yaml.validate": true,
+  "json.schemaDownload.enable": true,
+  "coc.preferences.colorSupport": true,
   "languageserver": {
     "golang": {
         "command": "gopls",
