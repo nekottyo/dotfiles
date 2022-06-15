@@ -525,29 +525,41 @@ depends = ['open-browser.vim']
 
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
+depends_on = ["p00f/nvim-ts-rainbow", "luochen1990/rainbow"]
 hook_add = '''
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
   },
-  ignore_install = {
-      'lua',
-      'ruby',
-      'toml',
-      'c_sharp',
-      'vue',
-      'c',
-      'rust',
-      'haskell'
+  ensure_installed = {
+    "bash",
+    "go",
+    "gomod",
+    "html",
+    "http",
+    "json",
+    "lua",
+    "make",
+    "perl",
+    "python",
+    "regex",
+    "rego",
+    "rst",
+    "ruby",
+    "toml",
+    "tsx",
+    "typescript",
+    "vim",
+    "yaml"
   },
   indent = {
     enable = true
   },
   rainbow = {
-    enable = true
-  },
-  ensure_installed = 'maintained'
+    enable = true,
+    extended_mode = true
+  }
 }
 EOF
 '''
