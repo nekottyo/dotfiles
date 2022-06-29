@@ -1,5 +1,6 @@
 [[plugins]]
 repo = "nvim-lua/plenary.nvim"
+depends = 'fzf.vim'
 hook_add = '''
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -33,3 +34,17 @@ depends = ["plenary.nvim", "telescope-fzf-native.nvim"]
 [[plugins]]
 repo = 'nvim-telescope/telescope-fzf-native.nvim'
 build = 'make'
+
+[[plugins]]
+repo = 'junegunn/fzf'
+build = '''
+./install --all
+'''
+
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+depends = ["fzf"]
+hook_add = '''
+set rtp+=/opt/homebrew/bin/fzf
+'''
+

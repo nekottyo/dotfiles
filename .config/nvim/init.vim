@@ -37,12 +37,12 @@ if dein#load_state(s:dein_cache_dir)
 
   let s:toml_dir = g:config_home . '/dein'
 
-  call dein#load_toml(s:toml_dir . '/plugins.toml', {'lazy': 0})
   call dein#load_toml(s:toml_dir . '/lsp.toml', {'lazy': 0})
-  call dein#load_toml(s:toml_dir . '/lazy.toml', {'lazy': 1})
+  call dein#load_toml(s:toml_dir . '/plugins.toml', {'lazy': 0})
   if has('nvim')
-    call dein#load_toml(s:toml_dir . '/neovim.toml', {'lazy': 1})
+    call dein#load_toml(s:toml_dir . '/neovim.toml', {'lazy': 0})
   endif
+  call dein#load_toml(s:toml_dir . '/lazy.toml', {'lazy': 1})
 
   if !has('nvim')
     call dein#add('roxma/nvim-yarp')
@@ -112,6 +112,7 @@ autocmd BufRead,BufNewFile *.gs setfiletype javascript
 autocmd FileType javascript,typescript setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+autocmd BufNewFile,BufRead *.tf setlocal filetype=terraform
 
 set clipboard&
 set clipboard^=unnamedplus
