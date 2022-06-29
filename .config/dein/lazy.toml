@@ -306,6 +306,3 @@ on_ft = ['rst']
 
 [[plugins]]
 repo = 'skanehira/translate.vim'
-
-[[plugins]]
-repo = 'jiangmiao/auto-pairs'

@@ -17,7 +17,7 @@ repo = 'Shougo/dein.vim'
 
 [[plugins]] # status line
 repo = 'itchyny/lightline.vim'
-depends_on = ['vim-fugitive', 'vista.nvim', 'coc.nvim']
+depends = ['vim-fugitive', 'vista.nvim', 'coc.nvim']
 hook_add = '''
 let g:lightline = {
  \ 'colorscheme': 'iceberg',
@@ -59,7 +59,7 @@ build = 'make'
 
 [[plugins]]
 repo = 'thinca/vim-quickrun'
-depends_on = 'vimproc.vim'
+depends = 'vimproc.vim'
 hook_add = '''
 nmap <Leader>q :QuickRun<CR>
 let g:quickrun_config = get(g:, 'quickrun_config', {})
@@ -382,7 +382,7 @@ repo = 'thinca/vim-ref'
 
 [[plugins]]
 repo = 'yuku-t/vim-ref-ri'
-depends_on = 'vim-ref'
+depends = 'vim-ref'
 
 [[plugins]]
 repo = 'nelstrom/vim-visual-star-search'
@@ -441,7 +441,7 @@ repo = 'haya14busa/incsearch-fuzzy.vim'
 
 [[plugins]]
 repo = 'easymotion/vim-easymotion'
-depends_on = ['incsearch.vim', 'incsearch-easymotion.vim', 'incsearch-fuzzy.vim']
+depends = ['incsearch.vim', 'incsearch-easymotion.vim', 'incsearch-fuzzy.vim']
 hook_add = '''
 let g:EasyMotion_do_mapping = 0
 
@@ -513,19 +513,13 @@ repo = 'tyru/open-browser.vim'
 repo = 'tyru/open-browser-github.vim'
 depends = ['open-browser.vim']
 
-
-# [[plugins]]
-# repo = 'junegunn/fzf'
-
-# [[plugins]]
-# repo = 'junegunn/fzf.vim'
-#
+# #
 # [[plugins]]
 # repo = '~/.fzf'
 
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
-depends_on = ["p00f/nvim-ts-rainbow", "luochen1990/rainbow"]
+depends = ["nvim-ts-rainbow", "rainbow"]
 hook_add = '''
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
@@ -566,3 +560,11 @@ EOF
 
 [[plugins]]
 repo = 'p00f/nvim-ts-rainbow'
+
+[[plugins]]
+repo = 'windwp/nvim-autopairs'
+hook_add = '''
+lua << EOF
+require("nvim-autopairs").setup {}
+EOF
+'''
