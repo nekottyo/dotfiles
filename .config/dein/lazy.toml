@@ -306,3 +306,10 @@ on_ft = ['rst']
 
 [[plugins]]
 repo = 'skanehira/translate.vim'
+
+[[plugins]]
+repo = 'iberianpig/tig-explorer.vim'
+depends = 'bclose.vim'
+
+[[plugins]]
+repo = 'rbgrouleff/bclose.vim'
