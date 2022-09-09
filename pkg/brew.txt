@@ -74,6 +74,7 @@ k9s
 kind
 kubebuilder
 kubectx
+kubeval
 kustomize
 ladicle/kubectl-bindrole/kubectl-rolesum
 libelf
@@ -84,9 +85,11 @@ libmagic
 libmpc
 libvterm
 lsd
+luajit-openresty
 luarocks
 mariadb
 minikube
+nekottyo/tap/lsec2
 neovim
 nkf
 node-build
