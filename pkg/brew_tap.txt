@@ -12,6 +12,7 @@ homebrew/cask-fonts
 homebrew/core
 jason0x43/neovim-nightly
 ladicle/kubectl-bindrole
+nekottyo/tap
 qmk/qmk
 robscott/tap
 tkengo/highway
