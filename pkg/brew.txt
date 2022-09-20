@@ -93,6 +93,7 @@ nekottyo/tap/lsec2
 neovim
 nkf
 node-build
+norwoodj/tap/helm-docs
 openjdk@11
 packer
 pandoc

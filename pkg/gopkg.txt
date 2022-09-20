@@ -6,5 +6,6 @@ github.com/client9/misspell/cmd/misspell@latest
 github.com/teamon/hclq@latest
 github.com/rhysd/actionlint/cmd/actionlint@latest
 github.com/FeLvi-zzz/tentez/cmd/tentez@latest
+github.com/norwoodj/helm-docs/cmd/helm-docs@latest
 github.com/nekottyo/alfred-datadog-workflow@latest
 sigs.k8s.io/controller-tools/cmd/controller-gen@latest
