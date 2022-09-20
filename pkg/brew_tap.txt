@@ -13,6 +13,7 @@ homebrew/core
 jason0x43/neovim-nightly
 ladicle/kubectl-bindrole
 nekottyo/tap
+norwoodj/tap
 qmk/qmk
 robscott/tap
 tkengo/highway
