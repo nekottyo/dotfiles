@@ -62,7 +62,8 @@ endif
 " 行数
 set number relativenumber
 
-set noswapfile
+" set noswapfile
+set directory=~/.local/share/nvim/swap
 
 " insertモードから抜ける
 inoremap <silent> jj <ESC>
