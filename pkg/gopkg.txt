@@ -1,4 +1,7 @@
+github.com/git-chglog/git-chglog/cmd/git-chglog@latest
+google.golang.org/protobuf/internal/cmd/generate-protos@latest
 github.com/nametake/golangci-lint-langserver@latest
+google.golang.org/protobuf/internal/cmd/generate-corpus@latest
 golang.org/x/tools/gopls@latest
 sigs.k8s.io/mdtoc@latest
 golang.org/x/tools/cmd/godoc@latest
@@ -6,6 +9,10 @@ github.com/client9/misspell/cmd/misspell@latest
 github.com/teamon/hclq@latest
 github.com/rhysd/actionlint/cmd/actionlint@latest
 github.com/FeLvi-zzz/tentez/cmd/tentez@latest
+google.golang.org/protobuf/internal/cmd/generate-types@latest
 github.com/norwoodj/helm-docs/cmd/helm-docs@latest
 github.com/nekottyo/alfred-datadog-workflow@latest
+google.golang.org/protobuf/internal/cmd/pbdump@latest
+github.com/haya14busa/bump@latest
+google.golang.org/protobuf/cmd/protoc-gen-go@latest
 sigs.k8s.io/controller-tools/cmd/controller-gen@latest

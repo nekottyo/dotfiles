@@ -51,6 +51,7 @@ golangci/tap/golangci-lint
 gomplate
 gopls
 goreleaser
+gperftools
 graphviz
 grep
 gsar
@@ -120,7 +121,6 @@ terraformer
 terraforming
 tflint
 tig
-tkengo/highway/highway
 tmux
 tmux-mem-cpu-load
 tree

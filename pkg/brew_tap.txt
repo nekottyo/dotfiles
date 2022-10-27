@@ -1,3 +1,4 @@
+aquaproj/aqua
 argoproj/tap
 aws/tap
 aylei/tap
