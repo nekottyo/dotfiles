@@ -10,7 +10,7 @@ deploy: install-zinit
 	@$(foreach val, $(CONFIG_TARGET), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
 install-brew:
-	/usr/bin/ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 install-zinit:
 	where zinit || sh -c "$$(curl -fsSL https://git.io/zinit-install)"
