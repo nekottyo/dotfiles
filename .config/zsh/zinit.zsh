@@ -15,9 +15,6 @@ zinit light romkatv/powerlevel10k
 
 zinit light romkatv/zsh-defer
 
-zinit ice wait lucid
-zinit light greymd/tmux-xpanes
-
 DIRCOLORS_SOLARIZED_ZSH_THEME="ansi-light"
 zinit ice wait lucid
 zinit light pinelibg/dircolors-solarized-zsh
@@ -64,6 +61,9 @@ zinit light mollifier/cd-gitroot
 
 zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
 zinit light zdharma-continuum/zsh-diff-so-fancy
+
+zinit ice wai'3' lucid
+zinit light greymd/tmux-xpanes
 
 # zinit ice wait'3' lucid
 # zinit light kubermatic/fubectl
