@@ -15,10 +15,13 @@ install-brew:
 install-zinit:
 	where zinit || sh -c "$$(curl -fsSL https://git.io/zinit-install)"
 
-install: install-brew
+install: install-brew install-go
 	cat pkg/brew_tap.txt | xargs -n1 brew tap
 	cat pkg/brew.txt | xargs brew install || true
 	cat pkg/cask.txt | xargs brew install --cask
+
+install-go:
+	cat pkg/gopkg.txt | xargs -n1 go install
 
 update:
 	brew tap > pkg/brew_tap.txt
