@@ -53,3 +53,9 @@ function istioctl() {
   source <(istioctl completion zsh)
   $0 "$@"
 }
+
+function clusterctl() {
+  unfunction "$0"
+  source <(clusterctl completion zsh)
+  $0 "$@"
+}
