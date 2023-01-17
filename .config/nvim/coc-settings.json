@@ -7,6 +7,7 @@
   "solargraph.completion": true,
   "solargraph.hover": true,
   "solargraph.rename": true,
+  "eslint.packageManager": "yarn",
   "coc.preferences.formatOnSaveFiletypes": ["ruby"],
   "yaml.schemas": {
     "http://json.schemastore.org/kustomization": [ "kustomization.yaml" ],

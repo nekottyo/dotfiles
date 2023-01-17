@@ -74,6 +74,10 @@ if [[ -a ~/.kube/config ]]; then
   export KUBECONFIG=~/.kube/config
 fi
 
+if [[ -a ~/.localenv ]]; then
+  . ~/.localenv
+fi
+
 if [ -z "$TMUX" ]; then
 
   if [[ $(uname) == "Darwin" ]]; then
@@ -95,6 +99,10 @@ if [ -z "$TMUX" ]; then
 
   if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+  fi
+
+  if [[ -d  "HOME/.cargo/bin" ]]; then
+    export PATH="$PATH:$HOME/.cargo/bin"
   fi
 
   . ~/.config/zsh/anyenv-defer.zsh
