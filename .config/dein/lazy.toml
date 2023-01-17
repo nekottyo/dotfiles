@@ -107,6 +107,10 @@ let g:rufo_auto_formatting = 0
 '''
 
 [[plugins]]
+repo = 'tpope/vim-endwise'
+on_ft = ['rails', 'ruby']
+
+[[plugins]]
 repo = 'tpope/vim-rake'
 depends = 'vim-pathogen'
 

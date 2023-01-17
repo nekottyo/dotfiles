@@ -569,3 +569,9 @@ lua << EOF
 require("nvim-autopairs").setup {}
 EOF
 '''
+
+[[plugins]]
+repo = 'chrisbra/Colorizer'
+hook_add = '''
+let g:colorizer_auto_color = 1
+'''

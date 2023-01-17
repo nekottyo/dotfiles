@@ -68,8 +68,8 @@ zinit light greymd/tmux-xpanes
 # zinit ice wait'3' lucid
 # zinit light kubermatic/fubectl
 
-zinit ice wait'4' lucid as"completion"
-zinit snippet OMZ::plugins/terraform/_terraform
+#zinit ice wait'4' lucid as"completion"
+#zinit snippet OMZ::plugins/terraform/_terraform
 
 zinit ice wait'4' lucid as"program" pick"src/batman.sh" atload"alias man=batman.sh"
 zinit light eth-p/bat-extras
