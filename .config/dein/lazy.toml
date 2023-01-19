@@ -111,6 +111,14 @@ repo = 'tpope/vim-endwise'
 on_ft = ['rails', 'ruby']
 
 [[plugins]]
+repo =  'dense-analysis/ale'
+on_ft = ['rails', 'ruby']
+hook_add = '''
+let g:ale_fixers = { 'ruby': ['rubocop'] }
+let g:ale_fix_on_save = 1
+'''
+
+[[plugins]]
 repo = 'tpope/vim-rake'
 depends = 'vim-pathogen'
 

@@ -8,7 +8,7 @@
   "solargraph.hover": true,
   "solargraph.rename": true,
   "eslint.packageManager": "yarn",
-  "coc.preferences.formatOnSaveFiletypes": ["ruby"],
+  "coc.preferences.formatOnSaveFiletypes": ["ruby", "rails", "typescriptreact", "typescript"],
   "yaml.schemas": {
     "http://json.schemastore.org/kustomization": [ "kustomization.yaml" ],
     "https://raw.githubusercontent.com/GoogleContainerTools/skaffold/master/docs/content/en/schemas/v2beta28.json": [ "skaffold.yaml" ],
