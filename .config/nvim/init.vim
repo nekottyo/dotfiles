@@ -97,20 +97,14 @@ set undofile
 " ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
 
+set tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType python setl tabstop=8 expandtab shiftwidth=4 softtabstop=4
-autocmd FileType yaml setl tabstop=4 expandtab shiftwidth=2 softtabstop=2
-autocmd FileType ruby,eruby,scss setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType ruby let &colorcolumn=join(range(81,999),",")
-autocmd FileType sh,zsh setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType make setl noexpandtab
-autocmd FileType html,vue setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
-autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
-autocmd FileType vim setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
-autocmd FileType toml setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 " autocmd FileType terraform setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 
 autocmd BufRead,BufNewFile *.gs setfiletype javascript
-autocmd FileType javascript,typescript setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+autocmd FileType javascript,typescript,typescriptreact setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 autocmd BufNewFile,BufRead *.tf setlocal filetype=terraform
