@@ -1,5 +1,3 @@
-eval "$(anyenv init - --no-rehash)"
-
 # go
 export GO111MODULE=auto
 export GOPATH=${HOME}/.golang
