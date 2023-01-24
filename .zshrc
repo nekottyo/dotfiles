@@ -87,7 +87,7 @@ if [ -z "$TMUX" ]; then
   export XDG_CONFIG_HOME=$HOME/.config
 
   ## PATH
-  export PATH="/usr/local/bin:/usr/bin:/bin:${PATH}"
+  export PATH="${PATH}:/usr/local/bin:/usr/bin:/bin"
 
   ## krew
   ### https://github.com/kubernetes-sigs/krew
@@ -161,3 +161,5 @@ zinit light-mode for \
 
 ### End of Zinit's installer chunk
 
+
+eval "$(anyenv init - --no-rehash)"

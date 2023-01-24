@@ -325,3 +325,4 @@ depends = 'bclose.vim'
 
 [[plugins]]
 repo = 'rbgrouleff/bclose.vim'
+
