@@ -13,10 +13,12 @@
     "http://json.schemastore.org/kustomization": [ "kustomization.yaml" ],
     "https://raw.githubusercontent.com/GoogleContainerTools/skaffold/master/docs/content/en/schemas/v2beta28.json": [ "skaffold.yaml" ],
     "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.1-standalone/all.json": [ "/*.yaml" ],
-    "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json": ["/*.yaml", "/*.yml"]
+    "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json": ["/*.swagger.yaml", "/*.swagger.yml"],
+    "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json": ["/*.swagger.yaml", "/*.swagger.yml"],
   },
   "yaml.format.enable": true,
   "yaml.validate": true,
+  "yaml.completion": true,
   "json.schemaDownload.enable": true,
   "coc.preferences.colorSupport": true,
   "languageserver": {
