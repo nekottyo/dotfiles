@@ -1,6 +1,9 @@
 [[plugins]]
 repo = "nvim-lua/plenary.nvim"
-depends = 'fzf.vim'
+
+[[plugins]]
+repo = "nvim-telescope/telescope.nvim"
+depends = ["plenary.nvim"]
 hook_add = '''
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -9,8 +12,15 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 '''
-hook_post_source = '''
+
+[[plugins]]
+repo = 'nvim-telescope/telescope-fzf-native.nvim'
+depends = ["telescope.nvim"]
+build = 'make'
+hook_add =  '''
 lua << EOF
+-- You dont need to set any of these options. These are the default ones. Only
+-- the loading is important
 require('telescope').setup {
   extensions = {
     fzf = {
@@ -28,13 +38,6 @@ require('telescope').load_extension('fzf')
 EOF
 '''
 
-[[plugins]]
-repo = "nvim-telescope/telescope.nvim"
-depends = ["plenary.nvim", "telescope-fzf-native.nvim"]
-
-[[plugins]]
-repo = 'nvim-telescope/telescope-fzf-native.nvim'
-build = 'make'
 
 [[plugins]]
 repo = 'junegunn/fzf'
