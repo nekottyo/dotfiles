@@ -66,25 +66,6 @@
       "args": ["start"],
       "filetypes": ["sh"],
       "ignoredRootPaths": ["~"]
-    },
-    "ruby-lsp": {
-        "command": "ruby-lsp",
-        "initializationOptions": {
-        "enabledFeatures": [
-            "codeActions",
-            "diagnostics",
-            "documentHighlights",
-            "documentLink",
-            "documentSymbols",
-            "foldingRanges",
-            "formatting",
-            "hover",
-            "inlayHint",
-            "onTypeFormatting",
-            "selectionRanges"
-        ]
-        },
-        "filetypes": ["ruby"],
     }
   }
 }
