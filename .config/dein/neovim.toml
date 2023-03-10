@@ -3,11 +3,12 @@ repo = "nvim-lua/plenary.nvim"
 
 [[plugins]]
 repo = "nvim-telescope/telescope.nvim"
-depends = ["plenary.nvim"]
+depends = ["plenary.nvim", "fzf.vim"]
 hook_add = '''
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fG <cmd>Telescope grep_string<cr>
+" nnoremap <Leader>fG :lua require'telescope.builtin'.grep_string(require('telescope.themes').get_ivy({}))<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
@@ -15,9 +16,9 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 [[plugins]]
 repo = 'nvim-telescope/telescope-fzf-native.nvim'
-depends = ["telescope.nvim"]
+depends = ["telescope.nvim", "fzf.vim"]
 build = 'make'
-hook_add =  '''
+hook_source =  '''
 lua << EOF
 -- You dont need to set any of these options. These are the default ones. Only
 -- the loading is important
