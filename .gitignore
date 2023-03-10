@@ -5,6 +5,7 @@ tags
 node_modules/
 bower_components/
 .github-token
+wkhtmltopdf
 
 .config/**
 !.config/alacritty

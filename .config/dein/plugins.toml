@@ -344,7 +344,9 @@ let g:vista_default_executive = 'coc'
 
 # コメントアウト
 [[plugins]]
-repo = "tyru/caw.vim"
+# repo = "tyru/caw.vim"
+repo = "yuki-yano/caw.vim"
+rev = "treesitter_error"
 hook_add = '''
 nmap <C-_> <Plug>(caw:hatpos:toggle)
 vmap <C-_> <Plug>(caw:hatpos:toggle)
