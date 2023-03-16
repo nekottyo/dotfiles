@@ -2,6 +2,17 @@
 repo = 'neoclide/coc.nvim'
 rev = 'release'
 hook_add='''
+let g:coc_global_extensions = [
+  \'coc-explorer',
+  \'coc-prettier',
+  \'coc-pyright',
+  \'coc-sh',
+  \'coc-solargraph',
+  \'coc-swagger',
+  \'coc-tsserver',
+  \'coc-yaml'
+\]
+
 " inoremap <silent><expr> <TAB>
 "      \ pumvisible() ? "\<C-n>" :
 "      \ <SID>check_back_space() ? "\<TAB>" :
