@@ -4,7 +4,11 @@ font-hackgen-nerd
 gimp
 keycastr
 ngrok
+postman
+sequel-ace
+session-manager-plugin
 skitch
+tableplus
 tg-pro
 visual-studio-code
 wireshark
