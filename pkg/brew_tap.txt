@@ -4,6 +4,7 @@ aws/tap
 aylei/tap
 budougumi0617/lsas
 cjbassi/ytop
+datreeio/datree
 fairwindsops/tap
 github/gh
 golangci/tap
@@ -11,6 +12,7 @@ hashicorp/tap
 homebrew/cask
 homebrew/cask-fonts
 homebrew/core
+homebrew/services
 jason0x43/neovim-nightly
 ladicle/kubectl-bindrole
 nekottyo/tap
