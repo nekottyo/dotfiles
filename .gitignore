@@ -10,6 +10,7 @@ wkhtmltopdf
 .config/**
 !.config/alacritty
 !.config/dein
+!.config/dein/**
 !.config/efm-langserver
 !.config/nvim
 !.config/starship.toml
