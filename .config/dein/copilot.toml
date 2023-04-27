@@ -1,0 +1,10 @@
+[[plugins]]
+repo = 'github/copilot.vim'
+hook_add='''
+imap <silent> <C-j> <Plug>(copilot-next)
+imap <silent> <C-k> <Plug>(copilot-previous)
+
+let g:copilot_filetypes = {
+    \ '*': v:true,
+    \ }
+'''
