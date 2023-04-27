@@ -101,12 +101,17 @@ if [ -z "$TMUX" ]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
   fi
 
-  if [[ -d  "HOME/.cargo/bin" ]]; then
+  if [[ -d  "${HOME}/.cargo/bin" ]]; then
     export PATH="$PATH:$HOME/.cargo/bin"
   fi
 
-  . ~/.config/zsh/anyenv-defer.zsh
+  if exists "go"; then
+    export PATH="$(go env GOPATH)/bin:${PATH}"
+  fi
+  # . ~/.config/zsh/anyenv-defer.zsh
 fi
+
+source ~/.config/zsh/anyenv-defer.zsh
 
 source ~/.config/zsh/zinit.zsh
 export EDITOR=nvim
