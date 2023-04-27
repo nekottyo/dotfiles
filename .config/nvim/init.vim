@@ -39,6 +39,7 @@ if dein#load_state(s:dein_cache_dir)
 
   call dein#load_toml(s:toml_dir . '/lsp.toml', {'lazy': 0})
   call dein#load_toml(s:toml_dir . '/plugins.toml', {'lazy': 0})
+  call dein#load_toml(s:toml_dir . '/copilot.toml', {'lazy': 0})
   if has('nvim')
     call dein#load_toml(s:toml_dir . '/neovim.toml', {'lazy': 0})
   endif
@@ -109,6 +110,8 @@ autocmd FileType javascript,typescript,typescriptreact setl tabstop=2 expandtab 
 autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 autocmd BufNewFile,BufRead *.tf setlocal filetype=terraform
+autocmd BufNewFile,BufRead *.mdx setlocal filetype=markdown
+
 
 set clipboard&
 set clipboard^=unnamedplus

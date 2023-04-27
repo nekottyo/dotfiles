@@ -53,10 +53,15 @@ autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.org
 '''
 
 [[plugins]]
+repo = 'preservim/vimux'
+
+[[plugins]]
 repo = 'sebdah/vim-delve'
+depends = ['vimux']
 on_ft = 'go'
 hook_add = '''
-let g:delve_backend = "native"
+" let g:delve_backend = "native"
+let g:delve_use_vimux = 1
 '''
 
 # ruby local variable highlight
