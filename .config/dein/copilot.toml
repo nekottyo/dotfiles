@@ -3,8 +3,11 @@ repo = 'github/copilot.vim'
 hook_add='''
 imap <silent> <C-j> <Plug>(copilot-next)
 imap <silent> <C-k> <Plug>(copilot-previous)
+imap <silent> <C-o> <Plug>(copilot-suggest)
 
 let g:copilot_filetypes = {
-    \ '*': v:true,
+    \ 'markdown': v:true,
+    \ 'text': v:true,
+    \ 'yaml': v:true
     \ }
 '''

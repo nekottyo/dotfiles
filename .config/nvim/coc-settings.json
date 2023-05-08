@@ -10,6 +10,7 @@
   "eslint.packageManager": "yarn",
   "coc.preferences.formatOnSaveFiletypes": ["ruby", "rails", "typescriptreact", "typescript"],
   "yaml.schemas": {
+    "https://json.schemastore.org/github-action.json": ["action.yml", "action.yaml"],
     "http://json.schemastore.org/kustomization": [ "kustomization.yaml" ],
     "https://raw.githubusercontent.com/GoogleContainerTools/skaffold/master/docs/content/en/schemas/v2beta28.json": [ "skaffold.yaml" ],
     "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.24.1-standalone/all.json": [ "/*.yaml" ],
