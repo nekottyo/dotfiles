@@ -50,11 +50,8 @@
 	    "terraform",
             "tf"
 	  ],
-	  "initializationOptions": {
-            "rootModulePaths": ["./"]
-          },
 	  "settings": {
-            "validateOnSave": true
+            "validateOnSave": true,
           }
     },
     "efm": {

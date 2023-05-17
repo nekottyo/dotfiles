@@ -124,6 +124,10 @@ let g:ale_fix_on_save = 1
 '''
 
 [[plugins]]
+repo = 'hankei6km/ale-linter-actionlint.vim'
+depends = 'ale'
+
+[[plugins]]
 repo = 'tpope/vim-rake'
 depends = 'vim-pathogen'
 
