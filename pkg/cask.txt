@@ -11,4 +11,3 @@ skitch
 tableplus
 tg-pro
 visual-studio-code
-wireshark

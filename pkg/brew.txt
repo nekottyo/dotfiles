@@ -49,6 +49,7 @@ global
 gnu-getopt
 gnu-sed
 gnupg
+go
 golangci/tap/golangci-lint
 gomplate
 gopls
@@ -58,6 +59,7 @@ graphviz
 grep
 groonga
 gsar
+guile
 hashicorp/tap/terraform-ls
 helmfile
 hexyl
@@ -78,7 +80,6 @@ jsonschema
 k6
 k9s
 kind
-kubebuilder
 kubeconform
 kubectx
 kubeval
@@ -107,6 +108,7 @@ php
 pinentry-mac
 pipes-sh
 procs
+protobuf
 py2cairo
 pyenv-virtualenv
 python-yq
