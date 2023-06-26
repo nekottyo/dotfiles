@@ -209,6 +209,7 @@ depends = ['tabular']
 hook_add = '''
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 '''
 
 [[plugins]]
@@ -268,8 +269,12 @@ au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
 [[plugins]]
 repo = 'elzr/vim-json'
 on_ft = 'json'
-hook_add = '''
+hook_post_source = '''
 let g:vim_json_syntax_conceal = 0
+set conceallevel=0
+let g:indentLine_noConcealCursor=""
+" autocmd InsertEnter *.json setlocal conceallevel=0 concealcursor=
+" autocmd InsertLeave *.json setlocal conceallevel=0 concealcursor=inc
 '''
 
 [[plugins]]
