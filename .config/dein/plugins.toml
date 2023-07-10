@@ -578,3 +578,7 @@ repo = 'chrisbra/Colorizer'
 hook_add = '''
 let g:colorizer_auto_color = 1
 '''
+
+[[plugins]]
+repo = 'tsuyoshicho/vim-efm-langserver-settings'
+depends = ['coc.nvim']
