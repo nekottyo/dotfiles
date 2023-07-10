@@ -217,8 +217,9 @@ repo = 'dhruvasagar/vim-table-mode'
 on_ft = ['markdown', 'md']
 
 [[plugins]]
-repo = 'iamcco/markdown-preview.vim'
+repo = 'iamcco/markdown-preview.nvim'
 on_ft = ['markdown', 'md']
+build = 'sh -c "cd app && yarn install"'
 
 [[plugins]]
 repo = 'slim-template/vim-slim'
