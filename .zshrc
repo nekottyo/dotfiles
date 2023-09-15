@@ -96,6 +96,7 @@ if [ -z "$TMUX" ]; then
   ## anyenv
   export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
+  . ~/.config/zsh/anyenv-defer.zsh
 
   if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
@@ -108,10 +109,9 @@ if [ -z "$TMUX" ]; then
   if exists "go"; then
     export PATH="$(go env GOPATH)/bin:${PATH}"
   fi
-  # . ~/.config/zsh/anyenv-defer.zsh
 fi
 
-source ~/.config/zsh/anyenv-defer.zsh
+# source ~/.config/zsh/anyenv-defer.zsh
 
 source ~/.config/zsh/zinit.zsh
 export EDITOR=nvim
