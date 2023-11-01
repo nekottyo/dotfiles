@@ -20,7 +20,6 @@ clusterctl
 cmake
 colima
 colordiff
-commitizen
 conftest
 ctags
 ctop
@@ -111,6 +110,9 @@ procs
 protobuf
 py2cairo
 pyenv-virtualenv
+python-argcomplete
+python-typing-extensions
+python@3.12
 ripgrep
 robscott/tap/kube-capacity
 saml2aws

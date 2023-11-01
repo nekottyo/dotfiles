@@ -19,6 +19,7 @@ install: install-brew install-go
 	cat pkg/brew_tap.txt | xargs -n1 brew tap
 	cat pkg/brew.txt | xargs brew install || true
 	cat pkg/cask.txt | xargs brew install --cask
+	cat pkg/npm.txt | xargs npm i -g
 
 install-go:
 	cat pkg/gopkg.txt | xargs -n1 go install
@@ -29,6 +30,10 @@ update:
 	brew list --cask > pkg/cask.txt
 	bash ./hack/goinstall.sh show > pkg/gopkg.txt
 	zsh ./hack/update-local.zsh
+	npm list -g -j | jq -r '.dependencies | keys | .[]' > pkg/npm.txt
+
+gopkg.update:
+	./hack/goinstall.sh show | xargs -n1 go install
 
 test.init:
 	brew install coreutils
