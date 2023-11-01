@@ -1,0 +1,13 @@
+@pkgdeps/update-github-actions-permissions
+action-docs
+ajv-cli
+bash-language-server
+corepack
+leetcode-cli
+neovim
+np
+npm
+prettier
+prettier-plugin-go-template
+yaml-to-json-schema
+yarn

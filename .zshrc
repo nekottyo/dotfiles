@@ -87,7 +87,7 @@ if [ -z "$TMUX" ]; then
   export XDG_CONFIG_HOME=$HOME/.config
 
   ## PATH
-  export PATH="${PATH}:/usr/local/bin:/usr/bin:/bin"
+  export PATH="${PATH}:/usr/local/bin:/usr/bin:/bin:${HOME}/.local/bin"
 
   ## krew
   ### https://github.com/kubernetes-sigs/krew

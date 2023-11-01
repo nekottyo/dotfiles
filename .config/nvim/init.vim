@@ -111,6 +111,7 @@ autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 autocmd BufNewFile,BufRead *.tf setlocal filetype=terraform
 autocmd BufNewFile,BufRead *.mdx setlocal filetype=markdown
+autocmd BufNewFile,BufRead */chart-libs/**/templates/*.yaml setlocal filetype=mustache
 
 
 set clipboard&
