@@ -36,6 +36,7 @@ eksctl
 expect
 fairwindsops/tap/pluto
 fb303
+fbthrift
 fd
 findutils
 fzf
@@ -103,6 +104,7 @@ norwoodj/tap/helm-docs
 openjdk@11
 packer
 pandoc
+parquet-cli
 php
 pinentry-mac
 pipes-sh
@@ -112,7 +114,6 @@ py2cairo
 pyenv-virtualenv
 python-argcomplete
 python-typing-extensions
-python@3.12
 ripgrep
 robscott/tap/kube-capacity
 saml2aws

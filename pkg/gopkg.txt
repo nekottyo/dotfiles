@@ -2,6 +2,7 @@ github.com/josharian/impl@latest
 golang.org/x/tools/cmd/gorename@latest
 golang.org/x/tools/cmd/guru@latest
 github.com/spf13/cobra-cli@latest
+github.com/ofabry/go-callvis@latest
 honnef.co/go/tools/cmd/staticcheck@latest
 github.com/git-chglog/git-chglog/cmd/git-chglog@latest
 google.golang.org/protobuf/internal/cmd/generate-protos@latest
