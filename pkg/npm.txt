@@ -9,5 +9,6 @@ np
 npm
 prettier
 prettier-plugin-go-template
+textlint
 yaml-to-json-schema
 yarn
