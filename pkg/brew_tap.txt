@@ -13,6 +13,7 @@ haya14busa/tap
 homebrew/cask-fonts
 homebrew/services
 jason0x43/neovim-nightly
+kanmu/tools
 ladicle/kubectl-bindrole
 nekottyo/tap
 norwoodj/tap
