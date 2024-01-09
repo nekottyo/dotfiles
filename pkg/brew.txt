@@ -2,6 +2,7 @@ act
 adns
 ansible-lint
 anyenv
+aquaproj/aqua/aqua
 argocd
 argoproj/tap/kubectl-argo-rollouts
 asdf
@@ -24,6 +25,7 @@ conftest
 ctags
 ctop
 datreeio/datree/datree
+deno
 dfu-programmer
 dfu-util
 dive
@@ -80,6 +82,7 @@ jid
 jsonschema
 k6
 k9s
+kanmu/tools/ddcat
 kubeconform
 kubectx
 kubeval
