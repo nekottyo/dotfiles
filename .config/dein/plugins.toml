@@ -532,6 +532,7 @@ require'nvim-treesitter.configs'.setup {
   },
   ensure_installed = {
     "bash",
+    "diff",
     "go",
     "gomod",
     "html",
@@ -539,6 +540,7 @@ require'nvim-treesitter.configs'.setup {
     "json",
     "lua",
     "make",
+    "markdown",
     "perl",
     "python",
     "regex",
