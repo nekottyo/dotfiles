@@ -116,7 +116,7 @@ fi
 source ~/.config/zsh/zinit.zsh
 export EDITOR=nvim
 
-[ -f ~/.fzf.zsh ] && zsh-defer . ~/.fzf.zsh
+[ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
 export FZF_DEFAULT_OPTS='--height 60% --reverse --border --ansi'
 export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
 
