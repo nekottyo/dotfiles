@@ -22,3 +22,5 @@ autoload -Uz fbr
 autoload -Uz ggrok
 autoload -z kubectl-get-pod-on-ng
 autoload -z aws-list-tg-health
+autoload -z aws-profile
+autoload -z aws-default

@@ -1,0 +1,5 @@
+ # vim: ft=zsh
+function aws-profile() {
+  export AWS_PROFILE=$(cat ~/.aws/config | grep -Po '(?<=profile )[\w-]*' | fzf)
+  aws sso login
+}
