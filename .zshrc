@@ -128,7 +128,7 @@ if [[ $(uname) == "Darwin" ]]; then
 fi
 
 if exists "saml2aws"; then
-  SAML_LOGIN_CMD="saml2aws login --skip-prompt -a default --force --session-duration=10800"
+  SAML_LOGIN_CMD="export AWS_PROFILE=default; saml2aws login --skip-prompt -a default --force --session-duration=10800"
 
   alias alogin="${SAML_LOGIN_CMD}"
   alias aadmin="${SAML_LOGIN_CMD} --role=\"${SSO_ADMIN}\""
