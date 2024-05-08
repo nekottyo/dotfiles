@@ -18,3 +18,4 @@ wkhtmltopdf
 !.config/tmux
 !.config/zsh
 !.config/zsh/**
+.config/**/*.zwc
