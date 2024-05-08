@@ -1,0 +1,4 @@
+# vim: ft=zsh
+function aws-default(){
+  export AWS_PROFILLE=default
+}

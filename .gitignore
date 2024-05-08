@@ -17,3 +17,4 @@ wkhtmltopdf
 !.config/terminator
 !.config/tmux
 !.config/zsh
+!.config/zsh/**
