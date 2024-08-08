@@ -112,6 +112,7 @@ autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 autocmd BufNewFile,BufRead *.tf setlocal filetype=terraform
 autocmd BufNewFile,BufRead *.mdx setlocal filetype=markdown
 autocmd BufNewFile,BufRead */chart-libs/**/templates/*.yaml setlocal filetype=mustache
+autocmd BufNewFile,BufRead helmfile*.y*ml setlocal filetype=helmfile
 
 
 set clipboard&

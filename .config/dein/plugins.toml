@@ -529,18 +529,21 @@ lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
+    disable = {"markdown"}
   },
   ensure_installed = {
     "bash",
     "diff",
     "go",
     "gomod",
+    "gotmpl",
     "html",
     "http",
     "json",
     "lua",
     "make",
     "markdown",
+    "markdown_inline",
     "perl",
     "python",
     "regex",

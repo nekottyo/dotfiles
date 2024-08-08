@@ -56,7 +56,7 @@
     "efm": {
       "command": "efm-langserver",
       "args": [],
-      "filetypes": ["markdown", "yaml"]
+      "filetypes": ["yaml"]
     },
     "bash": {
       "command": "bash-language-server",

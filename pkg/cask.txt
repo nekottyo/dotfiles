@@ -1,6 +1,7 @@
 alfred
 bettertouchtool
 font-hackgen-nerd
+gcc-arm-embedded
 gimp
 keycastr
 ngrok
