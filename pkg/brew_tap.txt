@@ -10,7 +10,6 @@ github/gh
 golangci/tap
 hashicorp/tap
 haya14busa/tap
-homebrew/cask-fonts
 homebrew/services
 homeport/tap
 jason0x43/neovim-nightly
