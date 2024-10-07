@@ -62,7 +62,7 @@ zinit light mollifier/cd-gitroot
 zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
 zinit light zdharma-continuum/zsh-diff-so-fancy
 
-zinit ice wai'3' lucid
+zinit ice wait'3' lucid
 zinit light greymd/tmux-xpanes
 
 # zinit ice wait'3' lucid
