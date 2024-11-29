@@ -126,8 +126,6 @@ if [ -z "$TMUX" ]; then
   fi
 fi
 
-# source ~/.config/zsh/anyenv-defer.zsh
-
 source ~/.config/zsh/zinit.zsh
 export EDITOR=nvim
 
