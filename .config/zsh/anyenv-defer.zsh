@@ -1,5 +1,3 @@
-# go
-
 source ~/.config/zsh/functions/exists
 
 # https://zenn.dev/ktakayama/articles/27b9d6218ed2f0ee9992
