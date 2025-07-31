@@ -3,7 +3,6 @@ argoproj/tap
 aws/tap
 aylei/tap
 budougumi0617/lsas
-cjbassi/ytop
 hashicorp/tap
 homebrew/services
 homeport/tap

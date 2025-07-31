@@ -17,7 +17,6 @@ budougumi0617/lsas/lsas
 cfssl
 chart-testing
 circleci
-cjbassi/ytop/ytop
 clusterctl
 cmake
 colima
