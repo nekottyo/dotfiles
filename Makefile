@@ -16,16 +16,13 @@ install-zinit:
 	where zinit || sh -c "$$(curl -fsSL https://git.io/zinit-install)"
 
 install: install-brew install-go
-	cat pkg/brew_tap.txt | xargs -n1 brew tap
 	cat pkg/brew.txt | xargs brew install || true
-	cat pkg/cask.txt | xargs brew install --cask
 	cat pkg/npm.txt | xargs npm i -g
 
 install-go:
 	cat pkg/gopkg.txt | xargs -n1 go install
 
 update:
-	brew tap > pkg/brew_tap.txt
 	brew leaves > pkg/brew.txt
 	brew list --cask > pkg/cask.txt
 	bash ./hack/goinstall.sh show > pkg/gopkg.txt
@@ -39,16 +36,16 @@ test.init:
 	brew install coreutils
 	gsplit -n 3 -d -a1 pkg/brew.txt brew-
 
-test.brew.0: test.init test.tap
+test.brew.0: test.init
 	cat brew-0 | xargs -t brew install || true
 
-test.brew.1: install-brew test.init test.tap
+test.brew.1: install-brew test.init
 	cat brew-1 | xargs -t brew install || true
 
-test.brew.2: install-brew test.init test.tap
+test.brew.2: install-brew test.init
 	cat brew-2 | xargs -t brew install || true
 
-test.cask: install-brew test.tap
+test.cask: install-brew
 	cat pkg/cask.txt | xargs -t brew install --cask
 
 test.deploy: deploy
