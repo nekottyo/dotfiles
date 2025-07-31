@@ -10,5 +10,4 @@ sequel-ace
 session-manager-plugin
 skitch
 tableplus
-tg-pro
 visual-studio-code
