@@ -4,7 +4,6 @@ aws/tap
 aylei/tap
 budougumi0617/lsas
 cjbassi/ytop
-datreeio/datree
 hashicorp/tap
 homebrew/services
 homeport/tap
