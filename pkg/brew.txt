@@ -24,7 +24,6 @@ colima
 colordiff
 conftest
 ctop
-datreeio/datree/datree
 deno
 dive
 docker
@@ -34,7 +33,6 @@ docutils
 efm-langserver
 eksctl
 expect
-fairwindsops/tap/pluto
 fd
 findutils
 fzf

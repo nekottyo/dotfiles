@@ -22,7 +22,6 @@ fi
 
 [[ -f ~/.profile ]] && source ~/.profile
 
-[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
 [[ -d /opt/homebrew/bin ]] && export PATH="$PATH:/opt/homebrew/bin"
 
@@ -93,8 +92,8 @@ if [[ -a ~/.localenv ]]; then
   . ~/.localenv
 fi
 
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 if [ -z "$TMUX" ]; then
-
   if [[ $(uname) == "Darwin" ]]; then
       export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
   fi
@@ -157,6 +156,8 @@ fi
 zsh-defer -c "$(pyenv init -)"
 
 zsh-defer source ~/.config/zsh/logging_tmux_pane.zsh
+
+
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
