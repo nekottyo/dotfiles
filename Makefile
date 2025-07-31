@@ -39,10 +39,7 @@ test.init:
 	brew install coreutils
 	gsplit -n 3 -d -a1 pkg/brew.txt brew-
 
-test.tap: install-brew
-	cat pkg/brew_tap.txt | xargs -t -n1 brew tap
-
-test.brew.0: install-brew test.init test.tap
+test.brew.0: test.init test.tap
 	cat brew-0 | xargs -t brew install || true
 
 test.brew.1: install-brew test.init test.tap
