@@ -37,10 +37,10 @@ let g:go_def_mapping_enabled = 0
 let g:go_doc_keywordprg_enabled = 0
 
 let g:neomake_go_errcheck_maker = {
-  \ 'args': ['-abspath'],
-  \ 'append_file': 0,
-  \ 'errorformat': '%f:%l:%c:\ %m, %f:%l:%c\ %#%m',
-  \ }
+ \ 'args': ['-abspath'],
+ \ 'append_file': 0,
+ \ 'errorformat': '%f:%l:%c:\ %m, %f:%l:%c\ %#%m',
+ \ }
 let g:go_gocode_unimported_packages = 1
 let g:sonictemplate_enable_pattern = 1
 

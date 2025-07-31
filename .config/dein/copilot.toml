@@ -18,7 +18,7 @@ repo = 'zbirenbaum/copilot.lua'
 
 [[plugins]]
 repo = 'CopilotC-Nvim/CopilotChat.nvim'
-rev = 'canary'
+rev = 'master'
 depends = ['plenary.nvim', 'copilot.lua']
 hook_add='''
 lua << EOF

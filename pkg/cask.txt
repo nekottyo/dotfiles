@@ -1,6 +1,7 @@
 alfred
 bettertouchtool
 font-hackgen-nerd
+gcc-arm-embedded
 gimp
 keycastr
 ngrok
@@ -9,5 +10,4 @@ sequel-ace
 session-manager-plugin
 skitch
 tableplus
-tg-pro
 visual-studio-code
