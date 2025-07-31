@@ -2,7 +2,6 @@ aquaproj/aqua
 argoproj/tap
 aws/tap
 aylei/tap
-budougumi0617/lsas
 hashicorp/tap
 homebrew/services
 homeport/tap
