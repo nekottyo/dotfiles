@@ -10,12 +10,12 @@ deploy: install-zinit
 	@$(foreach val, $(CONFIG_TARGET), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
 install-brew:
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 install-zinit:
 	where zinit || sh -c "$$(curl -fsSL https://git.io/zinit-install)"
 
-install: install-brew install-go
+install: install-brew
 	cat pkg/brew.txt | xargs brew install || true
 	cat pkg/npm.txt | xargs npm i -g
 

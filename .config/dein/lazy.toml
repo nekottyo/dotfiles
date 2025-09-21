@@ -5,14 +5,14 @@ on_ft = ['py', 'python']
 [[plugins]]
 repo = 'nvie/vim-flake8'
 on_ft = ['py', 'python']
-hock_add = '''
+hook_add = '''
 autocmd BufWritePost *.py call Flake8()
 '''
 
 [[plugins]]
 repo = 'tell-k/vim-autopep8'
 on_ft = ['py', 'python']
-hock_add = '''
+hook_add = '''
 autocmd FileType python noremap <buffer> <S-f> :call Autopep8()<CR>
 '''
 
@@ -270,13 +270,16 @@ au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
 [[plugins]]
 repo = 'elzr/vim-json'
 on_ft = 'json'
-hook_post_source = '''
+hook_source = '''
 let g:vim_json_syntax_conceal = 0
-set conceallevel=0
 let g:indentLine_noConcealCursor=""
 " autocmd InsertEnter *.json setlocal conceallevel=0 concealcursor=
 " autocmd InsertLeave *.json setlocal conceallevel=0 concealcursor=inc
 '''
+hook_post_source = '''
+set conceallevel=0
+'''
+
 
 [[plugins]]
 repo =  'uarun/vim-protobuf'
@@ -348,4 +351,21 @@ on_ft = ['bash', 'sh']
 hook_add = '''
 let g:shfmt_extra_args = '-i 2'
 let g:shfmt_fmt_on_save = 1
+'''
+
+[[plugins]]
+repo = 'djoshea/vim-autoread'
+
+## devcontainer
+[[plugins]]
+repo = 'MunifTanjim/nui.nvim'
+
+
+[[plugins]]
+repo = 'esensar/nvim-dev-container'
+depends = 'nvim-treesitter/nvim-treesitter'
+hook_post_source = '''
+lua << EOF
+require("devcontainer").setup{}
+EOF
 '''

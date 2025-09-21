@@ -69,10 +69,8 @@ k9s
 kanmu/tools/ddcat
 kubeconform
 kubectx
-kubeval
 kustomize
 ladicle/kubectl-bindrole/kubectl-rolesum
-libglade
 libmagic
 libtermkey
 lsd
@@ -93,7 +91,6 @@ pinentry-mac
 pipes-sh
 procs
 protobuf
-py2cairo
 pyenv-virtualenv
 python@3.10
 qmk/qmk/qmk
@@ -108,7 +105,6 @@ tcpdump
 telnet
 terraform-docs
 terraformer
-terraforming
 texinfo
 tflint
 tig
