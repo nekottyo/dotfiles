@@ -108,6 +108,7 @@ autocmd FileType make setl noexpandtab
 autocmd BufRead,BufNewFile *.gs setfiletype javascript
 autocmd FileType javascript,typescript,typescriptreact setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType dockerfile setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+autocmd Filetype,BufNewFile,BufRead json setl conceallevel=0
 autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 autocmd BufNewFile,BufRead *.tf setlocal filetype=terraform
 autocmd BufNewFile,BufRead *.mdx setlocal filetype=markdown

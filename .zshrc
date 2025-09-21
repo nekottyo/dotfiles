@@ -64,6 +64,9 @@ setopt nolistbeep
 setopt prompt_subst
 setopt pushd_ignore_dups
 
+# https://sunday-morning.app/posts/2019-08-31-tmux-ctrl-a
+bindkey -e
+
 autoload colors
 zstyle ':completion:*' use-cache true
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -107,10 +110,8 @@ if [ -z "$TMUX" ]; then
   ### https://github.com/kubernetes-sigs/krew
   export PATH="${PATH}:${HOME}/.krew/bin"
 
-  ## anyenv
-  export PATH="${HOME}/.anyenv/bin:${PATH}"
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
-  . ~/.config/zsh/anyenv-defer.zsh
+  . ~/.config/zsh/mise.zsh
 
   if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
