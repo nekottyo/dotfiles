@@ -8,7 +8,8 @@ imap <silent> <C-o> <Plug>(copilot-suggest)
 let g:copilot_filetypes = {
     \ 'markdown': v:true,
     \ 'text': v:true,
-    \ 'yaml': v:true
+    \ 'yaml': v:true,
+    \ "go": v:true
     \ }
 '''
 

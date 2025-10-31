@@ -22,9 +22,6 @@ fi
 
 [[ -f ~/.profile ]] && source ~/.profile
 
-
-[[ -d /opt/homebrew/bin ]] && export PATH="$PATH:/opt/homebrew/bin"
-
 function exists() {
   (( ${+commands[$1]} ))
 }
@@ -97,6 +94,8 @@ fi
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 if [ -z "$TMUX" ]; then
+  [[ -d /opt/homebrew/bin ]] && export PATH="$PATH:/opt/homebrew/bin"
+
   if [[ $(uname) == "Darwin" ]]; then
       export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
   fi
@@ -111,7 +110,6 @@ if [ -z "$TMUX" ]; then
   export PATH="${PATH}:${HOME}/.krew/bin"
 
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
-  . ~/.config/zsh/mise.zsh
 
   if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
@@ -159,7 +157,6 @@ zsh-defer -c "$(pyenv init -)"
 zsh-defer source ~/.config/zsh/logging_tmux_pane.zsh
 
 
-
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
 fi
@@ -180,3 +177,9 @@ zinit light-mode for \
     zdharma-continuum/zinit-annex-rust
 
 ### End of Zinit's installer chunk
+
+if [ -x "/opt/homebrew/bin/mise" ]; then
+  export MISE_ACTIVATE_AGGRESSIVE=1
+  eval "$(/opt/homebrew/bin/mise activate zsh)"
+fi
+
