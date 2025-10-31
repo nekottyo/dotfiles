@@ -43,15 +43,19 @@
         "args": ["--stdio"]
     },
     "terraform": {
-	  "command": "terraform-ls",
-	  "args": ["serve"],
-	  "filetypes": [
-	    "terraform",
-            "tf"
-	  ],
-	  "settings": {
-            "validateOnSave": true,
-          }
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "filetypes": [
+        "terraform",
+        "tf"
+      ],
+      "settings": {
+        "experimentalFeatures": {
+          "validateOnSave": true,
+          "prefillRequiredFields": true,
+          "validation": true,
+        }
+      }
     },
     "efm": {
       "command": "efm-langserver",
