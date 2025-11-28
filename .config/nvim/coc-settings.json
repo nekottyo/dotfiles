@@ -47,7 +47,8 @@
       "args": ["serve"],
       "filetypes": [
         "terraform",
-        "tf"
+        "tf",
+        "tfvars"
       ],
       "settings": {
         "experimentalFeatures": {
@@ -67,6 +68,16 @@
       "args": ["start"],
       "filetypes": ["sh"],
       "ignoredRootPaths": ["~"]
+    },
+    "kotlin": {
+      "command": "kotlin-lsp",
+      "filetypes": ["kotlin"],
+      "args": []
+    },
+    "proto": {
+      "command": "protols",
+      "filetypes": ["proto"],
+      "args": []
     }
   }
 }
