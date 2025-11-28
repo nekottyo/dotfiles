@@ -1,4 +1,19 @@
 # history of zsh startup time
+## 2025/11/28
+MBA M4 16GB
+```consoel
+❯ for i in {1..10} ; do time ( zsh -i -c exit ); done
+( zsh -i -c exit; )  0.08s user 0.11s system 42% cpu 0.435 total
+( zsh -i -c exit; )  0.05s user 0.06s system 55% cpu 0.197 total
+( zsh -i -c exit; )  0.05s user 0.05s system 55% cpu 0.186 total
+( zsh -i -c exit; )  0.05s user 0.05s system 53% cpu 0.193 total
+( zsh -i -c exit; )  0.05s user 0.05s system 54% cpu 0.189 total
+( zsh -i -c exit; )  0.05s user 0.05s system 55% cpu 0.184 total
+( zsh -i -c exit; )  0.05s user 0.05s system 55% cpu 0.188 total
+( zsh -i -c exit; )  0.05s user 0.05s system 54% cpu 0.190 total
+( zsh -i -c exit; )  0.05s user 0.05s system 54% cpu 0.190 total
+( zsh -i -c exit; )  0.05s user 0.05s system 53% cpu 0.194 total
+```
 
 ## 2022/06/10
 MBP M1 Pro 32GB
