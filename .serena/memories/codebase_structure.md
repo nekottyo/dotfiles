@@ -1,0 +1,76 @@
+# Codebase Structure
+
+The project has a clear and organized directory structure:
+
+-   `.`: The root directory contains core dotfiles and main project files.
+    -   `.gitignore`: Specifies intentionally untracked files to ignore.
+    -   `.ideavimrc`: Configuration for IdeaVim.
+    -   `.p10k.zsh`: Configuration for Powerlevel10k Zsh theme.
+    -   `.tigrc`: Configuration for Tig (Git interface).
+    -   `.tmux.conf`: Configuration for tmux.
+    -   `.whitesource`: Likely related to WhiteSource software composition analysis.
+    -   `.zshrc`: Main Zsh configuration file.
+    -   `Makefile`: Automates installation, deployment, and updates.
+    -   `README.md`: Project overview and basic instructions.
+    -   `SPEED_HISTORY.md`: Potentially a log of performance-related changes or benchmarks.
+-   `.config/`: This directory holds configuration files for various applications, symlinked to `~/.config/`.
+    -   `alacritty/`: Alacritty terminal emulator configuration.
+    -   `anyenv/`: Configuration for anyenv (tool version manager).
+    -   `coc/`: Conquer of Completion (Neovim plugin) configuration.
+    -   `colima/`: Colima (container runtime for macOS) configuration.
+    -   `configstore/`: Configuration store for various CLI tools.
+    -   `dein/`: Dein.vim (Neovim plugin manager) configuration, including plugin lists (`copilot.toml`, `lazy.toml`, `lsp.toml`, `neovim.toml`, `plugins.toml`).
+    -   `efm-langserver/`: EFM Language Server configuration.
+    -   `gcloud/`: Google Cloud CLI configuration.
+    -   `gh/`: GitHub CLI configuration.
+    -   `ghostty/`: Ghostty terminal emulator configuration.
+    -   `github-copilot/`: GitHub Copilot configuration.
+    -   `htop/`: htop (interactive process viewer) configuration.
+    -   `mise/`: Configuration for `mise` (next-gen `asdf` replacement).
+    -   `nvim/`: Neovim configuration.
+        -   `snippets/`: Neovim snippets.
+    -   `terminator/`: Terminator terminal emulator configuration.
+    -   `tmux/`: tmux configuration.
+    -   `toolhive/`: Configuration for `toolhive`.
+    -   `zsh/`: Zsh specific configurations.
+        -   `alias.zsh`: Zsh aliases.
+        -   `anyenv-defer.zsh`: anyenv defer loading script.
+        -   `aws_expire.zsh`: AWS credentials expiration script.
+        -   `lazy_completion.zsh`: Lazy Zsh completion setup.
+        -   `logging_tmux_pane.zsh`: tmux pane logging script.
+        -   `macos.zsh`: macOS specific Zsh configurations.
+        -   `tmux-ssh-overwrite-bg.zsh`: tmux SSH background override.
+        -   `utils.zsh`: Utility functions for Zsh.
+        -   `zinit.zsh`: Zinit plugin manager configuration.
+        -   `functions/`: Directory for Zsh functions.
+            -   `aws-default`, `aws-list-tg-health`, `aws-profile`, `eks-write-config`, `exists`, `fbr`, `fdv`, `fghq`, `fstash`, `fzf-z-search`, `ggrok`, `kubectl-get-pod-on-ng`, `lssh`, `README.md`, `xssh`: various utility functions.
+-   `.git/`: Git repository metadata.
+-   `.github/`: GitHub specific configurations.
+    -   `workflows/`: GitHub Actions workflow definitions.
+        -   `automerge.yml`: Workflow for automerging pull requests.
+        -   `rebase.yml`: Workflow for rebasing pull requests.
+        -   `test.yml`: Workflow for running tests.
+-   `.serena/`: Directory for Serena-related files (current working context for the agent).
+    -   `.gitignore`: Git ignore for Serena files.
+    -   `project.yml`: Serena project configuration.
+    -   `cache/`: Serena cache files.
+    -   `memories/`: Serena memory files (where this information is being stored).
+-   `configs/`: Other configuration files, not directly symlinked by `deploy` but potentially managed by other means.
+    -   `btt/`: BetterTouchTool configurations.
+        -   `mac.bttpreset`: BetterTouchTool preset for macOS.
+    -   `iterm2/`: iTerm2 configurations.
+        -   `Default.json`: iTerm2 profile.
+-   `hack/`: Scripts for various helper tasks.
+    -   `goinstall.sh`: Script to install Go packages.
+    -   `update-local.zsh`: Local update script.
+-   `install/`: Scripts for installing tools.
+    -   `anyenv.sh`: anyenv installation script.
+    -   `fzf.zsh`: fzf installation script.
+    -   `kubectl.sh`: kubectl installation script.
+    -   `local.sh`: Local installation script.
+    -   `macos.sh`: macOS specific installation script.
+-   `pkg/`: Directory containing lists of packages for different package managers.
+    -   `brew.txt`: List of Homebrew packages.
+    -   `cask.txt`: List of Homebrew Cask applications.
+    -   `gopkg.txt`: List of Go packages.
+    -   `npm.txt`: List of npm packages.

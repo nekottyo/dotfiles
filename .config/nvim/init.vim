@@ -114,7 +114,7 @@ autocmd BufNewFile,BufRead *.tf setlocal filetype=terraform
 autocmd BufNewFile,BufRead *.mdx setlocal filetype=markdown
 autocmd BufNewFile,BufRead */chart-libs/**/templates/*.yaml setlocal filetype=mustache
 autocmd BufNewFile,BufRead helmfile*.y*ml setlocal filetype=helmfile
-
+autocmd BufNewFile,BufRead *.kt setlocal filetype=kotlin
 
 set clipboard&
 set clipboard^=unnamedplus
