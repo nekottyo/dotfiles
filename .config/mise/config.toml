@@ -1,0 +1,10 @@
+[tools]
+gradle = "8.8"
+java = "openjdk-21.0.2"
+kotlin = "2.0.0"
+node = "24.7"
+python = "3.14.0"
+quarkus = "3.15.1"
+ruby = "latest"
+rust = "latest"
+terraform = "1.9.3"

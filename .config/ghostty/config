@@ -1,0 +1,38 @@
+# Theme
+theme = Iceberg Dark
+
+# Font
+font-family = MesloLGS NF
+font-feature = -dlig
+font-size = 14
+
+font-style-bold = false
+font-style-italic = false
+font-style-bold-italic = false
+
+font-thicken = true
+font-thicken-strength = 1
+
+alpha-blending = linear
+
+adjust-cell-width = -1
+adjust-cell-height = 2
+
+# macOS
+macos-titlebar-style = hidden
+macos-window-shadow = false
+
+# Shell
+shell-integration-features = no-cursor
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+cursor-invert-fg-bg = true
+cursor-opacity = 0.8
+
+# Other
+mouse-hide-while-typing = true
+resize-overlay = never
+link-url = true
+keybind = ¥=text:\\
