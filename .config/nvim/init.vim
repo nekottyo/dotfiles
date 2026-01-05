@@ -91,7 +91,7 @@ set scrolloff=3
 set autoread
 set noshowmode
 set inccommand=split
-set ambiwidth=double
+" set ambiwidth=double
 set undodir=~/.cache/nvim/undo
 set undofile
 set foldmethod=manual
