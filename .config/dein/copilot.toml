@@ -1,21 +1,25 @@
-[[plugins]]
-repo = 'github/copilot.vim'
-hook_add='''
-imap <silent> <C-j> <Plug>(copilot-next)
-imap <silent> <C-k> <Plug>(copilot-previous)
-imap <silent> <C-o> <Plug>(copilot-suggest)
-
-let g:copilot_filetypes = {
-    \ 'markdown': v:true,
-    \ 'text': v:true,
-    \ 'yaml': v:true,
-    \ "go": v:true
-    \ }
-'''
+# [[plugins]]
+# repo = 'github/copilot.vim'
+# hook_add='''
+# imap <silent> <C-j> <Plug>(copilot-next)
+# imap <silent> <C-k> <Plug>(copilot-previous)
+# imap <silent> <C-o> <Plug>(copilot-suggest)
+#
+# let g:copilot_filetypes = {
+#     \ 'markdown': v:true,
+#     \ 'text': v:true,
+#     \ 'yaml': v:true,
+#     \ "go": v:true
+#     \ }
+# '''
 
 [[plugins]]
 repo = 'zbirenbaum/copilot.lua'
-
+hook_add = '''
+lua << EOF
+require("copilot").setup({})
+EOF
+'''
 
 [[plugins]]
 repo = 'CopilotC-Nvim/CopilotChat.nvim'
@@ -27,5 +31,159 @@ require("CopilotChat").setup {
   debug = true, -- Enable debugging
   -- See Configuration section for rest
 }
+EOF
+'''
+
+[[plugins]]
+repo = 'neovim/nvim-lspconfig'
+
+[[plugins]]
+repo = 'folke/snacks.nvim'
+hook_add = '''
+lua << EOF
+require("snacks").setup({})
+EOF
+'''
+
+# https://zenn.dev/arrow2nd/articles/2025-init-lua#ai%E3%82%A2%E3%82%B7%E3%82%B9%E3%82%BF%E3%83%B3%E3%83%88
+[[plugins]]
+repo = 'folke/sidekick.nvim'
+depends = ["nvim-lspconfig", "snacks.nvim", "copilot.lua"]
+hook_add = '''
+lua << EOF
+require("sidekick").setup({
+  cli = {
+    win = {
+      split = {
+        width = 100,
+      },
+    },
+  },
+})
+
+-- 記事を参考にした設定: sidekick://prompt バッファの挙動定義
+vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
+  pattern = { "sidekick://prompt" },
+  callback = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    vim.api.nvim_set_option_value("filetype", "markdown", { buf = bufnr })
+    vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = bufnr })
+    vim.api.nvim_set_option_value("buflisted", false, { buf = bufnr })
+    vim.api.nvim_set_option_value("swapfile", false, { buf = bufnr })
+
+    local function map(mode, lhs, rhs)
+      vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, buffer = bufnr })
+    end
+
+    map("n", "q", "<Cmd>q<CR>")
+    map("n", "<c-n>", "<Cmd>q<CR>")
+    map("n", "Q", "<Cmd>q!<CR>")
+
+    -- <C-t> で閉じる (キャンセル)
+    local close_prompt = function()
+      vim.cmd("stopinsert")
+      -- プロンプトウィンドウを閉じる
+      vim.cmd("q")
+    end
+    map("n", "<C-t>", close_prompt)
+    map("i", "<C-t>", close_prompt)
+
+    vim.schedule(function()
+      vim.cmd("startinsert")
+    end)
+
+    -- <CR> で送信 (ノーマルモード)
+    map("n", "<CR>", function()
+      local prompt_lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+      local input = table.concat(prompt_lines, "\n")
+
+      -- 公式APIを使用して送信 (実行はしない)
+      require("sidekick.cli").send({ msg = input })
+
+      -- 少し待ってから、物理的にEnterキーを送信して実行させる
+      vim.defer_fn(function()
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
+
+          -- さらに少し待ってからバッファを閉じる
+          vim.defer_fn(function()
+              if vim.api.nvim_buf_is_valid(bufnr) then
+                  vim.api.nvim_buf_delete(bufnr, { force = true })
+              end
+          end, 100)
+      end, 200)
+    end)
+  end,
+})
+
+-- <C-t> のトグル処理を関数化
+_G.toggle_sidekick_prompt = function(force_open)
+  -- 1. 既にプロンプトが開いているか確認
+  local prompt_win = nil
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local name = vim.api.nvim_buf_get_name(buf)
+    if name:match("sidekick://prompt$") then
+      prompt_win = win
+      break
+    end
+  end
+
+  if prompt_win then
+    if force_open then
+       -- 強制オープンの場合、既に開いていればフォーカスしてインサートモードへ
+       vim.schedule(function()
+           vim.api.nvim_set_current_win(prompt_win)
+           vim.cmd("startinsert")
+       end)
+       return
+    else
+       -- 通常トグルの場合、閉じる
+       vim.api.nvim_win_close(prompt_win, true)
+       return
+    end
+  end
+
+  -- 2. Gemini を表示 (フォーカスはしない)
+  require("sidekick.cli").show({ name = "gemini", focus = false })
+
+  -- 3. Geminiのウィンドウを探して、その下に開く
+  vim.defer_fn(function()
+    local State = require("sidekick.cli.state")
+    local states = State.get({ name = "gemini" })
+    local gemini_state = states[1]
+
+    if gemini_state and gemini_state.terminal and gemini_state.terminal:is_open() then
+      local winid = gemini_state.terminal.win
+
+      -- Geminiのウィンドウに一時的にフォーカスを移す
+      vim.api.nvim_set_current_win(winid)
+
+      -- Geminiの下に高さ10行で開く
+      vim.cmd("belowright 10split sidekick://prompt")
+    else
+      -- Geminiが見つからない場合はフォールバックとして現在のウィンドウで開く
+      vim.cmd("vsplit sidekick://prompt")
+    end
+  end, 100)
+end
+
+-- ノーマルモードでのマッピング (トグル)
+vim.keymap.set("n", "<C-t>", function() _G.toggle_sidekick_prompt(false) end, { silent = true })
+
+-- Sidekick (ターミナル) 内の設定
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "sidekick_terminal",
+  callback = function()
+    -- ターミナルモードで <C-t> を押すと、プロンプトを強制的に開く (force_open=true)
+    vim.keymap.set("t", "<C-t>", [[<C-\><C-n><Cmd>lua _G.toggle_sidekick_prompt(true)<CR>]], { buffer = true, silent = true })
+    -- ノーマルモードでも同様に強制的に開く (プロンプトへ遷移)
+    vim.keymap.set("n", "<C-t>", function() _G.toggle_sidekick_prompt(true) end, { buffer = true, silent = true })
+  end,
+})
+
+-- <C-t> で gemini cli をトグル
+vim.keymap.set("n", "<C-t>", function()
+  require("sidekick.cli").toggle("gemini")
+end, { silent = true })
 EOF
 '''

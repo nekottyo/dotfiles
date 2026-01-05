@@ -369,3 +369,7 @@ lua << EOF
 require("devcontainer").setup{}
 EOF
 '''
+
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter-textobjects'
+rev = 'main'
