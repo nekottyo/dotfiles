@@ -6,9 +6,9 @@ autoload -Uz fghq
 zle -N fghq
 bindkey '^g' fghq
 
-autoload -Uz fgit-wt
-zle -N fgit-wt
-bindkey '^h' fgit-wt
+autoload -Uz fwt
+zle -N fwt
+bindkey '^j' fwt
 
 autoload -Uz fzf-z-search
 zle -N fzf-z-search
