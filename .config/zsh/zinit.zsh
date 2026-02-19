@@ -31,7 +31,7 @@ zinit light zdharma-continuum/fast-syntax-highlighting
 zinit ice wait'1' lucid as"program" pick"bin/color" pick"bin/histuniq"
 zinit load "Jxck/dotfiles"
 
-fpath=(~/.config/zsh /opt/homebrew/share/zsh/site-functions $fpath)
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 
 zinit ice wait'2' lucid atload"zicompinit; zicdreplay" blockf for \
   zsh-users/zsh-completions
