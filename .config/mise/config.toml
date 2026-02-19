@@ -1,5 +1,6 @@
 [tools]
 air = "latest"
+bun = "latest"
 gradle = "8.8"
 java = "openjdk-21.0.2"
 kotlin = "2.0.0"
