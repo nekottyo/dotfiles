@@ -31,26 +31,16 @@ zinit light zdharma-continuum/fast-syntax-highlighting
 zinit ice wait'1' lucid as"program" pick"bin/color" pick"bin/histuniq"
 zinit load "Jxck/dotfiles"
 
-zinit ice wait'1' lucid as"program" pick"hub/etc/hub.zsh_completion"
-zinit light github/hub
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 
 zinit ice wait'2' lucid atload"zicompinit; zicdreplay" blockf for \
   zsh-users/zsh-completions
-
-zinit ice wait'2' lucid as"program" pick "contrib/completion/git-completion.zsh"
-zinit light git/git
 
 zinit ice wait'2' lucid
 zinit light yous/vanilli.sh
 
 zinit ice wait'2' lucid
 zinit snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
-
-zinit ice wait'3' lucid as"program" pick"cli/contrib/completion/zsh/_docker" atload"export DOCKER_BUILDKIT=1"
-zinit light docker/cli
-
-zinit ice wait'3' lucid as"program" pick"compose/contrib/completion/zsh" atload"export COMPOSE_DOCKER_CLI_BUILD=1"
-zinit light docker/compose
 
 zinit ice wait'3' lucid
 zinit snippet OMZ::plugins/git/git.plugin.zsh
@@ -62,17 +52,13 @@ zinit light mollifier/cd-gitroot
 zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
 zinit light zdharma-continuum/zsh-diff-so-fancy
 
-zinit ice wai'3' lucid
+zinit ice wait'3' lucid
 zinit light greymd/tmux-xpanes
-
-# zinit ice wait'3' lucid
-# zinit light kubermatic/fubectl
-
-#zinit ice wait'4' lucid as"completion"
-#zinit snippet OMZ::plugins/terraform/_terraform
 
 zinit ice wait'4' lucid as"program" pick"src/batman.sh" atload"alias man=batman.sh"
 zinit light eth-p/bat-extras
 
+zinit ice wait'4' lucid atload"autoload -U +X bashcompinit && bashcompinit; complete -o nospace -C terraform terraform"
+zinit light zdharma-continuum/null
+
 zsh-defer -t 1 -c 'autoload -Uz compinit && compinit && zinit cdreplay -q'
-# autoload -Uz compinit && compinit && zinit cdreplay -q
