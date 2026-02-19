@@ -1,0 +1,10 @@
+# vim: ft=zsh
+# cd to git worktree uses git-wt
+local ghq_root=$(ghq root)
+local wt_dir=$(git-wt | fzf-tmux -p 80%,90% |  awk '{if ($1 == "*") print $2; else print $1}')
+if [[ -z "$wt_dir" ]]; then
+  zle accept-line
+  return
+fi
+BUFFER="cd ${wt_dir}"
+zle accept-line

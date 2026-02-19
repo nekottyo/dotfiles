@@ -6,6 +6,10 @@ autoload -Uz fghq
 zle -N fghq
 bindkey '^g' fghq
 
+autoload -Uz fgit-wt
+zle -N fgit-wt
+bindkey '^h' fgit-wt
+
 autoload -Uz fzf-z-search
 zle -N fzf-z-search
 bindkey '^f' fzf-z-search
@@ -24,3 +28,4 @@ autoload -z kubectl-get-pod-on-ng
 autoload -z aws-list-tg-health
 autoload -z aws-profile
 autoload -z aws-default
+

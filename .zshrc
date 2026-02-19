@@ -122,6 +122,10 @@ if [ -z "$TMUX" ]; then
   if exists "go"; then
     export PATH="$(go env GOPATH)/bin:${PATH}"
   fi
+
+  if exists "git-wt"; then
+    eval "$(git wt --init zsh)"
+  fi
 fi
 
 source ~/.config/zsh/zinit.zsh
