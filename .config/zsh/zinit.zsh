@@ -52,7 +52,8 @@ zinit light mollifier/cd-gitroot
 zinit ice wait'3' lucid as"program" pick"bin/git-dsf"
 zinit light zdharma-continuum/zsh-diff-so-fancy
 
-zinit ice wait'3' lucid
+zinit ice wait'3' lucid as"program" pick"bin/xpanes" \
+  atload"alias tmux-xpanes=xpanes; fpath+=(${ZINIT_HOME:h}/plugins/greymd---tmux-xpanes/completion/zsh); autoload -Uz _xpanes; compdef _xpanes xpanes"
 zinit light greymd/tmux-xpanes
 
 zinit ice wait'4' lucid as"program" pick"src/batman.sh" atload"alias man=batman.sh"
