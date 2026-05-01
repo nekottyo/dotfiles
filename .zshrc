@@ -156,7 +156,7 @@ fi
 . ~/.config/zsh/utils.zsh
 
 # zsh-defer eval "$(starship init zsh)"
-zsh-defer -c "$(pyenv init -)"
+# zsh-defer -c "$(pyenv init -)"
 
 zsh-defer source ~/.config/zsh/logging_tmux_pane.zsh
 
@@ -186,3 +186,6 @@ if [ -x "/opt/homebrew/bin/mise" ]; then
   export MISE_ACTIVATE_AGGRESSIVE=1
   eval "$(/opt/homebrew/bin/mise activate zsh)"
 fi
+
+# bun completions
+[ -s "/Users/shimizukotarou/.bun/_bun" ] && source "/Users/shimizukotarou/.bun/_bun"
