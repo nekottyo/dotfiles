@@ -33,6 +33,7 @@ cursor-opacity = 0.8
 
 # Other
 mouse-hide-while-typing = true
+mouse-scroll-multiplier = 3
 resize-overlay = never
 link-url = true
 keybind = ¥=text:\\

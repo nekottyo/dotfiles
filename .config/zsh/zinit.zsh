@@ -9,6 +9,8 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
 ## End of zinit's installer chunk
+#
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 
 zinit ice depth=1 atload"!source ~/.p10k.zsh"
 zinit light romkatv/powerlevel10k
@@ -31,7 +33,9 @@ zinit light zdharma-continuum/fast-syntax-highlighting
 zinit ice wait'1' lucid as"program" pick"bin/color" pick"bin/histuniq"
 zinit load "Jxck/dotfiles"
 
-fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+zinit ice wait'1' lucid
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit cdclear -q
 
 zinit ice wait'2' lucid atload"zicompinit; zicdreplay" blockf for \
   zsh-users/zsh-completions
@@ -41,10 +45,6 @@ zinit light yous/vanilli.sh
 
 zinit ice wait'2' lucid
 zinit snippet OMZ::plugins/ssh-agent/ssh-agent.plugin.zsh
-
-zinit ice wait'3' lucid
-zinit snippet OMZ::plugins/git/git.plugin.zsh
-zinit cdclear -q
 
 zinit ice wait'3' lucid
 zinit light mollifier/cd-gitroot
