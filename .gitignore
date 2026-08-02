@@ -20,3 +20,6 @@ wkhtmltopdf
 !.config/mise/
 .config/**/*.zwc
 **/.claude/settings.local.json
+
+# 実機のゲートウェイ MAC を持つ設定。public リポジトリに載せない (*.example のみ追跡する)
+macos/clamshell-guard/clamshell-guard.conf
