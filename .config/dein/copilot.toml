@@ -143,25 +143,25 @@ _G.toggle_sidekick_prompt = function(force_open)
     end
   end
 
-  -- 2. Gemini を表示 (フォーカスはしない)
-  require("sidekick.cli").show({ name = "gemini", focus = false })
+  -- 2. Claude を表示 (フォーカスはしない)
+  require("sidekick.cli").show({ name = "claude", focus = false })
 
-  -- 3. Geminiのウィンドウを探して、その下に開く
+  -- 3. Claudeのウィンドウを探して、その下に開く
   vim.defer_fn(function()
     local State = require("sidekick.cli.state")
-    local states = State.get({ name = "gemini" })
-    local gemini_state = states[1]
+    local states = State.get({ name = "claude" })
+    local claude_state = states[1]
 
-    if gemini_state and gemini_state.terminal and gemini_state.terminal:is_open() then
-      local winid = gemini_state.terminal.win
+    if claude_state and claude_state.terminal and claude_state.terminal:is_open() then
+      local winid = claude_state.terminal.win
 
-      -- Geminiのウィンドウに一時的にフォーカスを移す
+      -- Claudeのウィンドウに一時的にフォーカスを移す
       vim.api.nvim_set_current_win(winid)
 
-      -- Geminiの下に高さ10行で開く
+      -- Claudeの下に高さ10行で開く
       vim.cmd("belowright 10split sidekick://prompt")
     else
-      -- Geminiが見つからない場合はフォールバックとして現在のウィンドウで開く
+      -- Claudeが見つからない場合はフォールバックとして現在のウィンドウで開く
       vim.cmd("vsplit sidekick://prompt")
     end
   end, 100)
@@ -181,9 +181,9 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- <C-t> で gemini cli をトグル
+-- <C-t> で claude cli をトグル
 vim.keymap.set("n", "<C-t>", function()
-  require("sidekick.cli").toggle("gemini")
+  require("sidekick.cli").toggle("claude")
 end, { silent = true })
 EOF
 '''

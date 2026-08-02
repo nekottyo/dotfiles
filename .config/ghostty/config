@@ -37,3 +37,4 @@ mouse-scroll-multiplier = 3
 resize-overlay = never
 link-url = true
 keybind = ¥=text:\\
+keybind = shift+enter=text:\x1b\x0d

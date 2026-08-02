@@ -361,15 +361,15 @@ repo = 'djoshea/vim-autoread'
 repo = 'MunifTanjim/nui.nvim'
 
 
-[[plugins]]
-repo = 'esensar/nvim-dev-container'
-depends = 'nvim-treesitter/nvim-treesitter'
-hook_post_source = '''
-lua << EOF
-require("devcontainer").setup{}
-EOF
-'''
+# [[plugins]]
+# repo = 'esensar/nvim-dev-container'
+# depends = 'nvim-treesitter/nvim-treesitter'
+# hook_post_source = '''
+# lua << EOF
+# require("devcontainer").setup{}
+# EOF
+# '''
 
-[[plugins]]
-repo = 'nvim-treesitter/nvim-treesitter-textobjects'
-rev = 'main'
+# [[plugins]]
+# repo = 'nvim-treesitter/nvim-treesitter-textobjects'
+# rev = 'main'

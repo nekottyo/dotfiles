@@ -83,7 +83,6 @@ neovim
 nkf
 node-build
 openjdk@11
-packer
 pandoc
 parquet-cli
 php
