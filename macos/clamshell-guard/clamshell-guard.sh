@@ -98,6 +98,8 @@ gateway=''
 if [ -n "$KNOWN_GATEWAYS" ] && on_ac_power; then
 	gateway=$(physical_gateway_mac || true)
 	for known in $KNOWN_GATEWAYS; do
+		# 設定側も正規化する。arp(8) の出力をそのまま貼れるようにするため
+		known=$(printf '%s' "$known" | normalize_mac)
 		if [ "$gateway" = "$known" ]; then
 			desired=1
 			break

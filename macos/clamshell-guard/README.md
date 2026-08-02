@@ -70,7 +70,7 @@ sudo ./install.sh
 arp -n "$(ipconfig getoption en0 router)"
 ```
 
-得られた MAC を設定ファイルの `KNOWN_GATEWAYS` に空白区切りで書く。
+得られた MAC を設定ファイルの `KNOWN_GATEWAYS` に空白区切りで書く。大文字小文字と先頭ゼロの有無は読み込み側で揃えるため、`arp` の出力をそのまま貼ってよい。
 
 ```sh
 sudo vi /usr/local/etc/clamshell-guard.conf
