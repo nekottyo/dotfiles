@@ -129,6 +129,10 @@ if [ -z "$TMUX" ]; then
   if exists "git-wt"; then
     eval "$(git wt --init zsh)"
   fi
+
+  if exists "aqua"; then
+    export PATH="$(aqua root-dir)/bin:$PATH"
+  fi
 fi
 
 source ~/.config/zsh/zinit.zsh
