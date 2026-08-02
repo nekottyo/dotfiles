@@ -193,3 +193,5 @@ if [ -x "/opt/homebrew/bin/mise" ]; then
   export MISE_ACTIVATE_AGGRESSIVE=1
   eval "$(/opt/homebrew/bin/mise activate zsh)"
 fi
+
+export CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1
