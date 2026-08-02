@@ -93,11 +93,14 @@ if [[ -a ~/.localenv ]]; then
 fi
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
-if [ -z "$TMUX" ]; then
-  [[ -d /opt/homebrew/bin ]] && export PATH="$PATH:/opt/homebrew/bin"
 
+# Homebrew's bin must be prepended even inside tmux, otherwise system
+# /bin/bash (3.2) shadows brew's bash. Keep this outside the $TMUX guard.
+[[ -d /opt/homebrew/bin ]] && export PATH="/opt/homebrew/bin:$PATH"
+
+if [ -z "$TMUX" ]; then
   if [[ $(uname) == "Darwin" ]]; then
-      export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
+      export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"
   fi
   ## nvim
   export XDG_CONFIG_HOME=$HOME/.config
