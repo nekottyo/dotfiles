@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.nekottyo.clamshell-guard</string>
+
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/local/sbin/clamshell-guard.sh</string>
+	</array>
+
+	<!-- 30 秒間隔。電源の抜き差しやネットワーク切り替えへの追従はこの粒度で十分 -->
+	<key>StartInterval</key>
+	<integer>30</integer>
+
+	<!-- 起動直後にも評価する。これがあるため、デーモンが止まったまま
+	     disablesleep が有効に取り残されても再起動で必ず復旧する -->
+	<key>RunAtLoad</key>
+	<true/>
+
+	<key>StandardOutPath</key>
+	<string>/var/log/clamshell-guard.log</string>
+	<key>StandardErrorPath</key>
+	<string>/var/log/clamshell-guard.log</string>
+</dict>
+</plist>
