@@ -19,3 +19,4 @@ wkhtmltopdf
 !.config/ghostty/
 !.config/mise/
 .config/**/*.zwc
+**/.claude/settings.local.json
