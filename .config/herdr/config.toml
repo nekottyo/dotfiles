@@ -15,8 +15,9 @@ onboarding = false
 #   herdr plugin install wyattjoh/herdr-plugin-gh-pr  # サイドバーの $pr トークンを供給
 
 [theme]
-# tmux では Solarized 系の配色を使っていたため、組み込みの solarized テーマを採用する。
-name = "solarized"
+# 組み込みの固定配色ではなく、外側のターミナル (ghostty) の配色をそのまま使う。
+# tmux 時代は Solarized 系を使っていたが、配色の管理を ghostty 側へ一本化する。
+name = "terminal"
 
 [terminal]
 # 新規ペインのシェルは $SHELL を利用する(tmux の default-command "" 相当)。
