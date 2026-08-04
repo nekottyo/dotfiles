@@ -7,7 +7,12 @@ onboarding = false
 #   - tmux の pane          -> herdr の pane
 #   - tmux の copy-mode      -> herdr は独自のスクロールバック / edit_scrollback を持つため非移植
 #   - tmux のステータスバー配色 -> herdr はテーマ制のため theme で代替 (solarized)
-#   - tmux のプラグイン(tpm 等) -> herdr に対応概念がないため非移植
+#   - tmux のプラグイン(tpm 等) -> herdr にも plugin 機構があるが、tpm の資産は非移植
+#
+# 利用中の plugin。実体とインストール状態は追跡対象外 (ログやセッション状態と同じ
+# ディレクトリに置かれるため) なので、新しい環境では以下を実行して入れ直す。
+#   herdr plugin install kakigakki/herdr-auto-namer   # agent 名と workspace 名の自動命名
+#   herdr plugin install wyattjoh/herdr-plugin-gh-pr  # サイドバーの $pr トークンを供給
 
 [theme]
 # tmux では Solarized 系の配色を使っていたため、組み込みの solarized テーマを採用する。
