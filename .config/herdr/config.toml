@@ -119,7 +119,7 @@ agent_panel_sort = "spaces"
 # fg を指定するとテーマ追従が切れるので、色はテーマに任せる。
 rows = [
   ["state_icon", "workspace", "tab", "$pr"],
-  [{ token = "terminal_title_stripped", dim = false }],
+  [{ token = "terminal_title_stripped", dim = false, bold = true }],
   ["agent"],
 ]
 
