@@ -1,0 +1,122 @@
+onboarding = false
+# herdr 設定ファイル
+# ~/.tmux.conf を参考に、移植可能な範囲でキーバインドと設定を反映している。
+#
+# tmux と herdr は概念が異なる部分があるため、以下の方針で移植した。
+#   - tmux の window        -> herdr の tab
+#   - tmux の pane          -> herdr の pane
+#   - tmux の copy-mode      -> herdr は独自のスクロールバック / edit_scrollback を持つため非移植
+#   - tmux のステータスバー配色 -> herdr はテーマ制のため theme で代替 (solarized)
+#   - tmux のプラグイン(tpm 等) -> herdr に対応概念がないため非移植
+
+[theme]
+# tmux では Solarized 系の配色を使っていたため、組み込みの solarized テーマを採用する。
+name = "solarized"
+
+[terminal]
+# 新規ペインのシェルは $SHELL を利用する(tmux の default-command "" 相当)。
+# default_shell = ""
+
+# 新規ペインの CWD は元のペイン/ワークスペースを引き継ぐ。
+# tmux の split-window -c "#{pane_current_path}" 相当。
+new_cwd = "follow"
+
+[keys]
+# プレフィックスキー。
+# tmux では C-z を使っていたが、C-z 本来のサスペンド機能との衝突を避けるため
+# herdr 標準の ctrl+b を採用する。
+prefix = "ctrl+x"
+
+# --- 設定リロード ---
+# tmux では prefix+r をリロードに使っていたが、herdr では prefix+r を
+# リサイズモードに割り当てるため、リロードは標準の prefix+shift+r のままにする。
+reload_config = "prefix+shift+r"
+
+# --- ペインのリサイズ ---
+# tmux の H/J/K/L による resize-pane 相当。herdr ではリサイズモードに入ってから操作する。
+resize_mode = "prefix+r"
+
+# --- タブ(tmux の window)操作 ---
+new_tab = "prefix+c"          # tmux: bind c(新規ウィンドウ作成)
+close_tab = "prefix+shift+x"  # tmux: bind C-p kill-window 相当
+previous_tab = "prefix+p"     # tmux: bind -r C-h select-window -t :-
+next_tab = "prefix+n"         # tmux: bind -r C-l select-window -t :+
+rename_tab = "prefix+shift+t"
+switch_tab = "prefix+1..9"    # tmux の base-index 1 と同じく 1 始まりでタブへ移動
+
+# --- ペインのフォーカス移動(Vim キーバインド)---
+# tmux: bind h/j/k/l select-pane -L/-D/-U/-R 相当。
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+# --- ペインの分割 ---
+# tmux: bind | split-window -h(左右に分割 = 縦の仕切り)-> split_vertical
+# tmux: bind - split-window -v(上下に分割 = 横の仕切り)-> split_horizontal
+# 注記: tmux の "|" は herdr の記号系キーバインドでは安定しないため、
+#       左右分割は herdr 標準の prefix+v を使う。上下分割は "-" がそのまま使える。
+split_vertical = "prefix+v"
+split_horizontal = "prefix+minus"
+
+# --- ペインのクローズ / ズーム ---
+close_pane = "prefix+0"  # tmux: bind 0 kill-pane 相当
+zoom = "prefix+x"
+
+# --- スクロールバックの編集 ---
+# tmux の copy-mode(prefix + [ 等)の代替。herdr ではエディタでスクロールバックを開く。
+edit_scrollback = "prefix+e"
+
+# --- プラグインアクション (gh-pr) ---
+# gh-pr プラグインはマニフェストにキーを持てないため、ここで割り当てる。
+# 組み込みで埋まっている o / g / r / v / e と、端末で文字を発生させる alt+ 系は避けた。
+[[keys.command]]
+key = "prefix+u"
+type = "plugin_action"
+command = "gh-pr.open-pr"
+description = "open PR in browser"
+
+[[keys.command]]
+key = "prefix+i"
+type = "plugin_action"
+command = "gh-pr.refresh"
+description = "refresh PR status"
+
+[ui]
+# サイドバーの幅。既定 (26) / 上限 (36) からそれぞれ +6 して広げている。
+# 幅は workspace 名の長さに応じて自動スケールするため、上限も一緒に上げないと効かない。
+# 下限は既定 (18) のまま。マウスで細く絞りたいときに邪魔になるため上げない。
+sidebar_width = 32
+sidebar_max_width = 42
+
+# tmux: set-option -g mouse on 相当。マウス操作を有効化する。
+mouse_capture = true
+
+# ペイン境界の描画。tmux のペインボーダー相当。
+pane_borders = true
+
+# 分割ペインの境界に、検出済み agent のラベルを出す。
+# 手動でペイン名を付けたペインでは名前が優先されるため影響しない。
+show_agent_labels_on_pane_borders = true
+
+agent_panel_sort = "spaces"
+
+# --- サイドバーの agent 行レイアウト ---
+# 既定の [["state_icon", "workspace", "tab"], ["agent"]] に $pr と作業サマリ行を足したもの。
+# $pr は gh-pr プラグインが書き込む named token で、フォーカス中の agent pane の
+# ブランチに対応する GitHub PR の状態 (例: #123 ✓) を表示する。
+# 行に置かないとプラグインが値を書いても描画されないため、ここでの指定が必須。
+# terminal_title_stripped は agent が端末タイトルへ出す作業サマリ (Claude Code なら
+# 現在のタスク要約) から装飾を落としたもの。どの pane が何をしているかを一覧で追える。
+[ui.sidebar.agents]
+rows = [["state_icon", "workspace", "tab", "$pr"], ["terminal_title_stripped"], ["agent"]]
+
+[advanced]
+# tmux: set-option -g history-limit 200000 相当。
+# herdr はバイト単位で保持するため、大きめ(約 50MB)に設定して長い履歴を保持する。
+scrollback_limit_bytes = 50000000
+
+[experimental]
+# サーバ再起動をまたいでペインの画面履歴を保持する。
+# scrollback_limit_bytes を大きく取っているため、再起動で履歴を失わないようにする。
+pane_history = true

@@ -18,6 +18,11 @@ wkhtmltopdf
 !.config/zsh/
 !.config/ghostty/
 !.config/mise/
+# herdr は設定と同じディレクトリにログ・ソケット・セッション状態・プラグイン実体を吐くため、
+# ディレクトリごとではなく config.toml だけを追跡する。
+!.config/herdr/
+.config/herdr/*
+!.config/herdr/config.toml
 .config/**/*.zwc
 **/.claude/settings.local.json
 
