@@ -118,10 +118,15 @@ agent_panel_sort = "spaces"
 # terminal_title_stripped は既定で dim が乗って読みづらいため、dim だけ外す。
 # fg を指定するとテーマ追従が切れるので、色はテーマに任せる。
 rows = [
-  ["state_icon", "workspace", "tab", "$pr"],
+  ["state_icon", "workspace", "tab"],
   [{ token = "terminal_title_stripped", dim = false, bold = true }],
-  ["agent"],
+  ["agent", "$pr"],
 ]
+
+# バックグラウンド workspace の agent が状態変化したときに鳴る通知音。
+# 既定は有効 (enabled = true) なので、明示的に切る。
+[ui.sound]
+enabled = false
 
 [advanced]
 # tmux: set-option -g history-limit 200000 相当。
