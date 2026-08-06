@@ -93,7 +93,7 @@ description = "refresh PR status"
 # 幅は workspace 名の長さに応じて自動スケールするため、上限も一緒に上げないと効かない。
 # 下限は既定 (18) のまま。マウスで細く絞りたいときに邪魔になるため上げない。
 sidebar_width = 32
-sidebar_max_width = 42
+sidebar_max_width = 56
 
 # tmux: set-option -g mouse on 相当。マウス操作を有効化する。
 mouse_capture = true
