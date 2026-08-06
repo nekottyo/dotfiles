@@ -30,10 +30,24 @@ metrics_generator:
       source: tempo
   storage:
     path: /var/tempo/generator/wal
+    # 送り先が無いと service-graphs / span-metrics の生成メトリクスは捨てられる
+    remote_write:
+      - url: http://mimir:9009/api/v1/push
   traces_storage:
     path: /var/tempo/generator/traces
+  processor:
+    span_metrics:
+      # 既定は上限 16.384s までで、llm_request や interaction がまるごと +Inf に落ちて
+      # p95 が上限値に張り付く。既定の 2 倍刻みをそのまま 262.144s まで延長する
+      histogram_buckets:
+        [
+          0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024,
+          2.048, 4.096, 8.192, 16.384, 32.768, 65.536, 131.072, 262.144,
+        ]
 
 overrides:
   defaults:
     metrics_generator:
+      # service-graphs は現状 0 series。辺は CLIENT スパンと SERVER スパンのペアから作られるが、
+      # Claude Code のスパンは全て SPAN_KIND_INTERNAL のため。将来 kind が増えたときのために残す
       processors: [service-graphs, span-metrics]

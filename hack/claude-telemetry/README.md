@@ -78,6 +78,9 @@ docker compose down -v
 - **トレース**: プロンプト 1 回が `claude_code.interaction` をルートとするスパン木になる。
   子スパンに `claude_code.llm_request` / `claude_code.tool` / `claude_code.tool.execution` /
   `claude_code.tool.blocked_on_user` (権限承認の待ち時間) が並ぶ
+- **トレース由来のメトリクス**: Tempo の metrics-generator がスパンから `traces_spanmetrics_*` を
+  生成し、Mimir へ remote write する。`span_name` 別のレイテンシ分布が取れるので、ツール実行時間の
+  p95 や承認待ち時間をパネル化できる
 
 プロンプト本文とツールの入出力は既定で `<REDACTED>` になり、長さだけが記録される。
 本文まで送るなら `OTEL_LOG_USER_PROMPTS` / `OTEL_LOG_TOOL_CONTENT` を明示的に有効化する必要がある。
@@ -89,3 +92,7 @@ docker compose down -v
 - Loki datasource は `uid` を固定しないと Tempo の `tracesToLogsV2` から参照できない
 - ログの `trace_id` は structured metadata なので、derivedFields は本文の正規表現ではなく
   `matcherType: label` で引く
+- span-metrics のヒストグラムは既定の上限が 16.384s しかなく、`llm_request` や `interaction` が
+  まるごと `+Inf` に落ちて p95 が上限値に張り付く。既定の 2 倍刻みを 262.144s まで延長している
+- service-graphs processor は有効だが現状 0 series。辺は CLIENT スパンと SERVER スパンのペアから
+  作られるところ、Claude Code のスパンは全て `SPAN_KIND_INTERNAL` のため
