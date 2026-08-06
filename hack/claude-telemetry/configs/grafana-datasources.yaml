@@ -48,3 +48,7 @@ datasources:
     uid: mimir
     url: http://mimir:9009/prometheus
     isDefault: true
+    jsonData:
+      # Claude Code の OTLP export は 60 秒間隔。既定の 15s のままだと $__rate_interval が
+      # 60s に決まり、窓にデータ点が 2 つ入らず increase が計算できない区間ができる
+      timeInterval: 60s
