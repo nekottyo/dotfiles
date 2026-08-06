@@ -709,6 +709,74 @@
         "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["mean", "max"] },
         "tooltip": { "mode": "multi", "sort": "desc" }
       }
+    },
+    {
+      "type": "row",
+      "id": 80,
+      "title": "セッション",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 78 },
+      "panels": []
+    },
+    {
+      "type": "bargauge",
+      "id": 81,
+      "title": "期間内で最も深かったセッション (上位 10)",
+      "datasource": { "type": "prometheus", "uid": "mimir" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 79 },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "mimir" },
+          "expr": "topk(10, max by (session_id, dir) (max_over_time(claude_session_turns[$__range])))",
+          "instant": true,
+          "legendFormat": "{{dir}} / {{session_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "color": { "mode": "continuous-BlPu" } },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "showUnfilled": true,
+        "minVizWidth": 8,
+        "minVizHeight": 10
+      }
+    },
+    {
+      "type": "timeseries",
+      "id": 82,
+      "title": "セッション別 turn 数の推移",
+      "datasource": { "type": "prometheus", "uid": "mimir" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 79 },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "mimir" },
+          "expr": "max by (session_id, dir) (claude_session_turns)",
+          "range": true,
+          "legendFormat": "{{dir}} / {{session_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true, "calcs": ["mean", "max"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      }
     }
   ]
 }
