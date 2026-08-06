@@ -470,7 +470,7 @@
       "type": "timeseries",
       "id": 51,
       "title": "スパン別レイテンシ p95",
-      "description": "Tempo の metrics-generator (span-metrics) が生成。ヒストグラムの上限バケットが 16.384s なので、それを超える実行時間は p95 に正確には反映されない",
+      "description": "Tempo の metrics-generator (span-metrics) が生成。ヒストグラムの上限バケットは 2097.152s (約 35 分) で、それを超える実行時間は p95 に正確には反映されない。バケット境界を変更した直後は変更前後の系列が混在して単調性が崩れ、広い窓ほど p95 が歪む (最大 24h で自然解消)",
       "datasource": { "type": "prometheus", "uid": "mimir" },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 42 },
       "targets": [
