@@ -31,7 +31,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
-          "expr": "sum(increase(claude_code_cost_usage_USD_total[$__range]))",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total[$__range]))",
           "instant": true,
           "legendFormat": "コスト"
         }
@@ -60,7 +60,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
-          "expr": "sum(increase(claude_code_token_usage_tokens_total[$__range]))",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total[$__range]))",
           "instant": true,
           "legendFormat": "トークン"
         }
@@ -89,7 +89,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
-          "expr": "sum(increase(claude_code_session_count_total[$__range]))",
+          "expr": "sum(max_over_time(claude_code_session_count_total[$__range]))",
           "instant": true,
           "legendFormat": "セッション"
         }
@@ -118,7 +118,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
-          "expr": "sum(increase(claude_code_active_time_seconds_total{type=\"user\"}[$__range]))",
+          "expr": "sum(max_over_time(claude_code_active_time_seconds_total{type=\"user\"}[$__range]))",
           "instant": true,
           "legendFormat": "作業時間"
         }
@@ -147,7 +147,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
-          "expr": "sum(increase(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / clamp_min(sum(increase(claude_code_token_usage_tokens_total[$__range])), 1)",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{type=\"cacheRead\"}[$__range])) / clamp_min(sum(max_over_time(claude_code_token_usage_tokens_total[$__range])), 1)",
           "instant": true,
           "legendFormat": "キャッシュ率"
         }
@@ -230,7 +230,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
-          "expr": "sum by (query_source) (increase(claude_code_cost_usage_USD_total[$__range]))",
+          "expr": "sum by (query_source) (max_over_time(claude_code_cost_usage_USD_total[$__range]))",
           "instant": true,
           "legendFormat": "{{query_source}}"
         }
@@ -257,7 +257,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
-          "expr": "topk(10, sum by (skill_name) (increase(claude_code_cost_usage_USD_total{skill_name!=\"\"}[$__range])))",
+          "expr": "topk(10, sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{skill_name!=\"\"}[$__range])))",
           "instant": true,
           "legendFormat": "{{skill_name}}"
         }
@@ -371,7 +371,7 @@
         {
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
-          "expr": "sum by (decision) (increase(claude_code_code_edit_tool_decision_total[$__range]))",
+          "expr": "sum by (decision) (max_over_time(claude_code_code_edit_tool_decision_total[$__range]))",
           "instant": true,
           "legendFormat": "{{decision}}"
         }
