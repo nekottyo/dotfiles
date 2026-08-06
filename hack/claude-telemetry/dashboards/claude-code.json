@@ -197,6 +197,7 @@
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
           "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total[$__rate_interval]))",
+          "range": true,
           "legendFormat": "{{model}}"
         }
       ],
@@ -294,6 +295,7 @@
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
           "expr": "sum by (type) (increase(claude_code_token_usage_tokens_total[$__rate_interval]))",
+          "range": true,
           "legendFormat": "{{type}}"
         }
       ],
@@ -333,6 +335,7 @@
           "refId": "A",
           "datasource": { "type": "prometheus", "uid": "mimir" },
           "expr": "sum by (type) (increase(claude_code_lines_of_code_count_total[$__rate_interval]))",
+          "range": true,
           "legendFormat": "{{type}}"
         }
       ],
@@ -414,6 +417,7 @@
           "refId": "A",
           "datasource": { "type": "loki", "uid": "loki" },
           "expr": "sum by (event_name) (count_over_time({service_name=\"claude-code\"} | event_name != \"\" [$__auto]))",
+          "queryType": "range",
           "legendFormat": "{{event_name}}"
         }
       ],
