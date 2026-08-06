@@ -1,0 +1,50 @@
+# Grafana データソース自動プロビジョニング
+apiVersion: 1
+
+datasources:
+  # Loki (ログ)
+  # uid を固定しないと Tempo の tracesToLogsV2 から参照できない
+  - name: Loki
+    type: loki
+    access: proxy
+    uid: loki
+    url: http://loki:3100
+    isDefault: false
+    jsonData:
+      # Claude Code のログは trace_id を structured metadata に持つため、
+      # 本文の正規表現ではなくラベル一致でトレースへ繋ぐ
+      derivedFields:
+        - datasourceUid: tempo
+          matcherType: label
+          matcherRegex: trace_id
+          name: TraceID
+          url: "$${__value.raw}"
+          urlDisplayLabel: トレースを表示
+
+  # Tempo (トレース)
+  - name: Tempo
+    type: tempo
+    access: proxy
+    uid: tempo
+    url: http://tempo:3200
+    isDefault: false
+    jsonData:
+      # trace_id はインデックスラベルではないため customQuery で明示的に引く
+      tracesToLogsV2:
+        datasourceUid: loki
+        spanStartTimeShift: "-5m"
+        spanEndTimeShift: "5m"
+        customQuery: true
+        query: '{service_name="claude-code"} | trace_id="$${__span.traceId}"'
+      search:
+        hide: false
+      nodeGraph:
+        enabled: true
+
+  # Mimir (メトリクス)
+  - name: Mimir
+    type: prometheus
+    access: proxy
+    uid: mimir
+    url: http://mimir:9009/prometheus
+    isDefault: true

@@ -1,0 +1,57 @@
+# OTel Collector 設定
+# Claude Code から OTLP で受け取り、Loki / Tempo / Mimir へ転送する
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  # メモリ使用量を制限する
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+  # バッチ送信でパフォーマンスを向上させる
+  batch:
+    timeout: 5s
+
+exporters:
+  # メトリクス → Mimir (Prometheus Remote Write)
+  prometheusremotewrite:
+    endpoint: http://mimir:9009/api/v1/push
+    tls:
+      insecure: true
+
+  # トレース → Tempo (OTLP HTTP)
+  otlphttp/tempo:
+    endpoint: http://tempo:4318
+    tls:
+      insecure: true
+
+  # ログ → Loki (OTLP HTTP)
+  otlphttp/loki:
+    endpoint: http://loki:3100/otlp
+    tls:
+      insecure: true
+
+  # デバッグ用 (コンテナログに出力)
+  debug:
+    verbosity: basic
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [prometheusremotewrite]
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlphttp/tempo]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlphttp/loki]

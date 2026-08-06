@@ -1,0 +1,99 @@
+# Claude Code テレメトリ収集スタック (Grafana LGTM)
+# - Grafana      : ダッシュボード (http://localhost:3000)
+# - Loki         : ログ収集
+# - Tempo        : トレース収集
+# - Mimir        : メトリクス収集
+# - OTel Collector: OTLP 受信 → 各バックエンドへ転送
+#
+# 収集データには user_email / organization_id / session_id など個人を識別する
+# 属性が含まれるため、ポートは全て 127.0.0.1 に閉じて外部ネットワークへ晒さない。
+
+services:
+  # ── OpenTelemetry Collector ──────────────────────────────────────────
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.107.0
+    container_name: claude-otel-collector
+    command: ["--config=/etc/otel/config.yaml"]
+    volumes:
+      - ./configs/otel-collector.yaml:/etc/otel/config.yaml:ro
+    ports:
+      - "127.0.0.1:4317:4317"   # OTLP gRPC
+      - "127.0.0.1:4318:4318"   # OTLP HTTP
+    networks:
+      - telemetry
+    depends_on:
+      - loki
+      - tempo
+      - mimir
+    restart: unless-stopped
+
+  # ── Grafana ──────────────────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: claude-grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - ./configs/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+      - ./configs/grafana-dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
+      - ./dashboards:/etc/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - telemetry
+    restart: unless-stopped
+
+  # ── Loki (ログ) ──────────────────────────────────────────────────────
+  loki:
+    image: grafana/loki:3.1.0
+    container_name: claude-loki
+    command: ["-config.file=/etc/loki/config.yaml"]
+    volumes:
+      - ./configs/loki.yaml:/etc/loki/config.yaml:ro
+      - loki-data:/loki
+    ports:
+      - "127.0.0.1:3100:3100"
+    networks:
+      - telemetry
+    restart: unless-stopped
+
+  # ── Tempo (トレース) ─────────────────────────────────────────────────
+  tempo:
+    image: grafana/tempo:2.5.0
+    container_name: claude-tempo
+    command: ["-config.file=/etc/tempo/config.yaml"]
+    volumes:
+      - ./configs/tempo.yaml:/etc/tempo/config.yaml:ro
+      - tempo-data:/var/tempo
+    ports:
+      - "127.0.0.1:3200:3200"   # Tempo HTTP API
+    networks:
+      - telemetry
+    restart: unless-stopped
+
+  # ── Mimir (メトリクス) ───────────────────────────────────────────────
+  mimir:
+    image: grafana/mimir:2.13.0
+    container_name: claude-mimir
+    command: ["--config.file=/etc/mimir/config.yaml"]
+    volumes:
+      - ./configs/mimir.yaml:/etc/mimir/config.yaml:ro
+      - mimir-data:/data
+    ports:
+      - "127.0.0.1:9009:9009"
+    networks:
+      - telemetry
+    restart: unless-stopped
+
+networks:
+  telemetry:
+    driver: bridge
+
+volumes:
+  grafana-data:
+  loki-data:
+  tempo-data:
+  mimir-data:

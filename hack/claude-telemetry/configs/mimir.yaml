@@ -1,0 +1,46 @@
+# Mimir 設定 (シングルバイナリモード)
+multitenancy_enabled: false
+
+blocks_storage:
+  backend: filesystem
+  filesystem:
+    dir: /data/blocks
+  # 既定値 (./tsdb) のままだと ingester の TSDB と WAL が volume の外に置かれ、
+  # コンテナ再作成のたびに未フラッシュのメトリクスを失う
+  tsdb:
+    dir: /data/tsdb
+  bucket_store:
+    sync_dir: /data/tsdb-sync
+
+compactor:
+  data_dir: /data/compactor
+
+distributor:
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: memberlist
+
+ingester:
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: memberlist
+    replication_factor: 1
+
+ruler_storage:
+  backend: filesystem
+  filesystem:
+    dir: /data/rules
+
+server:
+  http_listen_port: 9009
+  log_level: warn
+
+store_gateway:
+  sharding_ring:
+    replication_factor: 1
+
+memberlist:
+  join_members:
+    - 127.0.0.1

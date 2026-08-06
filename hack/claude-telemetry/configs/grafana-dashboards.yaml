@@ -1,0 +1,16 @@
+# Grafana ダッシュボード自動プロビジョニング
+# dashboards/ 配下の JSON を "Claude Code" フォルダへ読み込む
+apiVersion: 1
+
+providers:
+  - name: claude-code
+    orgId: 1
+    folder: Claude Code
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    # UI での試行錯誤を許可する (保存内容はファイル側が正のまま)
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/dashboards
+      foldersFromFilesStructure: false
