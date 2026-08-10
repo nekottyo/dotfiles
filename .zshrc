@@ -114,6 +114,8 @@ if [ -z "$TMUX" ]; then
 
   export PATH="${HOME}/.local/bin/powerline:${PATH}"
 
+  export PATH="${PATH}:${HOME}/.cargo/bin"
+
   if [[ -d "${KREW_ROOT:-$HOME/.krew}" ]]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
   fi
@@ -132,6 +134,10 @@ if [ -z "$TMUX" ]; then
 
   if exists "aqua"; then
     export PATH="$(aqua root-dir)/bin:$PATH"
+  fi
+
+  if command -v wt >/dev/null 2>&1; then
+    eval "$(command wt config shell init zsh)"
   fi
 fi
 
@@ -195,3 +201,13 @@ if [ -x "/opt/homebrew/bin/mise" ]; then
 fi
 
 export CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1
+
+# Copilot CLI のテレメトリをローカルの LGTM スタックへ送る (hack/claude-telemetry)
+# Claude Code は gRPC 4317 を使うが、Copilot CLI は OTLP HTTP のみ対応なので 4318 を使う。
+# global に export すると OTel を読む他ツールへ波及するため、copilot 起動時だけ効く wrapper にしている。
+copilot() {
+  OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
+  OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
+  command copilot "$@"
+}
+
