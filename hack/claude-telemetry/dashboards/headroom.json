@@ -47,7 +47,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
+        "w": 3,
         "x": 0,
         "y": 1
       },
@@ -100,8 +100,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 4,
+        "w": 3,
+        "x": 3,
         "y": 1
       },
       "targets": [
@@ -153,8 +153,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 8,
+        "w": 3,
+        "x": 6,
         "y": 1
       },
       "targets": [
@@ -197,6 +197,59 @@
     },
     {
       "type": "stat",
+      "id": 28,
+      "title": "圧縮率",
+      "description": "圧縮で削れた入力トークンの割合。分母の圧縮前トークン数は Prometheus に公開されて いないため、上流へ送った入力トークンに削った分を足し戻して近似している。分母には圧縮対象にならなかったリクエストの入力も混ざるので、実際の圧縮率より低く出る。正確な値は Headroom の /stats が返す avg_compression_pct を見る",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 9,
+        "y": 1
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(increase(headroom_tokens_saved_total[$__range])) / clamp_min(sum(increase(headroom_tokens_input_total[$__range])) + sum(increase(headroom_tokens_saved_total[$__range])), 1)",
+          "instant": true,
+          "legendFormat": "圧縮率"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "blue"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto"
+      }
+    },
+    {
+      "type": "stat",
       "id": 5,
       "title": "圧縮による節約額",
       "datasource": {
@@ -205,8 +258,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 12,
+        "w": 3,
+        "x": 15,
         "y": 1
       },
       "targets": [
@@ -257,8 +310,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 16,
+        "w": 3,
+        "x": 18,
         "y": 1
       },
       "targets": [
@@ -322,8 +375,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 20,
+        "w": 3,
+        "x": 21,
         "y": 1
       },
       "targets": [

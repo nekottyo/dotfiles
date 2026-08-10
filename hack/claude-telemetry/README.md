@@ -155,6 +155,18 @@ prometheus receiver は counter に `_total` を付け足すため、`/metrics` 
 
 `_max` / `_min` / `_active` 系の gauge と、元から `_total` で終わる counter は素通しされる。
 
+### 圧縮率は近似値
+
+サマリの「圧縮率」は近似で、Headroom 自身が出す値とは一致しない。圧縮前の総トークン数
+(`/stats` の `total_tokens_before`) が Prometheus に公開されていないため、上流へ送った
+`headroom_tokens_input_total` に削った `headroom_tokens_saved_total` を足し戻して分母を復元している。
+この分母には圧縮対象にならなかったリクエストの入力も混ざるので、実際より低く出る。実測では
+`/stats` の `avg_compression_pct` が 2.2% のとき、このパネルは 1.93% を示した。
+
+分子の `headroom_tokens_saved_total` が数えているのは圧縮レイヤ単体の節約分だけである点にも注意。
+tool schema 由来の節約 (`/stats` の `tool_schema_tokens_saved`) は Prometheus 側に系列が無く、
+全レイヤ込みの節約量はダッシュボードからは見えない。正確な内訳が要るときは `/stats` を直接叩く。
+
 ### ラベルと集計上の注意
 
 - 全系列に `job="headroom"` と `instance="host.docker.internal:8787"` が付く。個別の分解軸は
