@@ -1,11 +1,11 @@
 # Grafana ダッシュボード自動プロビジョニング
-# dashboards/ 配下の JSON を "Claude Code" フォルダへ読み込む
+# dashboards/ 配下の JSON を "AI Agents" フォルダへ読み込む
 apiVersion: 1
 
 providers:
-  - name: claude-code
+  - name: agent-telemetry
     orgId: 1
-    folder: Claude Code
+    folder: AI Agents
     type: file
     disableDeletion: false
     updateIntervalSeconds: 30
