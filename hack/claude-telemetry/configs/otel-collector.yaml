@@ -1,5 +1,6 @@
 # OTel Collector 設定
 # Claude Code から OTLP で受け取り、Loki / Tempo / Mimir へ転送する
+# Headroom だけは push ではなく collector からの scrape で取り込む
 
 receivers:
   otlp:
@@ -8,6 +9,18 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
+
+  # Headroom proxy の Prometheus エンドポイントを scrape する。
+  # 公式 docker image に opentelemetry SDK が同梱されておらず、HEADROOM_OTEL_METRICS_*
+  # による push は派生 image のビルドを強いるため、既に公開されている /metrics を引きに行く。
+  prometheus/headroom:
+    config:
+      scrape_configs:
+        - job_name: headroom
+          scrape_interval: 15s
+          metrics_path: /metrics
+          static_configs:
+            - targets: ["host.docker.internal:8787"]
 
 processors:
   # メモリ使用量を制限する
@@ -44,7 +57,7 @@ exporters:
 service:
   pipelines:
     metrics:
-      receivers: [otlp]
+      receivers: [otlp, prometheus/headroom]
       processors: [memory_limiter, batch]
       exporters: [prometheusremotewrite]
     traces:

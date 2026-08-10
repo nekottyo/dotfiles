@@ -1,6 +1,7 @@
 # AI エージェント テレメトリ (Grafana LGTM Stack)
 
-Claude Code と Copilot CLI の OpenTelemetry テレメトリを Grafana で可視化するためのローカル収集スタック。
+Claude Code と Copilot CLI の OpenTelemetry テレメトリ、および Headroom プロキシのメトリクスを
+Grafana で可視化するためのローカル収集スタック。
 
 ## 構成
 
@@ -8,14 +9,17 @@ Claude Code と Copilot CLI の OpenTelemetry テレメトリを Grafana で可�
 Claude Code ──── OTLP gRPC :4317 ────┐
 Copilot CLI ──── OTLP HTTP :4318 ────┤
                                      ▼
-OTel Collector
-    ├─→ Mimir  :9009  (メトリクス)
-    ├─→ Loki   :3100  (ログ)
-    └─→ Tempo  :3200  (トレース)
-                │
-                ▼
-           Grafana :3000  (ダッシュボード)
+Headroom :8787 ←── scrape ────── OTel Collector
+                                     ├─→ Mimir  :9009  (メトリクス)
+                                     ├─→ Loki   :3100  (ログ)
+                                     └─→ Tempo  :3200  (トレース)
+                                                │
+                                                ▼
+                                           Grafana :3000  (ダッシュボード)
 ```
+
+Claude Code と Copilot CLI は collector へ push するが、Headroom だけは向きが逆で collector が
+pull する。理由は後述の「Headroom メトリクス」を参照。
 
 ポートは全て `127.0.0.1` にのみ bind している。収集データには `user_email` / `organization_id` /
 `session_id` といった個人を識別できる属性が含まれ、かつ Grafana は認証なし (匿名 Admin) で開くため、
@@ -30,9 +34,13 @@ docker compose up -d
 
 Grafana: http://localhost:3000 (認証なし)
 
-ダッシュボード「AI エージェント テレメトリ」は `dashboards/` から自動プロビジョニングされるので、
-インポート操作は不要。上部の `Agent` は既定で `All` (Claude Code と Copilot CLI の両方) で、
-片方だけ見たいときに絞る。
+ダッシュボードは `dashboards/` から自動プロビジョニングされるので、インポート操作は不要。
+フォルダ `AI Agents` に 2 枚入る。
+
+- **AI エージェント テレメトリ** — Claude Code と Copilot CLI。上部の `Agent` は既定で `All`
+  (両方) で、片方だけ見たいときに絞る
+- **Headroom プロキシ** — Headroom の圧縮とキャッシュの挙動。agent 側とは指標体系が全く別なので
+  ダッシュボードを分けてある
 
 variable の値は `service.name` そのもので、Prometheus では `job`、span metrics では `service`、
 Loki では `service_name` ラベルに対応する。3 者でラベル名が違うだけで値は共通なので、
@@ -116,6 +124,53 @@ variable がこの値をそのまま使うので、`OTEL_SERVICE_NAME` で上書
 ```bash
 COPILOT_OTEL_FILE_EXPORTER_PATH=/tmp/copilot-otel.jsonl copilot
 ```
+
+## Headroom メトリクス
+
+Headroom 側の設定は無い。collector が `configs/otel-collector.yaml` の `prometheus/headroom`
+receiver で `http://host.docker.internal:8787/metrics` を 15 秒ごとに scrape する。
+
+[公式ドキュメント](https://headroomlabs-ai.github.io/headroom/metrics/) は `HEADROOM_OTEL_METRICS_*`
+による OTLP push を案内しているが、それには `pip install "headroom-ai[proxy,otel]"` が要る。
+`ghcr.io/headroomlabs-ai/headroom:latest` には opentelemetry SDK が同梱されておらず
+(コンテナ内で `import opentelemetry.sdk` が `ModuleNotFoundError`)、push させるには派生 image を
+焼いて `headroom install apply --image` で deployment を入れ直すことになる。upstream 更新のたびに
+再ビルドが要るうえ `:latest` の自動追従も壊れる。一方 `/metrics` はドキュメント上 OTel facade と
+同じイベント源なので、取れる指標は push でも pull でも変わらない。それで pull を選んでいる。
+
+`HEADROOM_TELEMETRY=off` は Headroom が開発元へ送る匿名テレメトリの設定で、ここの話とは無関係。
+off のままでよい。
+
+### メトリクス名の正規化
+
+prometheus receiver は counter に `_total` を付け足すため、`/metrics` に出ている名前と Mimir 上の
+名前が一致しない系列がある。`/metrics` の名前をそのままクエリに書くと結果が空になる。
+
+| `/metrics` の名前 | Mimir 上の名前 |
+| --- | --- |
+| `headroom_latency_ms_sum` | `headroom_latency_ms_sum_total` |
+| `headroom_latency_ms_count` | `headroom_latency_ms_count_total` |
+| `headroom_requests_by_provider` | `headroom_requests_by_provider_total` |
+| `headroom_requests_by_model` | `headroom_requests_by_model_total` |
+
+`_max` / `_min` / `_active` 系の gauge と、元から `_total` で終わる counter は素通しされる。
+
+### ラベルと集計上の注意
+
+- 全系列に `job="headroom"` と `instance="host.docker.internal:8787"` が付く。個別の分解軸は
+  `provider` / `model` / `transform` / `stage` と `path` の組 / `ttl` の 5 系統
+- counter はプロセス起動以降の累積で、Headroom を再起動するとリセットされる。ダッシュボードは
+  `increase()` と `rate()` で組んであるのでリセットは吸収される。`claude_code_*` のパネルが
+  `max_over_time` を使っているのとは逆の選択で、あちらは OTLP push で標本が疎なため
+  `increase()` の外挿が効きすぎる。Headroom は 15 秒間隔で scrape していて標本が密なので
+  `increase()` が素直に効く
+- 上記の外挿の性質上、scrape を始めた直後は表示期間の頭にデータが無く、サマリの数値が実際より
+  大きく出る。1 時間ほど溜まれば落ち着く
+- `headroom_latency_ms_max` などは累積の最大値であって時間窓の最大ではない。時系列で見ると単調増加に
+  なるため、ダッシュボードでは平均 (`rate(_sum_total) / rate(_count_total)`) を主に置き、
+  最大値は補助のパネルに分けてある
+- scrape 先のポートは `headroom install apply --port` で変えられる。変えたら
+  `otel-collector.yaml` の `targets` も直す
 
 ## 収集されるデータ
 
