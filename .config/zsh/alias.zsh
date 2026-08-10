@@ -3,6 +3,22 @@ exists "lsd"       && alias ls="lsd"
 exists "colordiff" && alias diff="colordiff"
 exists "terraform" && alias t="terraform"
 
+exists "headroom" && exists "claude" \
+  && claude() {
+    # headroom の persistent-docker コンテナは HOME (/tmp/headroom-home) 直下が root:root で、
+    # 実行ユーザー (ホスト uid に一致) から .cache を作れず、huggingface_hub の cache 書き込みが
+    # EACCES で失敗しログを延々と汚す。native wrapper は HF_HOME を forward しないため、
+    # コンテナが起動していれば .cache をホスト uid:gid 所有で先に用意しておく (冪等・無害)。
+    if command -v docker >/dev/null 2>&1 && docker ps -q -f name='^headroom-default$' | grep -q .; then
+      docker exec -u 0 headroom-default sh -c "mkdir -p \"\$HOME/.cache\" && chown $(id -u):$(id -g) \"\$HOME/.cache\"" 2>/dev/null
+    fi
+    headroom wrap claude --1m --model "claude-opus-5[1m]" -- "$@"
+}
+# exists "headroom" && exists "copilot" \
+#   && copilot() {
+#     headroom wrap copilot --subscription -- --model claude-opus-5 -- "$@"
+# }
+
 ## aliases
 alias vim="nvim"
 
