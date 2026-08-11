@@ -191,7 +191,16 @@ tool schema 由来の節約 (`/stats` の `tool_schema_tokens_saved`) は Promet
   `model` / `skill_name` / `query_source` (main / subagent / auxiliary) 別に分解できる
 - **ログ**: ツール実行、API リクエスト、hook 実行などのイベント。`event_name` や `tool_name` は
   インデックスラベルではなく structured metadata に入るため、集計には
-  `{service_name="claude-code"} | event_name != ""` のようにパイプラインを挟む
+  `{service_name="claude-code"} | event_name != ""` のようにパイプラインを挟む。
+  ツールの利用状況はメトリクスでなくこちら側にしかない (`claude_code_*` でツール別に割れるのは
+  `code_edit_tool_decision` の Edit / Write だけ)。`tool_name` を素で絞ると `tool_decision` と
+  `tool_result` の両方が数えられて実回数の約 2 倍になるので、`event_name` で必ず絞る
+- **ログ側の匿名化の境界**は一貫していない。MCP は `tool_decision` の `tool_name` が `mcp_tool` に、
+  `mcp_server_name` / `mcp_tool_name` が `custom` に潰れるため、サーバー別・ツール別には割れない
+  (割れるのは `tool_source` の builtin / mcp と `mcp_server_scope` の user / project まで)。
+  skill も `skill_activated` の `skill_name` は自作分がすべて `custom_skill` になる一方、
+  `api_request` の `skill_name` には実名が入る。「ツール / skill 利用状況」row が後者を軸にしているのは
+  このため。ただし `api_request` の件数は skill が有効な間の API リクエスト数であって起動回数ではない
 - **トレース**: プロンプト 1 回が `claude_code.interaction` をルートとするスパン木になる。
   子スパンに `claude_code.llm_request` / `claude_code.tool` / `claude_code.tool.execution` /
   `claude_code.tool.blocked_on_user` (権限承認の待ち時間) が並ぶ
