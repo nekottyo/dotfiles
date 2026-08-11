@@ -9,7 +9,7 @@
   ],
   "timezone": "browser",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "editable": true,
   "refresh": "1m",
   "time": {
@@ -446,7 +446,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 12,
         "x": 12,
         "y": 6
       },
@@ -489,6 +489,19 @@
       }
     },
     {
+      "type": "row",
+      "id": 110,
+      "title": "skill 別コスト (Claude Code のみ)",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "panels": []
+    },
+    {
       "type": "bargauge",
       "id": 13,
       "title": "skill 別コスト (上位 10)",
@@ -499,9 +512,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 6
+        "w": 12,
+        "x": 0,
+        "y": 15
       },
       "targets": [
         {
@@ -541,6 +554,339 @@
       }
     },
     {
+      "type": "bargauge",
+      "id": 103,
+      "title": "skill 別の API リクエスト数 (上位 10)",
+      "description": "skill が有効な間に発生した api_request の件数であって、skill の起動回数ではない。起動回数を持つ skill_activated イベントは自作 skill が custom_skill に潰れて使えないため、この軸を採っている",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "topk(10, sum by (skill_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" [$__range])))",
+          "queryType": "instant",
+          "legendFormat": "{{skill_name}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "continuous-BlPu"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      }
+    },
+    {
+      "type": "barchart",
+      "id": 111,
+      "title": "main / subagent 別コスト (上位 10)",
+      "description": "skill から委譲した subagent の消費にも親の skill_name が付く。並び順は skill 名の昇順で、コスト順に見たいときは右の明細テーブルを使う",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (skill_name, caller) (label_replace(label_replace(max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range]), \"caller\", \"subagent\", \"agent_name\", \".+\"), \"caller\", \"main\", \"agent_name\", \"\")) and on (skill_name) topk(10, sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])))",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "caller",
+            "rowField": "skill_name",
+            "valueField": "Value",
+            "emptyValue": "zero"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "skill_name\\caller"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "renameByName": {},
+            "indexByName": {
+              "skill_name\\caller": 0,
+              "main": 1,
+              "subagent": 2
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 2,
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "stacking": "normal",
+        "xTickLabelRotation": 0,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "type": "table",
+      "id": 112,
+      "title": "skill 別コスト明細",
+      "description": "上位 10 で切らず全 skill を並べる。subagent 比率は委譲の重い skill を示す",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range]))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "(sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\",agent_name=\"\"}[$__range])) or (sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])) * 0))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "(sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\",agent_name!=\"\"}[$__range])) or (sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])) * 0))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "(sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\",agent_name!=\"\"}[$__range])) or (sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])) * 0)) / sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range]))",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "skill_name",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "Time": true
+            },
+            "renameByName": {
+              "skill_name": "skill",
+              "Value #A": "合計",
+              "Value #B": "main",
+              "Value #C": "subagent",
+              "Value #D": "subagent 比率"
+            },
+            "indexByName": {
+              "skill_name": 0,
+              "Value #A": 1,
+              "Value #B": 2,
+              "Value #C": 3,
+              "Value #D": 4
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 2
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "subagent 比率"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 1
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge",
+                  "mode": "gradient"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "合計",
+            "desc": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "timeseries",
+      "id": 113,
+      "title": "skill 別コストの推移",
+      "description": "どの時期にどの skill が重かったかを追う。合計額は上の明細テーブルを見ること (こちらは増分の外挿を含む)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (skill_name) (increase(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "{{skill_name}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
       "type": "row",
       "id": 20,
       "title": "トークン",
@@ -549,7 +895,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 39
       },
       "panels": []
     },
@@ -566,7 +912,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 40
       },
       "targets": [
         {
@@ -630,7 +976,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 48
       },
       "panels": []
     },
@@ -646,7 +992,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 24
+        "y": 49
       },
       "targets": [
         {
@@ -750,7 +1096,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 49
       },
       "targets": [
         {
@@ -826,7 +1172,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 57
       },
       "panels": []
     },
@@ -842,7 +1188,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 58
       },
       "targets": [
         {
@@ -899,7 +1245,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 58
       },
       "targets": [
         {
@@ -931,7 +1277,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 66
       },
       "panels": []
     },
@@ -948,7 +1294,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 42
+        "y": 67
       },
       "targets": [
         {
@@ -1004,7 +1350,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 42
+        "y": 67
       },
       "targets": [
         {
@@ -1069,7 +1415,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 50
+        "y": 75
       },
       "targets": [
         {
@@ -1103,7 +1449,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 60
+        "y": 85
       },
       "panels": []
     },
@@ -1119,7 +1465,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 61
+        "y": 86
       },
       "targets": [
         {
@@ -1177,7 +1523,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 61
+        "y": 86
       },
       "targets": [
         {
@@ -1223,7 +1569,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 69
+        "y": 94
       },
       "panels": []
     },
@@ -1239,7 +1585,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 70
+        "y": 95
       },
       "targets": [
         {
@@ -1293,7 +1639,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 70
+        "y": 95
       },
       "targets": [
         {
@@ -1343,7 +1689,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 78
+        "y": 103
       },
       "panels": []
     },
@@ -1359,7 +1705,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 79
+        "y": 104
       },
       "targets": [
         {
@@ -1409,7 +1755,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 79
+        "y": 104
       },
       "targets": [
         {
@@ -1454,13 +1800,13 @@
     {
       "type": "row",
       "id": 100,
-      "title": "ツール / skill 利用状況 (Claude Code のみ)",
+      "title": "ツール利用状況 (Claude Code のみ)",
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 87
+        "y": 112
       },
       "panels": []
     },
@@ -1477,7 +1823,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 88
+        "y": 113
       },
       "targets": [
         {
@@ -1524,9 +1870,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 12,
         "x": 12,
-        "y": 88
+        "y": 113
       },
       "targets": [
         {
@@ -1566,55 +1912,6 @@
       }
     },
     {
-      "type": "bargauge",
-      "id": 103,
-      "title": "skill 別の API リクエスト数 (上位 10)",
-      "description": "skill が有効な間に発生した api_request の件数であって、skill の起動回数ではない。起動回数を持つ skill_activated イベントは自作 skill が custom_skill に潰れて使えないため、この軸を採っている",
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 88
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "topk(10, sum by (skill_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" [$__range])))",
-          "queryType": "instant",
-          "legendFormat": "{{skill_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "continuous-BlPu"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "showUnfilled": true,
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        }
-      }
-    },
-    {
       "type": "row",
       "id": 90,
       "title": "Copilot CLI 固有 (GenAI semconv)",
@@ -1623,7 +1920,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 96
+        "y": 121
       },
       "panels": []
     },
@@ -1640,7 +1937,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 97
+        "y": 122
       },
       "targets": [
         {
@@ -1706,7 +2003,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 97
+        "y": 122
       },
       "targets": [
         {
@@ -1772,7 +2069,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 105
+        "y": 130
       },
       "targets": [
         {
@@ -1828,7 +2125,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 105
+        "y": 130
       },
       "targets": [
         {
@@ -1904,7 +2201,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 113
+        "y": 138
       },
       "targets": [
         {
@@ -1953,7 +2250,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 113
+        "y": 138
       },
       "targets": [
         {
@@ -2019,7 +2316,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 121
+        "y": 146
       },
       "targets": [
         {
