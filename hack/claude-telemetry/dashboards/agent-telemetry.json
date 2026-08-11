@@ -1453,6 +1453,169 @@
     },
     {
       "type": "row",
+      "id": 100,
+      "title": "ツール / skill 利用状況 (Claude Code のみ)",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 87
+      },
+      "panels": []
+    },
+    {
+      "type": "bargauge",
+      "id": 101,
+      "title": "ツール別の呼び出し回数 (上位 15)",
+      "description": "tool_decision イベントの件数。MCP ツールは匿名化されており個別の名前が残らず、すべて mcp_tool に潰れる (内訳は右の比率パネルまで)",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 88
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "topk(15, sum by (tool_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_name != \"\" [$__range])))",
+          "queryType": "instant",
+          "legendFormat": "{{tool_name}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "continuous-BlPu"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      }
+    },
+    {
+      "type": "piechart",
+      "id": 102,
+      "title": "builtin 対 MCP の比率",
+      "description": "tool_decision の tool_source 内訳。MCP はサーバー名・ツール名とも匿名化されているため、割れるのはこの粒度まで",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 88
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (tool_source) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
+          "queryType": "instant",
+          "legendFormat": "{{tool_source}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "pieType": "donut",
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        }
+      }
+    },
+    {
+      "type": "bargauge",
+      "id": 103,
+      "title": "skill 別の API リクエスト数 (上位 10)",
+      "description": "skill が有効な間に発生した api_request の件数であって、skill の起動回数ではない。起動回数を持つ skill_activated イベントは自作 skill が custom_skill に潰れて使えないため、この軸を採っている",
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 88
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "topk(10, sum by (skill_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" [$__range])))",
+          "queryType": "instant",
+          "legendFormat": "{{skill_name}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "continuous-BlPu"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      }
+    },
+    {
+      "type": "row",
       "id": 90,
       "title": "Copilot CLI 固有 (GenAI semconv)",
       "collapsed": false,
@@ -1460,7 +1623,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 87
+        "y": 96
       },
       "panels": []
     },
@@ -1477,7 +1640,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 88
+        "y": 97
       },
       "targets": [
         {
@@ -1543,7 +1706,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 88
+        "y": 97
       },
       "targets": [
         {
@@ -1609,7 +1772,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 96
+        "y": 105
       },
       "targets": [
         {
@@ -1665,7 +1828,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 96
+        "y": 105
       },
       "targets": [
         {
@@ -1741,7 +1904,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 104
+        "y": 113
       },
       "targets": [
         {
@@ -1790,7 +1953,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 104
+        "y": 113
       },
       "targets": [
         {
@@ -1856,7 +2019,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 112
+        "y": 121
       },
       "targets": [
         {
