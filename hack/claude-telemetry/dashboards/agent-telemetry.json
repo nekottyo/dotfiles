@@ -77,6 +77,74 @@
     },
     {
       "type": "stat",
+      "id": 7,
+      "title": "7d 使用率",
+      "description": "Claude のアカウント週次上限に対する使用率。statusline hook が headroom の subscription-window から取って push する値 (job=claude-statusline) で、アカウント全体の値なので $agent の絞り込みは掛けていない",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "max(claude_usage_rate_limit_used_percent{window=\"seven_day\"})",
+          "instant": true,
+          "legendFormat": "7d 使用率"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1,
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto"
+      }
+    },
+    {
+      "type": "stat",
       "id": 2,
       "title": "コスト",
       "description": "表示期間内に発生した API コストの合計",
@@ -86,8 +154,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 5,
-        "x": 0,
+        "w": 4,
+        "x": 4,
         "y": 1
       },
       "targets": [
@@ -139,8 +207,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 5,
-        "x": 5,
+        "w": 4,
+        "x": 8,
         "y": 1
       },
       "targets": [
@@ -202,8 +270,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 5,
-        "x": 10,
+        "w": 4,
+        "x": 12,
         "y": 1
       },
       "targets": [
@@ -255,8 +323,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 5,
-        "x": 15,
+        "w": 4,
+        "x": 16,
         "y": 1
       },
       "targets": [
@@ -904,6 +972,351 @@
     },
     {
       "type": "row",
+      "id": 120,
+      "title": "handover のコスト削減 (ADR-085)",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "panels": []
+    },
+    {
+      "type": "stat",
+      "id": 121,
+      "title": "handover 1 回あたりコスト (バケット別)",
+      "description": "handover 1 回 (1 セッション) あたりの総コスト。親と handover-worker の両方を含む (subagent の消費にも親の skill_name が乗るため)。old = 旧手順 / new = ADR-076 の script 化後 / delegated = ADR-085 の委譲後1 call の単価がセッションの文脈量に比例するため、バケット間の比較はこの値だけでは決められない (親 1 call あたりの単価のパネルを併せて読むこと)。またコスト側は Mimir に残っている期間のぶんしか結合できず、実測では old の 249 セッション中 33 セッションしか値を持たない。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1)) / count by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1))",
+          "instant": true,
+          "legendFormat": "{{bucket}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "value_and_name"
+      }
+    },
+    {
+      "type": "bargauge",
+      "id": 122,
+      "title": "親 tool call 数の中央値 (バケット別)",
+      "description": "handover 1 回で親セッションが叩いた tool call 数の中央値。親のコストはほぼ call 数に比例する (1 call あたり約 $0.15) ため、これが削減の直接の物差しになる",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "quantile by (bucket) (0.5, max_over_time(claude_handover_parent_calls[$__range]))",
+          "instant": true,
+          "legendFormat": "{{bucket}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 1,
+          "color": {
+            "mode": "continuous-BlPu"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      }
+    },
+    {
+      "type": "table",
+      "id": 123,
+      "title": "バケット別の明細",
+      "description": "バケットごとの handover 件数・総コスト・親 tool call 数の中央値",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 48
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "count by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1))",
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "quantile by (bucket) (0.5, max_over_time(claude_handover_parent_calls[$__range]))",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "bucket",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time": true
+            },
+            "renameByName": {
+              "bucket": "バケット",
+              "Value #A": "件数",
+              "Value #B": "総コスト",
+              "Value #C": "call 中央値"
+            },
+            "indexByName": {
+              "bucket": 0,
+              "Value #A": 1,
+              "Value #B": 2,
+              "Value #C": 3
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 1
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "件数"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "総コスト"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "総コスト",
+            "desc": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "stat",
+      "id": 124,
+      "title": "1 回あたり削減額 (call 数削減 × 実測単価)",
+      "description": "旧手順と委譲手順の親 tool call 中央値の差に、旧手順で実測した 1 call あたり単価を掛けた見積り。素のコスト差を使わないのは、1 call の単価がセッションの文脈量に比例してバケット間で 4 倍以上ぶれるため。ADR-085 の削減モデル (削減 = 減らせた call 数 × 単価) をそのまま式にしている",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 48
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "(quantile(0.5, max_over_time(claude_handover_parent_calls{bucket=\"old\"}[$__range])) - quantile(0.5, max_over_time(claude_handover_parent_calls{bucket=\"delegated\"}[$__range]))) * (sum(sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left() (max_over_time(claude_handover_parent_calls{bucket=\"old\"}[$__range]) * 0 + 1)) / sum(max_over_time(claude_handover_parent_calls{bucket=\"old\"}[$__range]) and on(session_id) sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range]))))",
+          "instant": true,
+          "legendFormat": "削減額"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 2,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto"
+      }
+    },
+    {
+      "type": "stat",
+      "id": 125,
+      "title": "親 1 call あたりの単価 (バケット別)",
+      "description": "handover 1 call あたりのコスト。単価はそのセッションの文脈量 (cache read) に比例するため、バケット間で 4 倍以上ぶれる。1 回あたりコストの比較がこの差に引きずられるので、削減の物差しは親 tool call 数 (右上のパネル) を主に読むこと",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 56
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1)) / sum by (bucket) (max_over_time(claude_handover_parent_calls[$__range]) and on(session_id) sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])))",
+          "instant": true,
+          "legendFormat": "{{bucket}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 3,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "value_and_name"
+      }
+    },
+    {
+      "type": "row",
       "id": 20,
       "title": "トークン",
       "collapsed": false,
@@ -911,7 +1324,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 39
+        "y": 64
       },
       "panels": []
     },
@@ -928,7 +1341,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 40
+        "y": 65
       },
       "targets": [
         {
@@ -992,7 +1405,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 48
+        "y": 73
       },
       "panels": []
     },
@@ -1008,7 +1421,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 49
+        "y": 74
       },
       "targets": [
         {
@@ -1112,7 +1525,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 49
+        "y": 74
       },
       "targets": [
         {
@@ -1188,7 +1601,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 82
       },
       "panels": []
     },
@@ -1204,7 +1617,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 58
+        "y": 83
       },
       "targets": [
         {
@@ -1261,7 +1674,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 58
+        "y": 83
       },
       "targets": [
         {
@@ -1293,7 +1706,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 66
+        "y": 91
       },
       "panels": []
     },
@@ -1310,7 +1723,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 67
+        "y": 92
       },
       "targets": [
         {
@@ -1366,7 +1779,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 67
+        "y": 92
       },
       "targets": [
         {
@@ -1431,7 +1844,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 75
+        "y": 100
       },
       "targets": [
         {
@@ -1465,7 +1878,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 85
+        "y": 110
       },
       "panels": []
     },
@@ -1481,7 +1894,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 86
+        "y": 111
       },
       "targets": [
         {
@@ -1539,7 +1952,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 86
+        "y": 111
       },
       "targets": [
         {
@@ -1585,7 +1998,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 94
+        "y": 119
       },
       "panels": []
     },
@@ -1601,7 +2014,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 95
+        "y": 120
       },
       "targets": [
         {
@@ -1655,7 +2068,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 95
+        "y": 120
       },
       "targets": [
         {
@@ -1705,7 +2118,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 103
+        "y": 128
       },
       "panels": []
     },
@@ -1721,7 +2134,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 104
+        "y": 129
       },
       "targets": [
         {
@@ -1771,7 +2184,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 104
+        "y": 129
       },
       "targets": [
         {
@@ -1822,7 +2235,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 112
+        "y": 137
       },
       "panels": []
     },
@@ -1839,7 +2252,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 113
+        "y": 138
       },
       "targets": [
         {
@@ -1904,7 +2317,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 113
+        "y": 138
       },
       "targets": [
         {
@@ -1952,7 +2365,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 121
+        "y": 146
       },
       "panels": []
     },
@@ -1969,7 +2382,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 122
+        "y": 147
       },
       "targets": [
         {
@@ -2035,7 +2448,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 122
+        "y": 147
       },
       "targets": [
         {
@@ -2101,7 +2514,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 130
+        "y": 155
       },
       "targets": [
         {
@@ -2157,7 +2570,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 130
+        "y": 155
       },
       "targets": [
         {
@@ -2233,7 +2646,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 138
+        "y": 163
       },
       "targets": [
         {
@@ -2282,7 +2695,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 138
+        "y": 163
       },
       "targets": [
         {
@@ -2348,7 +2761,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 146
+        "y": 171
       },
       "targets": [
         {
