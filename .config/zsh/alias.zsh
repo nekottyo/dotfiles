@@ -12,12 +12,20 @@ exists "headroom" && exists "claude" \
     if command -v docker >/dev/null 2>&1 && docker ps -q -f name='^headroom-default$' | grep -q .; then
       docker exec -u 0 headroom-default sh -c "mkdir -p \"\$HOME/.cache\" && chown $(id -u):$(id -g) \"\$HOME/.cache\"" 2>/dev/null
     fi
-    headroom wrap claude --1m --model "claude-opus-5[1m]" -- "$@"
+    # --memory は付けない。DB が {cwd}/.headroom/memory.db に落ちるうえ storage=project が
+    # cwd から project key を切るため、worktree ごとに memory が分断されて実用にならない。
+    headroom wrap claude --no-serena --1m --model "claude-opus-5[1m]" -- "$@"
 }
-# exists "headroom" && exists "copilot" \
-#   && copilot() {
-#     headroom wrap copilot --subscription -- --model claude-opus-5 -- "$@"
-# }
+
+# Copilot CLI のテレメトリをローカルの LGTM スタックへ送る (hack/claude-telemetry)
+# Claude Code は gRPC 4317 を使うが、Copilot CLI は OTLP HTTP のみ対応なので 4318 を使う。
+# global に export すると OTel を読む他ツールへ波及するため、copilot 起動時だけ効く wrapper にしている。
+exists "headroom" && exists "copilot" \
+  && copilot() {
+  OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
+  OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
+  headroom wrap copilot --subscription -- --model claude-opus-5 -- "$@"
+}
 
 ## aliases
 alias vim="nvim"
