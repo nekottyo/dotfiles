@@ -6,6 +6,8 @@ node_modules/
 bower_components/
 .github-token
 wkhtmltopdf
+# headroom が作業ディレクトリ直下に吐く memory DB 群。追跡対象にしない
+.headroom/
 
 .config/*
 !.config/alacritty/
