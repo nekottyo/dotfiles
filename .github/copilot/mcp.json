@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "claude-mem": {
+      "command": "/Users/kotaro.shimizu/.local/share/mise/installs/node/24.7.0/bin/node",
+      "args": [
+        "/Users/kotaro.shimizu/.claude/plugins/marketplaces/thedotmack/plugin/scripts/mcp-server.cjs"
+      ]
+    }
+  }
+}

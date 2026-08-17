@@ -40,7 +40,7 @@ reload_config = "prefix+shift+r"
 
 # --- ペインのリサイズ ---
 # tmux の H/J/K/L による resize-pane 相当。herdr ではリサイズモードに入ってから操作する。
-resize_mode = "prefix+r"
+# resize_mode = "prefix+r"
 
 # --- タブ(tmux の window)操作 ---
 new_tab = "prefix+c"          # tmux: bind c(新規ウィンドウ作成)
@@ -88,6 +88,11 @@ type = "plugin_action"
 command = "gh-pr.refresh"
 description = "refresh PR status"
 
+[[keys.command]]
+key = "prefix+r"
+type = "plugin_action"
+command = "persiyanov.reviewr.toggle"   # <plugin_id>.<action_id> — note the id, not the name
+
 [ui]
 # サイドバーの幅。既定 (26) / 上限 (36) からそれぞれ +6 して広げている。
 # 幅は workspace 名の長さに応じて自動スケールするため、上限も一緒に上げないと効かない。
@@ -114,6 +119,13 @@ agent_panel_sort = "spaces"
 # 行に置かないとプラグインが値を書いても描画されないため、ここでの指定が必須。
 # terminal_title_stripped は agent が端末タイトルへ出す作業サマリ (Claude Code なら
 # 現在のタスク要約) から装飾を落としたもの。どの pane が何をしているかを一覧で追える。
+# $paneid は pane_id (例 w59:pP)。agent や pane コマンドの宛先をサイドバーから直接
+# 読めるようにするために足した。識別子であって内容ではないので dim で目立たせない。
+# 組み込みの pane token は pane の label (`pane rename` で付く名前) を出すもので
+# pane_id ではないため使えない。値は各 pane が自分で報告する必要がある:
+#   herdr pane report-metadata "$HERDR_PANE_ID" --source claude-pane-id \
+#     --token paneid="$HERDR_PANE_ID"
+# 報告していない pane では空欄になる。
 [ui.sidebar.agents]
 # terminal_title_stripped は既定で dim が乗って読みづらいため、dim を外したうえで
 # fg も明示する。既定色は dracula の comment (#6272a4) 相当で背景 (#282a36) との
@@ -123,7 +135,7 @@ agent_panel_sort = "spaces"
 # fg に使えるのは #RGB / #RRGGBB のみで、cyan のような名前色や rgb() は弾かれる。
 rows = [
   ["state_icon", { token = "terminal_title_stripped", dim = false, bold = true, fg = "#ff79c6" }],
-  ["agent", "$pr"],
+  ["agent", { token = "$paneid", dim = true }, "$pr"],
 ]
 
 # バックグラウンド workspace の agent が状態変化したときに鳴る通知音。
@@ -140,3 +152,4 @@ scrollback_limit_bytes = 50000000
 # サーバ再起動をまたいでペインの画面履歴を保持する。
 # scrollback_limit_bytes を大きく取っているため、再起動で履歴を失わないようにする。
 pane_history = true
+

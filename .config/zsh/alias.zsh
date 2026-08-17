@@ -14,7 +14,7 @@ exists "headroom" && exists "claude" \
     fi
     # --memory は付けない。DB が {cwd}/.headroom/memory.db に落ちるうえ storage=project が
     # cwd から project key を切るため、worktree ごとに memory が分断されて実用にならない。
-    headroom wrap claude --no-serena --1m --model "claude-opus-5[1m]" -- "$@"
+    headroom wrap claude --no-serena --1m --model "opusplan" --effort "midium" -- "$@"
 }
 
 # Copilot CLI のテレメトリをローカルの LGTM スタックへ送る (hack/claude-telemetry)
@@ -24,7 +24,7 @@ exists "headroom" && exists "copilot" \
   && copilot() {
   OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
   OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-  headroom wrap copilot --subscription -- --model claude-opus-5 -- "$@"
+  headroom wrap copilot --subscription --model gemini-3.7-flash -- "$@"
 }
 
 ## aliases
