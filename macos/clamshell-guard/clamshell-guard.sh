@@ -1,11 +1,15 @@
 #!/bin/sh
 #
-# 蓋を閉じたときのスリープ (Clamshell Sleep) を、信頼できる場所かつ AC 接続時だけ抑止する。
+# 蓋を閉じたときのスリープ (Clamshell Sleep) を、信頼できる場所でだけ抑止する。
 #
 # macOS の `pmset disablesleep` は電源ソース別に持てない (plist の SystemPowerSettings に
 # 書かれるため `-c` を付けても全体へ適用される)。素で有効にするとバッテリー駆動時も蓋閉じで
 # スリープしなくなり、カバンの中で発熱し続けることになる。そこで条件判定をこのスクリプトが
 # 外側から受け持ち、条件を外れたら自動で元に戻す。
+#
+# ネットワークによって AC 電源の要否が違う。ACC_GATEWAYS (オフィス等) は在席中は AC を
+# 抜き差ししながら使うため AC 条件を課さず、KNOWN_GATEWAYS (自宅等) は蓋閉じ = 持ち出しの
+# 合図になりやすいので従来どおり AC 接続時のみ抑止する。
 #
 # 場所の判定に SSID を使わないのは、macOS 15 以降 SSID / BSSID の取得に位置情報の TCC 権限が
 # 要り、root の LaunchDaemon からは `<redacted>` しか返らないため。代わりにゲートウェイの MAC
@@ -19,9 +23,10 @@ set -eu
 # このリポジトリは public なので、自宅ネットワークを同定できる値をコードに含めない。
 CONFIG_FILE=${CLAMSHELL_GUARD_CONFIG:-/usr/local/etc/clamshell-guard.conf}
 
-# 設定ファイルが無い、または KNOWN_GATEWAYS が空のときは「どこも既知でない」扱いになり
+# 設定ファイルが無い、または両方の変数が空のときは「どこも既知でない」扱いになり
 # 抑止しない。設定漏れが抑止の垂れ流しにならない側へ倒してある。
 KNOWN_GATEWAYS=''
+ALWAYS_ON_GATEWAYS=''
 if [ -r "$CONFIG_FILE" ]; then
 	# shellcheck source=/dev/null
 	. "$CONFIG_FILE"
@@ -94,17 +99,31 @@ current_sleep_disabled() {
 desired=0
 gateway=''
 
-# 既知ネットワークが 1 つも設定されていなければ、ゲートウェイを引くまでもなく抑止しない
-if [ -n "$KNOWN_GATEWAYS" ] && on_ac_power; then
+# どちらの変数も空なら、ゲートウェイを引くまでもなく抑止しない
+if [ -n "$KNOWN_GATEWAYS" ] || [ -n "$ALWAYS_ON_GATEWAYS" ]; then
 	gateway=$(physical_gateway_mac || true)
-	for known in $KNOWN_GATEWAYS; do
-		# 設定側も正規化する。arp(8) の出力をそのまま貼れるようにするため
-		known=$(printf '%s' "$known" | normalize_mac)
-		if [ "$gateway" = "$known" ]; then
-			desired=1
-			break
+
+	if [ -n "$gateway" ]; then
+		for known in $ALWAYS_ON_GATEWAYS; do
+			# 設定側も正規化する。arp(8) の出力をそのまま貼れるようにするため
+			known=$(printf '%s' "$known" | normalize_mac)
+			if [ "$gateway" = "$known" ]; then
+				desired=1
+				break
+			fi
+		done
+
+		# ALWAYS_ON_GATEWAYS で既に決まっていれば AC 電源の有無は問わない
+		if [ "$desired" = 0 ] && on_ac_power; then
+			for known in $KNOWN_GATEWAYS; do
+				known=$(printf '%s' "$known" | normalize_mac)
+				if [ "$gateway" = "$known" ]; then
+					desired=1
+					break
+				fi
+			done
 		fi
-	done
+	fi
 fi
 
 current=$(current_sleep_disabled)
@@ -122,7 +141,7 @@ fi
 pmset -a disablesleep "$desired"
 
 if [ "$desired" = 1 ]; then
-	log "sleep disabled: on AC power at known network (gateway=${gateway})"
+	log "sleep disabled: at known network (gateway=${gateway})"
 else
 	log "sleep restored: off AC power or unknown network (gateway=${gateway:-none})"
 fi

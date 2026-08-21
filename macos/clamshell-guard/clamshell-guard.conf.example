@@ -18,3 +18,8 @@ KNOWN_GATEWAYS=""
 
 # 複数のネットワークを許可する場合:
 # KNOWN_GATEWAYS="00:00:5e:00:53:0a 00:00:5e:00:53:0b"
+
+# KNOWN_GATEWAYS は AC 電源接続時のみ抑止する。ここ ALWAYS_ON_GATEWAYS に書いたネットワークは
+# AC の有無を問わず抑止する (例: 在席中に AC を抜き差ししながら使うオフィスの有線 / 無線)。
+# 書式・調べ方は KNOWN_GATEWAYS と同じ。
+ALWAYS_ON_GATEWAYS=""

@@ -41,11 +41,12 @@ echo "log: /var/log/clamshell-guard.log"
 
 # 設定が空のままだと常時 no-op になり、入れたのに効かない状態に気づけないので明示する
 KNOWN_GATEWAYS=''
+ALWAYS_ON_GATEWAYS=''
 # shellcheck source=/dev/null
 . "$INSTALLED_CONFIG"
-if [ -z "$KNOWN_GATEWAYS" ]; then
+if [ -z "$KNOWN_GATEWAYS" ] && [ -z "$ALWAYS_ON_GATEWAYS" ]; then
 	echo >&2
-	echo "warning: KNOWN_GATEWAYS is empty; sleep will never be disabled." >&2
+	echo "warning: KNOWN_GATEWAYS and ALWAYS_ON_GATEWAYS are both empty; sleep will never be disabled." >&2
 	echo "         add the gateway MAC to ${INSTALLED_CONFIG}:" >&2
 	echo "           arp -n \"\$(ipconfig getoption en0 router)\"" >&2
 fi
