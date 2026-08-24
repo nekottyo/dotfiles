@@ -1,15 +1,16 @@
 {
   "uid": "agent-telemetry",
   "title": "AI エージェント テレメトリ",
-  "description": "Claude Code と Copilot CLI の OTLP テレメトリ (Mimir / Loki / Tempo) をまとめて見るダッシュボード。上部の Agent で切り替える",
+  "description": "Claude Code、Codex、Copilot CLI の OTLP テレメトリを Mimir / Loki / Tempo で横断表示するダッシュボード。上部の Agent で切り替える",
   "tags": [
     "claude-code",
+    "codex",
     "copilot-cli",
     "otel"
   ],
   "timezone": "browser",
   "schemaVersion": 39,
-  "version": 2,
+  "version": 3,
   "editable": true,
   "refresh": "1m",
   "time": {
@@ -25,8 +26,8 @@
         "name": "agent",
         "label": "Agent",
         "type": "custom",
-        "description": "service.name の値。Prometheus では job、span metrics では service、Loki では service_name ラベルに対応する。Claude Code は statusline hook が job=claude-statusline で別に出す補助メトリクス (rate limit / turn 数) があるため、両方を含めている",
-        "query": "Claude Code : claude-code|claude-statusline,Copilot CLI : github-copilot",
+        "description": "service.name の値。Prometheus では job、span metrics では service、Loki では service_name ラベルに対応する。Claude Code は statusline hook、Codex は対話 CLI と codex exec の service 名をそれぞれまとめている",
+        "query": "Claude Code : claude-code|claude-statusline,Codex : codex_cli_rs|codex_exec,Copilot CLI : github-copilot",
         "options": [
           {
             "selected": true,
@@ -37,6 +38,11 @@
             "selected": false,
             "text": "Claude Code",
             "value": "claude-code|claude-statusline"
+          },
+          {
+            "selected": false,
+            "text": "Codex",
+            "value": "codex_cli_rs|codex_exec"
           },
           {
             "selected": false,
@@ -54,7 +60,7 @@
           ]
         },
         "includeAll": true,
-        "allValue": "claude-code|claude-statusline|github-copilot",
+        "allValue": "claude-code|claude-statusline|github-copilot|codex_cli_rs|codex_exec",
         "multi": true,
         "hide": 0,
         "skipUrlSync": false
@@ -200,7 +206,7 @@
       "type": "stat",
       "id": 3,
       "title": "トークン",
-      "description": "表示期間内に消費した全トークン。Claude Code は counter、Copilot CLI は gen_ai.client.token.usage ヒストグラムの sum から算出する",
+      "description": "表示期間内に消費した全トークン。Claude Code は counter、Codex と Copilot CLI は histogram の sum から算出する",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -230,6 +236,16 @@
           },
           "expr": "sum(increase(gen_ai_client_token_usage_sum{job=~\"$agent\"}[$__range]))",
           "legendFormat": "トークン (Copilot CLI)",
+          "instant": true
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(max_over_time(codex_turn_token_usage_sum{job=~\"$agent\",token_type=\"total\"}[$__range]))",
+          "legendFormat": "トークン (Codex)",
           "instant": true
         }
       ],
@@ -263,7 +279,7 @@
       "type": "stat",
       "id": 4,
       "title": "セッション",
-      "description": "起動したセッション数 (fresh / resume の合計)",
+      "description": "Claude Code の session と Codex の thread の起動数。Copilot CLI は対応 metric を持たない",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -283,7 +299,17 @@
           },
           "expr": "sum(max_over_time(claude_code_session_count_total{job=~\"$agent\"}[$__range]))",
           "instant": true,
-          "legendFormat": "セッション"
+          "legendFormat": "Claude Code session"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(max_over_time(codex_thread_started_total{job=~\"$agent\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Codex thread"
         }
       ],
       "fieldConfig": {
@@ -369,7 +395,7 @@
       "type": "stat",
       "id": 6,
       "title": "キャッシュ率",
-      "description": "全トークンに占める cacheRead の割合。高いほどプロンプトキャッシュが効いている",
+      "description": "全トークンに占める cacheRead / cached_input の割合。Claude Code と Codex に対応し、高いほど prompt cache が効いている",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -389,7 +415,17 @@
           },
           "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\",type=\"cacheRead\"}[$__range])) / clamp_min(sum(max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__range])), 1)",
           "instant": true,
-          "legendFormat": "キャッシュ率"
+          "legendFormat": "Claude Code"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(max_over_time(codex_turn_token_usage_sum{job=~\"$agent\",token_type=\"cached_input\"}[$__range])) / clamp_min(sum(max_over_time(codex_turn_token_usage_sum{job=~\"$agent\",token_type=\"total\"}[$__range])), 1)",
+          "instant": true,
+          "legendFormat": "Codex"
         }
       ],
       "fieldConfig": {
@@ -456,7 +492,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 6,
         "x": 0,
         "y": 6
       },
@@ -505,8 +541,119 @@
     },
     {
       "type": "piechart",
-      "id": 12,
+      "id": 14,
+      "title": "モデル別コスト比率",
+      "description": "選択期間内でのモデル別コスト内訳",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (model) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "{{model}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "pieType": "donut",
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "id": 15,
       "title": "呼び出し元別コスト",
+      "description": "main (対話) / subagent (委譲) / auxiliary (要約などの内部処理) の推移",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 6
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (query_source) (increase(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "{{query_source}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "type": "piechart",
+      "id": 12,
+      "title": "呼び出し元別コスト比率",
       "description": "main (対話) / subagent (委譲) / auxiliary (要約などの内部処理) の内訳",
       "datasource": {
         "type": "prometheus",
@@ -514,8 +661,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
+        "w": 6,
+        "x": 18,
         "y": 6
       },
       "targets": [
@@ -1332,7 +1479,7 @@
       "type": "timeseries",
       "id": 21,
       "title": "種別トークン消費",
-      "description": "cacheRead が大半を占めるのが正常。input / output の伸びが実コストに直結する。Copilot CLI は input / output のみで cache 種別を持たない",
+      "description": "Claude Code、Codex、Copilot CLI の token type 別消費量。Codex は cached_input / cache_write_input / reasoning_output も分離する",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -1362,6 +1509,16 @@
           },
           "expr": "sum by (gen_ai_token_type) (increase(gen_ai_client_token_usage_sum{job=~\"$agent\"}[$__rate_interval]))",
           "legendFormat": "Copilot {{gen_ai_token_type}}",
+          "range": true
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (token_type) (increase(codex_turn_token_usage_sum{job=~\"$agent\"}[$__rate_interval]))",
+          "legendFormat": "Codex {{token_type}}",
           "range": true
         }
       ],
@@ -1609,6 +1766,7 @@
       "type": "timeseries",
       "id": 41,
       "title": "イベント種別の発生数",
+      "description": "Claude Code と Codex の structured log event を event_name 別に集計する。Copilot CLI は logs signal を出さない",
       "datasource": {
         "type": "loki",
         "uid": "loki"
@@ -1665,7 +1823,7 @@
       "type": "table",
       "id": 42,
       "title": "直近のトレース",
-      "description": "行を開くとスパンの内訳 (llm_request / tool / 承認待ち) が見られる",
+      "description": "Claude Code、Codex、Copilot CLI の直近 trace。行を開くと LLM request / tool / approval wait などの span 内訳が見られる",
       "datasource": {
         "type": "tempo",
         "uid": "tempo"
@@ -1732,7 +1890,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (span_name, le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (service, span_name, le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\"}[$__rate_interval])))",
           "range": true,
           "legendFormat": "{{service}} {{span_name}}"
         }
@@ -1867,7 +2025,7 @@
         "dedupStrategy": "none",
         "sortOrder": "Descending"
       },
-      "description": "Copilot CLI は logs シグナルを出さないため、Copilot 選択時は空になる"
+      "description": "Claude Code と Codex の structured event log。Copilot CLI は logs signal を出さないため、Copilot 選択時は空になる"
     },
     {
       "type": "row",
@@ -2359,7 +2517,7 @@
     {
       "type": "row",
       "id": 90,
-      "title": "Copilot CLI 固有 (GenAI semconv)",
+      "title": "Codex / Copilot 実行メトリクス",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -2373,7 +2531,7 @@
       "type": "timeseries",
       "id": 91,
       "title": "LLM 呼び出しの応答時間",
-      "description": "gen_ai.client.operation.duration。1 回の LLM 呼び出しが返るまでの時間",
+      "description": "Copilot CLI の GenAI request と Codex の HTTP / WebSocket request の応答時間。通常の Codex exec は WebSocket transport を使う",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -2393,7 +2551,7 @@
           },
           "expr": "histogram_quantile(0.95, sum by (gen_ai_request_model, le) (rate(gen_ai_client_operation_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
           "range": true,
-          "legendFormat": "p95 {{gen_ai_request_model}}"
+          "legendFormat": "Copilot p95 {{gen_ai_request_model}}"
         },
         {
           "refId": "B",
@@ -2403,7 +2561,27 @@
           },
           "expr": "sum(rate(gen_ai_client_operation_duration_seconds_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_client_operation_duration_seconds_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
           "range": true,
-          "legendFormat": "平均"
+          "legendFormat": "Copilot 平均"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (model, le) (rate(codex_api_request_duration_ms_milliseconds_bucket{job=~\"$agent\"}[$__rate_interval]))) / 1000",
+          "range": true,
+          "legendFormat": "Codex HTTP p95 {{model}}"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (model, le) (rate(codex_websocket_request_duration_ms_milliseconds_bucket{job=~\"$agent\"}[$__rate_interval]))) / 1000",
+          "range": true,
+          "legendFormat": "Codex WebSocket p95 {{model}}"
         }
       ],
       "fieldConfig": {
@@ -2439,7 +2617,7 @@
       "type": "timeseries",
       "id": 92,
       "title": "ストリーミングの応答性",
-      "description": "time_to_first_chunk は最初のトークンが返るまで、time_per_output_chunk は 1 チャンクあたりの時間。体感速度に直結する",
+      "description": "Copilot CLI の first/output chunk と Codex の TTFT / TTFM。最初の token または message が返るまでの体感速度",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -2459,7 +2637,7 @@
           },
           "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_to_first_chunk_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
           "range": true,
-          "legendFormat": "最初のチャンクまで p95"
+          "legendFormat": "Copilot 最初のチャンクまで p95"
         },
         {
           "refId": "B",
@@ -2469,7 +2647,27 @@
           },
           "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_per_output_chunk_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
           "range": true,
-          "legendFormat": "チャンクあたり p95"
+          "legendFormat": "Copilot チャンクあたり p95"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(codex_turn_ttft_duration_ms_milliseconds_bucket{job=~\"$agent\"}[$__rate_interval]))) / 1000",
+          "range": true,
+          "legendFormat": "Codex TTFT p95"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(codex_turn_ttfm_duration_ms_milliseconds_bucket{job=~\"$agent\"}[$__rate_interval]))) / 1000",
+          "range": true,
+          "legendFormat": "Codex TTFM p95"
         }
       ],
       "fieldConfig": {
@@ -2505,7 +2703,7 @@
       "type": "timeseries",
       "id": 93,
       "title": "エージェント実行時間",
-      "description": "gen_ai.invoke_agent.duration。プロンプト 1 回に対するエージェント全体の所要時間",
+      "description": "Copilot CLI の gen_ai.invoke_agent.duration と Codex の turn E2E duration。prompt 1 回に対する agent 全体の所要時間",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -2525,7 +2723,17 @@
           },
           "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_invoke_agent_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
           "range": true,
-          "legendFormat": "p95"
+          "legendFormat": "Copilot p95"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(codex_turn_e2e_duration_ms_milliseconds_bucket{job=~\"$agent\"}[$__rate_interval]))) / 1000",
+          "range": true,
+          "legendFormat": "Codex p95"
         }
       ],
       "fieldConfig": {
@@ -2561,7 +2769,7 @@
       "type": "timeseries",
       "id": 94,
       "title": "1 実行あたりの推論回数とツール呼び出し回数",
-      "description": "gen_ai.invoke_agent.inference_calls / tool_calls の平均。値が大きいほど 1 プロンプトで多くの往復をしている",
+      "description": "Copilot CLI の inference / tool calls と Codex の turn tool calls の平均。値が大きいほど 1 prompt で多くの往復をしている",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -2601,7 +2809,17 @@
           },
           "expr": "sum(rate(github_copilot_agent_turn_count_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(github_copilot_agent_turn_count_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
           "range": true,
-          "legendFormat": "LLM 往復 (平均)"
+          "legendFormat": "Copilot LLM 往復 (平均)"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(rate(codex_turn_tool_call_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(codex_turn_tool_call_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "range": true,
+          "legendFormat": "Codex ツール呼び出し (平均)"
         }
       ],
       "fieldConfig": {
@@ -2637,7 +2855,7 @@
       "type": "bargauge",
       "id": 95,
       "title": "ツール別の呼び出し回数 (上位 10)",
-      "description": "github.copilot.tool.call.count。表示期間内の増分",
+      "description": "Copilot CLI と Codex の tool call count。表示期間内の増分",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -2657,7 +2875,17 @@
           },
           "expr": "topk(10, sum by (tool_name) (increase(github_copilot_tool_call_count_total{job=~\"$agent\"}[$__range])))",
           "instant": true,
-          "legendFormat": "{{tool_name}}"
+          "legendFormat": "Copilot {{tool_name}}"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "topk(10, sum by (tool) (increase(codex_tool_call_total{job=~\"$agent\"}[$__range])))",
+          "instant": true,
+          "legendFormat": "Codex {{tool}}"
         }
       ],
       "fieldConfig": {
@@ -2686,7 +2914,7 @@
       "type": "timeseries",
       "id": 96,
       "title": "ツール実行時間 p95",
-      "description": "github.copilot.tool.call.duration をツール別に。gen_ai.execute_tool.duration も同じ実行を計測している",
+      "description": "Copilot CLI と Codex の tool 実行時間 p95。Codex の millisecond histogram は second に変換して重ねる",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
@@ -2706,7 +2934,7 @@
           },
           "expr": "histogram_quantile(0.95, sum by (tool_name, le) (rate(github_copilot_tool_call_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
           "range": true,
-          "legendFormat": "{{tool_name}}"
+          "legendFormat": "Copilot {{tool_name}}"
         },
         {
           "refId": "B",
@@ -2716,7 +2944,17 @@
           },
           "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_execute_tool_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
           "range": true,
-          "legendFormat": "execute_tool 全体"
+          "legendFormat": "Copilot execute_tool 全体"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (tool, le) (rate(codex_tool_call_duration_ms_milliseconds_bucket{job=~\"$agent\"}[$__rate_interval]))) / 1000",
+          "range": true,
+          "legendFormat": "Codex {{tool}}"
         }
       ],
       "fieldConfig": {
@@ -2751,7 +2989,7 @@
     {
       "type": "timeseries",
       "id": 97,
-      "title": "MCP サーバーへの接続試行",
+      "title": "MCP サーバーへの接続試行 (Copilot CLI)",
       "description": "github.copilot.mcp.server.connection.count。接続が繰り返し発生していれば MCP サーバーが不安定な可能性がある",
       "datasource": {
         "type": "prometheus",
@@ -2796,6 +3034,305 @@
           "calcs": [
             "max",
             "mean"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "type": "row",
+      "id": 130,
+      "title": "Codex 固有メトリクス",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 179
+      },
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "id": 131,
+      "title": "Request 成否 (Codex)",
+      "description": "Codex の HTTP api_request と WebSocket request を model / status / success 別に集計。通常の Codex exec は WebSocket 側に記録される",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 180
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (model, status, success) (increase(codex_api_request_total{job=~\"$agent\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "HTTP {{model}} status={{status}} success={{success}}"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (model, status, success) (increase(codex_websocket_request_total{job=~\"$agent\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "WebSocket {{model}} success={{success}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "type": "bargauge",
+      "id": 132,
+      "title": "Approval 結果 (Codex)",
+      "description": "codex.approval.requested の表示期間内増分。tool と approved の組み合わせ別に確認する",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 180
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (tool, approved) (increase(codex_approval_requested_total{job=~\"$agent\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "{{tool}} approved={{approved}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "continuous-BlPu"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "showUnfilled": true,
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "id": 133,
+      "title": "MCP call 数と実行時間 (Codex)",
+      "description": "codex.mcp.call の interval 内件数と codex.mcp.call.duration_ms の p95。右軸が実行時間",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 188
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(increase(codex_mcp_call_total{job=~\"$agent\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "MCP call 数"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(codex_mcp_call_duration_ms_milliseconds_bucket{job=~\"$agent\"}[$__rate_interval]))) / 1000",
+          "range": true,
+          "legendFormat": "MCP call p95"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "spanNulls": true,
+            "showPoints": "never"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "max",
+            "mean"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "id": 134,
+      "title": "Thread / subagent / compact / hook (Codex)",
+      "description": "Codex の thread 起動、multi-agent spawn、task compaction、hook 実行の interval 内件数",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 188
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(increase(codex_thread_started_total{job=~\"$agent\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "thread started"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(increase(codex_multi_agent_spawn_total{job=~\"$agent\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "subagent spawn"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(increase(codex_task_compact_total{job=~\"$agent\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "task compact"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (hook_name, status) (increase(codex_hooks_run_total{job=~\"$agent\"}[$__rate_interval]))",
+          "range": true,
+          "legendFormat": "hook {{hook_name}} status={{status}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "sum"
           ]
         },
         "tooltip": {

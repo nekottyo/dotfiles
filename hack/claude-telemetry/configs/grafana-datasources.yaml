@@ -29,13 +29,14 @@ datasources:
     url: http://tempo:3200
     isDefault: false
     jsonData:
-      # trace_id はインデックスラベルではないため customQuery で明示的に引く
+      # trace_id はインデックスラベルではないため customQuery で明示的に引く。
+      # Copilot CLI は logs signal を出さないため、Claude Code と Codex だけを対象にする。
       tracesToLogsV2:
         datasourceUid: loki
         spanStartTimeShift: "-5m"
         spanEndTimeShift: "5m"
         customQuery: true
-        query: '{service_name="claude-code"} | trace_id="$${__span.traceId}"'
+        query: '{service_name=~"claude-code|codex_cli_rs|codex_exec"} | trace_id="$${__span.traceId}"'
       search:
         hide: false
       nodeGraph:

@@ -1,5 +1,5 @@
 # OTel Collector 設定
-# Claude Code から OTLP で受け取り、Loki / Tempo / Mimir へ転送する
+# Claude Code / Codex / Copilot CLI から OTLP で受け取り、Loki / Tempo / Mimir へ転送する
 # Headroom だけは push ではなく collector からの scrape で取り込む
 
 receivers:
@@ -27,6 +27,9 @@ processors:
   memory_limiter:
     check_interval: 1s
     limit_mib: 512
+  # Codex が Delta temporality で送る metrics を Prometheus Remote Write が要求する
+  # cumulative temporality へ変換する。cumulative metrics はそのまま通過する。
+  deltatocumulative: {}
   # バッチ送信でパフォーマンスを向上させる
   batch:
     timeout: 5s
@@ -58,7 +61,7 @@ service:
   pipelines:
     metrics:
       receivers: [otlp, prometheus/headroom]
-      processors: [memory_limiter, batch]
+      processors: [memory_limiter, deltatocumulative, batch]
       exporters: [prometheusremotewrite]
     traces:
       receivers: [otlp]

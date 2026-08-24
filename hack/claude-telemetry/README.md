@@ -1,12 +1,13 @@
 # AI エージェント テレメトリ (Grafana LGTM Stack)
 
-Claude Code と Copilot CLI の OpenTelemetry テレメトリ、および Headroom プロキシのメトリクスを
+Claude Code、Codex、Copilot CLI の OpenTelemetry テレメトリ、および Headroom プロキシのメトリクスを
 Grafana で可視化するためのローカル収集スタック。
 
 ## 構成
 
 ```
 Claude Code ──── OTLP gRPC :4317 ────┐
+Codex ────────── OTLP gRPC :4317 ────┤
 Copilot CLI ──── OTLP HTTP :4318 ────┤
                                      ▼
 Headroom :8787 ←── scrape ────── OTel Collector
@@ -18,7 +19,7 @@ Headroom :8787 ←── scrape ────── OTel Collector
                                            Grafana :3000  (ダッシュボード)
 ```
 
-Claude Code と Copilot CLI は collector へ push するが、Headroom だけは向きが逆で collector が
+Claude Code、Codex、Copilot CLI は collector へ push するが、Headroom だけは向きが逆で collector が
 pull する。理由は後述の「Headroom メトリクス」を参照。
 
 ポートは全て `127.0.0.1` にのみ bind している。収集データには `user_email` / `organization_id` /
@@ -37,8 +38,8 @@ Grafana: http://localhost:3000 (認証なし)
 ダッシュボードは `dashboards/` から自動プロビジョニングされるので、インポート操作は不要。
 フォルダ `AI Agents` に 2 枚入る。
 
-- **AI エージェント テレメトリ** — Claude Code と Copilot CLI。上部の `Agent` は既定で `All`
-  (両方) で、片方だけ見たいときに絞る
+- **AI エージェント テレメトリ** — Claude Code、Codex、Copilot CLI。上部の `Agent` は既定で `All`
+  (3 種すべて) で、個別に見たいときに絞る
 - **Headroom プロキシ** — Headroom の圧縮とキャッシュの挙動。agent 側とは指標体系が全く別なので
   ダッシュボードを分けてある
 
@@ -48,9 +49,11 @@ Loki では `service_name` ラベルに対応する。3 者でラベル名が違
 `job=claude-statusline` で rate limit と turn 数を別に出しているため、variable の値に
 `claude-code|claude-statusline` の 2 つを含めている。
 
-両方を同時に表示するパネル (トークン、コード編集行数、スパンレイテンシ) は、凡例の頭に
-どちらの agent かが出る。片方にしか無い指標はパネルのタイトルに `(Claude Code のみ)` と付けるか、
-`Copilot CLI 固有` の row にまとめてある。
+Codex は対話 CLI が `service.name=codex_cli_rs`、`codex exec` が `service.name=codex_exec` を使う。
+Agent variable の Codex は両方を含めているため、実行方法をまたいで同じパネルに集約される。
+
+複数 agent を同時に表示するパネル (トークン、コード編集行数、スパンレイテンシ) は、凡例の頭に
+agent 名が出る。一部にしか無い指標はパネルのタイトルに対象を付けるか、固有の row にまとめてある。
 
 ## 停止
 
@@ -85,6 +88,37 @@ docker compose down -v
 `settings.json` の `env` は hot reload されるので、編集すれば起動中のセッションからすぐ反映される。
 
 スタックが停止していてもエラーにはならず、単に送信が失敗するだけ。
+
+## Codex テレメトリ設定
+
+Codex は user-level の `~/.codex/config.toml` に OTel 設定を置く。project-level の
+`.codex/config.toml` に書いた `[otel]` は適用されない。
+
+```toml
+[otel]
+environment = "dev"
+log_user_prompt = true
+exporter = { otlp-grpc = { endpoint = "http://localhost:4317" } }
+metrics_exporter = { otlp-grpc = { endpoint = "http://localhost:4317" } }
+trace_exporter = { otlp-grpc = { endpoint = "http://localhost:4317" } }
+```
+
+設定は新しく起動した Codex process から有効になる。対話 CLI は `service.name=codex_cli_rs`、
+`codex exec` は `service.name=codex_exec` を使うため、dashboard では両方を Codex として扱う。
+
+Codex の metrics は Delta temporality 固定なので、collector の `deltatocumulative` processor で
+cumulative に変換してから Mimir へ送る。Claude Code の cumulative metrics と Headroom の
+Prometheus scrape metrics は変換されず、そのまま同じ pipeline を通る。collector-contrib は
+`deltatocumulative` を distribution に初めて含めた `0.108.0` へ固定している。従来の `0.107.0` では
+processor module 自体が image に含まれず、同じ config を読み込めない。
+
+Codex metrics は turn 完了時だけ送られる sparse cumulative 系列で、広い窓の `increase()` は外挿により
+summary を過大評価し得る。トークン、thread、cache 率の summary は `max_over_time()`、推移パネルは
+interval ごとの差分を見るため `increase()` を使う。
+
+`log_user_prompt = true` は Claude Code の現在の設定と同じく raw prompt を送る設定である。
+この stack が localhost に閉じていても、prompt は Loki の永続 volume に保存される。source code、token、
+個人情報を含み得るため、本文が不要なら `false` にする。dashboard の集計に raw prompt は不要。
 
 ## Copilot CLI テレメトリ設定
 
@@ -238,6 +272,28 @@ Copilot CLI が出すのは **traces と metrics だけ**で、logs シグアル
   Prometheus 名は remote write exporter が unit を suffix に付けた後の形。unit が `s` のものだけ
   `_seconds` が付き、`{token}` や `{call}` のような無次元 unit には付かない。
   Copilot 側が unit を変えるとパネルが空になるので、その場合はここの対応表から直す
+
+### Codex
+
+Codex は logs / metrics / traces の 3 signal を出す。Claude Code と signal の種類は同じだが、
+event 名、metric 名、span 構造は Codex 固有であり、Claude の `claude_code_*` と直接は集約できない。
+
+- **ログ**: `codex.api_request`、`codex.user_prompt`、`codex.tool_decision`、`codex.tool_result` などの
+  structured event。`log_user_prompt = false` でも送られる prompt 長と、tool result に output snippet が
+  含まれる可能性
+- **メトリクス**: token usage、API / tool / MCP の回数と duration、turn の TTFT / TTFM / E2E、
+  approval、thread、subagent spawn、compaction。Delta temporality から collector での cumulative への変換
+- **トレース**: 対話 CLI は `codex_cli_rs`、`codex exec` は `codex_exec` の service 名で Tempo に入る。
+  Tempo の span metrics は Claude Code / Copilot CLI と同じ `traces_spanmetrics_*` として重ねる構成
+
+通常の Codex exec は WebSocket transport を使い、request 数と応答時間は `codex.websocket.request` /
+`codex.websocket.request.duration_ms` に記録される。HTTP transport を使う経路では `codex.api_request` /
+`codex.api_request.duration_ms` に入るため、dashboard は両方を transport 名付きで重ねる。
+
+Codex の OTel instrument 名は Prometheus Remote Write で `_total`、`_sum`、`_count`、unit suffix を
+付けた名前に正規化される。例えば `codex.turn.token_usage` は `codex_turn_token_usage_sum`、
+`codex.websocket.request.duration_ms` は `codex_websocket_request_duration_ms_milliseconds_bucket`、
+`codex.api_request.duration_ms` は `codex_api_request_duration_ms_milliseconds_bucket` になる。
 
 Claude Code のプロンプト本文とツールの入出力は既定で `<REDACTED>` になり、長さだけが記録される。
 本文まで送るなら `OTEL_LOG_USER_PROMPTS` / `OTEL_LOG_TOOL_CONTENT` を明示的に有効化する必要がある。

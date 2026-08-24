@@ -11,7 +11,7 @@
 services:
   # ── OpenTelemetry Collector ──────────────────────────────────────────
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.107.0
+    image: otel/opentelemetry-collector-contrib:0.108.0
     container_name: claude-otel-collector
     command: ["--config=/etc/otel/config.yaml"]
     volumes:
