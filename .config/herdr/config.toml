@@ -89,6 +89,12 @@ command = "gh-pr.refresh"
 description = "refresh PR status"
 
 [[keys.command]]
+key = "prefix+f"
+type = "plugin_action"
+command = "fzf-url"
+description = "open URL from pane"
+
+[[keys.command]]
 key = "prefix+r"
 type = "plugin_action"
 command = "persiyanov.reviewr.toggle"   # <plugin_id>.<action_id> — note the id, not the name
@@ -152,4 +158,3 @@ scrollback_limit_bytes = 50000000
 # サーバ再起動をまたいでペインの画面履歴を保持する。
 # scrollback_limit_bytes を大きく取っているため、再起動で履歴を失わないようにする。
 pane_history = true
-
