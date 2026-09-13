@@ -91,7 +91,7 @@ description = "refresh PR status"
 [[keys.command]]
 key = "prefix+f"
 type = "shell"
-command = "herdr plugin pane open --plugin kaar.fzf-url --entrypoint picker --placement overlay --env \"SOURCE_PANE_ID=$HERDR_ACTIVE_PANE_ID\" --env 'H_URL_EXTRA_PATTERN=([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)#([0-9]+)' --env 'H_URL_EXTRA_SUB=https://github.com/$1/issues/$2' --focus"
+command = "herdr plugin pane open --plugin kaar.fzf-url --entrypoint picker --env \"SOURCE_PANE_ID=$HERDR_ACTIVE_PANE_ID\" --env 'H_URL_EXTRA_PATTERN=([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)#([0-9]+)' --env 'H_URL_EXTRA_SUB=https://github.com/$1/issues/$2' --focus"
 description = "open URL or GitHub issue from pane"
 
 [[keys.command]]
