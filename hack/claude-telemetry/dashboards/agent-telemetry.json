@@ -1,71 +1,11 @@
 {
-  "uid": "agent-telemetry",
-  "title": "AI エージェント テレメトリ",
-  "description": "Claude Code と Copilot CLI の OTLP テレメトリ (Mimir / Loki / Tempo) をまとめて見るダッシュボード。上部の Agent で切り替える",
-  "tags": [
-    "claude-code",
-    "copilot-cli",
-    "otel"
-  ],
-  "timezone": "browser",
-  "schemaVersion": 39,
-  "version": 2,
-  "editable": true,
-  "refresh": "1m",
-  "time": {
-    "from": "now-24h",
-    "to": "now"
-  },
   "annotations": {
     "list": []
   },
-  "templating": {
-    "list": [
-      {
-        "name": "agent",
-        "label": "Agent",
-        "type": "custom",
-        "description": "service.name の値。Prometheus では job、span metrics では service、Loki では service_name ラベルに対応する。Claude Code は statusline hook が job=claude-statusline で別に出す補助メトリクス (rate limit / turn 数) があるため、両方を含めている",
-        "query": "Claude Code : claude-code|claude-statusline,Copilot CLI : github-copilot",
-        "options": [
-          {
-            "selected": true,
-            "text": "All",
-            "value": "$__all"
-          },
-          {
-            "selected": false,
-            "text": "Claude Code",
-            "value": "claude-code|claude-statusline"
-          },
-          {
-            "selected": false,
-            "text": "Copilot CLI",
-            "value": "github-copilot"
-          }
-        ],
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "includeAll": true,
-        "allValue": "claude-code|claude-statusline|github-copilot",
-        "multi": true,
-        "hide": 0,
-        "skipUrlSync": false
-      }
-    ]
-  },
+  "description": "Claude Code と Copilot CLI の OTLP テレメトリ (Mimir / Loki / Tempo) をまとめて見るダッシュボード。上部の Agent で切り替える",
+  "editable": true,
   "panels": [
     {
-      "type": "row",
-      "id": 1,
-      "title": "サマリ",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -73,41 +13,22 @@
         "x": 0,
         "y": 0
       },
-      "panels": []
+      "id": 1,
+      "panels": [],
+      "title": "サマリ",
+      "type": "row"
     },
     {
-      "type": "stat",
-      "id": 7,
-      "title": "7d 使用率",
-      "description": "Claude のアカウント週次上限に対する使用率。statusline hook が headroom の subscription-window から取って push する値 (job=claude-statusline) で、アカウント全体の値なので $agent の絞り込みは掛けていない",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
       },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 0,
-        "y": 1
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "max(claude_usage_rate_limit_used_percent{window=\"seven_day\"})",
-          "instant": true,
-          "legendFormat": "7d 使用率"
-        }
-      ],
+      "description": "Claude のアカウント週次上限に対する使用率。statusline hook が headroom の subscription-window から取って push する値 (job=claude-statusline) で、アカウント全体の値なので $agent の絞り込みは掛けていない",
       "fieldConfig": {
         "defaults": {
-          "unit": "percent",
           "decimals": 1,
-          "min": 0,
           "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -124,11 +45,23 @@
                 "value": 90
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 7,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -136,21 +69,39 @@
           "fields": "",
           "values": false
         },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
         "textMode": "auto"
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "max(claude_usage_rate_limit_used_percent{window=\"seven_day\"})",
+          "instant": true,
+          "legendFormat": "7d 使用率",
+          "refId": "A"
+        }
+      ],
+      "title": "7d 使用率",
+      "type": "stat"
     },
     {
-      "type": "stat",
-      "id": 2,
-      "title": "コスト",
-      "description": "表示期間内に発生した API コストの合計",
       "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "表示期間内に発生した API コストの合計",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "decimals": 2,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 4,
@@ -158,30 +109,12 @@
         "x": 4,
         "y": 1
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__range]))",
-          "instant": true,
-          "legendFormat": "コスト"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 2,
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "green"
-          }
-        },
-        "overrides": []
-      },
+      "id": 2,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -189,21 +122,40 @@
           "fields": "",
           "values": false
         },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
         "textMode": "auto"
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
+          "instant": true,
+          "legendFormat": "コスト",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "コスト",
+      "type": "stat"
     },
     {
-      "type": "stat",
-      "id": 3,
-      "title": "トークン",
-      "description": "表示期間内に消費した全トークン。Claude Code は counter、Copilot CLI は gen_ai.client.token.usage ヒストグラムの sum から算出する",
       "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
+        "type": "datasource",
+        "uid": "-- Mixed --"
+      },
+      "description": "表示期間内に消費した全トークン。Claude Code は counter、Copilot CLI は gen_ai.client.token.usage ヒストグラムの sum から算出する",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 4,
@@ -211,40 +163,12 @@
         "x": 8,
         "y": 1
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__range]))",
-          "instant": true,
-          "legendFormat": "トークン (Claude Code)"
-        },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(increase(gen_ai_client_token_usage_sum{job=~\"$agent\"}[$__range]))",
-          "legendFormat": "トークン (Copilot CLI)",
-          "instant": true
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "decimals": 1,
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "blue"
-          }
-        },
-        "overrides": []
-      },
+      "id": 3,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -252,21 +176,50 @@
           "fields": "",
           "values": false
         },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
         "textMode": "auto"
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap input_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap output_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_creation_tokens [$__range]))",
+          "instant": true,
+          "legendFormat": "トークン (Claude Code)",
+          "queryType": "instant",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(increase(gen_ai_client_token_usage_sum{job=~\"$agent\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "トークン (Copilot CLI)",
+          "refId": "B"
+        }
+      ],
+      "title": "トークン",
+      "type": "stat"
     },
     {
-      "type": "stat",
-      "id": 4,
-      "title": "セッション",
-      "description": "起動したセッション数 (fresh / resume の合計)",
       "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "起動したセッション数 (fresh / resume の合計)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "purple",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "unit": "none"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 4,
@@ -274,30 +227,12 @@
         "x": 12,
         "y": 1
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(max_over_time(claude_code_session_count_total{job=~\"$agent\"}[$__range]))",
-          "instant": true,
-          "legendFormat": "セッション"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "none",
-          "decimals": 0,
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "purple"
-          }
-        },
-        "overrides": []
-      },
+      "id": 4,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -305,21 +240,40 @@
           "fields": "",
           "values": false
         },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
         "textMode": "auto"
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "count(sum by (session_id) (count_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | session_id != \"\" [$__range])))",
+          "instant": true,
+          "legendFormat": "セッション",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "セッション",
+      "type": "stat"
     },
     {
-      "type": "stat",
-      "id": 5,
-      "title": "作業時間",
-      "description": "ユーザーが実際に操作していた時間 (type=user)",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "description": "ユーザーが実際に操作していた時間 (type=user)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "unit": "s"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 4,
@@ -327,30 +281,12 @@
         "x": 16,
         "y": 1
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(max_over_time(claude_code_active_time_seconds_total{job=~\"$agent\",type=\"user\"}[$__range]))",
-          "instant": true,
-          "legendFormat": "作業時間"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "decimals": 0,
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "orange"
-          }
-        },
-        "overrides": []
-      },
+      "id": 5,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -358,46 +294,34 @@
           "fields": "",
           "values": false
         },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
         "textMode": "auto"
-      }
-    },
-    {
-      "type": "stat",
-      "id": 6,
-      "title": "キャッシュ率",
-      "description": "全トークンに占める cacheRead の割合。高いほどプロンプトキャッシュが効いている",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 20,
-        "y": 1
       },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\",type=\"cacheRead\"}[$__range])) / clamp_min(sum(max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__range])), 1)",
+          "expr": "sum(increase(claude_code_active_time_seconds_total{job=~\"$agent\",type=\"user\"}[$__range]))",
           "instant": true,
-          "legendFormat": "キャッシュ率"
+          "legendFormat": "作業時間",
+          "refId": "A"
         }
       ],
+      "title": "作業時間",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "全トークンに占める cacheRead の割合。高いほどプロンプトキャッシュが効いている",
       "fieldConfig": {
         "defaults": {
-          "unit": "percentunit",
           "decimals": 1,
-          "min": 0,
           "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -414,11 +338,23 @@
                 "value": 0.8
               }
             ]
-          }
+          },
+          "unit": "percentunit"
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 6,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -426,17 +362,25 @@
           "fields": "",
           "values": false
         },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
         "textMode": "auto"
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) / (sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap input_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap output_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_creation_tokens [$__range])))",
+          "instant": true,
+          "legendFormat": "キャッシュ率",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "キャッシュ率",
+      "type": "stat"
     },
     {
-      "type": "row",
-      "id": 10,
-      "title": "コスト (Claude Code のみ)",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -444,108 +388,89 @@
         "x": 0,
         "y": 5
       },
-      "panels": []
+      "id": 10,
+      "panels": [],
+      "title": "コスト (Claude Code のみ)",
+      "type": "row"
     },
     {
-      "type": "timeseries",
-      "id": 11,
-      "title": "モデル別コスト",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 6
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]))",
-          "range": true,
-          "legendFormat": "{{model}}"
-        }
-      ],
       "fieldConfig": {
         "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 3,
           "custom": {
             "drawStyle": "bars",
             "fillOpacity": 60,
             "lineWidth": 1,
             "stacking": {
-              "mode": "normal",
-              "group": "A"
+              "group": "A",
+              "mode": "normal"
             }
-          }
+          },
+          "decimals": 3,
+          "unit": "currencyUSD"
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
+      "id": 11,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "sum"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
-    },
-    {
-      "type": "piechart",
-      "id": 12,
-      "title": "呼び出し元別コスト",
-      "description": "main (対話) / subagent (委譲) / auxiliary (要約などの内部処理) の内訳",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 6
       },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (query_source) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__range]))",
-          "instant": true,
-          "legendFormat": "{{query_source}}"
+          "expr": "sum by (model) (increase(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]))",
+          "legendFormat": "{{model}}",
+          "range": true,
+          "refId": "A"
         }
       ],
+      "title": "モデル別コスト",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "選択期間内でのモデル別コスト内訳",
       "fieldConfig": {
         "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 2
+          "decimals": 2,
+          "unit": "currencyUSD"
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
+      "id": 14,
       "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "pieType": "donut",
         "displayLabels": [
           "percent"
         ],
@@ -553,13 +478,145 @@
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (model) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
+          "instant": true,
+          "legendFormat": "{{model}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "モデル別コスト比率",
+      "type": "piechart"
     },
     {
-      "type": "row",
-      "id": 110,
-      "title": "skill 別コスト (Claude Code のみ)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "description": "main (対話) / subagent (委譲) / auxiliary (要約などの内部処理) の推移",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
+          },
+          "decimals": 3,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 6
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (query_source) (increase(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]))",
+          "legendFormat": "{{query_source}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "呼び出し元別コスト",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "main (対話) / subagent (委譲) / auxiliary (要約などの内部処理) の内訳",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 6
+      },
+      "id": 12,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (query_source) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
+          "instant": true,
+          "legendFormat": "{{query_source}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "呼び出し元別コスト比率",
+      "type": "piechart"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -567,16 +624,26 @@
         "x": 0,
         "y": 14
       },
-      "panels": []
+      "id": 110,
+      "panels": [],
+      "title": "skill 別コスト (Claude Code のみ)",
+      "type": "row"
     },
     {
-      "type": "bargauge",
-      "id": 13,
-      "title": "skill 別コスト (上位 10)",
-      "description": "skill を使わなかった消費は除外している",
       "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "skill を使わなかった消費は除外している",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "decimals": 2,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -584,29 +651,12 @@
         "x": 0,
         "y": 15
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "topk(10, sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])))",
-          "instant": true,
-          "legendFormat": "{{skill_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 2,
-          "color": {
-            "mode": "continuous-BlPu"
-          }
-        },
-        "overrides": []
-      },
+      "id": 13,
       "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 8,
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -614,21 +664,38 @@
           "fields": "",
           "values": false
         },
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "showUnfilled": true,
-        "minVizWidth": 8,
-        "minVizHeight": 10
-      }
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "topk(10, sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])))",
+          "instant": true,
+          "legendFormat": "{{skill_name}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "skill 別コスト (上位 10)",
+      "type": "bargauge"
     },
     {
-      "type": "bargauge",
-      "id": 103,
-      "title": "skill 別の API リクエスト数 (上位 10)",
-      "description": "skill が有効な間に発生した api_request の件数であって、skill の起動回数ではない。起動回数を持つ skill_activated イベントは自作 skill が custom_skill に潰れて使えないため、この軸を採っている",
       "datasource": {
         "type": "loki",
         "uid": "loki"
+      },
+      "description": "skill が有効な間に発生した api_request の件数であって、skill の起動回数ではない。起動回数を持つ skill_activated イベントは自作 skill が custom_skill に潰れて使えないため、この軸を採っている",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -636,39 +703,32 @@
         "x": 12,
         "y": 15
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "topk(10, sum by (skill_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" [$__range])))",
-          "queryType": "instant",
-          "legendFormat": "{{skill_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "continuous-BlPu"
-          }
-        },
-        "overrides": []
-      },
+      "id": 103,
       "options": {
         "displayMode": "gradient",
         "orientation": "horizontal",
-        "showUnfilled": true,
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "showUnfilled": true
       },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "topk(10, sum by (skill_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" [$__range])))",
+          "legendFormat": "{{skill_name}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "skill 別の API リクエスト数 (上位 10)",
       "transformations": [
         {
           "id": "organize",
@@ -676,24 +736,33 @@
             "excludeByName": {
               "Time": true
             },
-            "renameByName": {},
-            "indexByName": {}
+            "indexByName": {},
+            "renameByName": {}
           }
         },
         {
           "id": "rowsToFields",
           "options": {}
         }
-      ]
+      ],
+      "type": "bargauge"
     },
     {
-      "type": "barchart",
-      "id": 111,
-      "title": "main / subagent 別コスト (上位 10)",
-      "description": "skill から委譲した subagent の消費にも親の skill_name が付く。並び順は skill 名の昇順で、コスト順に見たいときは右の明細テーブルを使う",
       "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "skill から委譲した subagent の消費にも親の skill_name が付く。並び順は skill 名の昇順で、コスト順に見たいときは右の明細テーブルを使う",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1
+          },
+          "decimals": 2,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -701,26 +770,43 @@
         "x": 0,
         "y": 23
       },
+      "id": 111,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "horizontal",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "xTickLabelRotation": 0
+      },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
+            "type": "loki",
+            "uid": "loki"
           },
-          "expr": "sum by (skill_name, caller) (label_replace(label_replace(max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range]), \"caller\", \"subagent\", \"agent_name\", \".+\"), \"caller\", \"main\", \"agent_name\", \"\")) and on (skill_name) topk(10, sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])))",
+          "expr": "((sum by (skill_name, caller) (label_replace(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name = \"\" | unwrap cost_usd [$__range]), \"caller\", \"main\", \"skill_name\", \".+\"))) or (sum by (skill_name, caller) (label_replace(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range]), \"caller\", \"subagent\", \"skill_name\", \".+\")))) and on (skill_name) topk(10, sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])))",
+          "format": "table",
           "instant": true,
-          "format": "table"
+          "queryType": "instant",
+          "refId": "A"
         }
       ],
+      "title": "main / subagent 別コスト (上位 10)",
       "transformations": [
         {
           "id": "groupingToMatrix",
           "options": {
             "columnField": "caller",
+            "emptyValue": "zero",
             "rowField": "skill_name",
-            "valueField": "Value",
-            "emptyValue": "zero"
+            "valueField": "Value"
           }
         },
         {
@@ -738,137 +824,27 @@
           "id": "organize",
           "options": {
             "excludeByName": {},
-            "renameByName": {},
             "indexByName": {
-              "skill_name\\caller": 0,
               "main": 1,
+              "skill_name\\caller": 0,
               "subagent": 2
-            }
+            },
+            "renameByName": {}
           }
         }
       ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 2,
-          "custom": {
-            "fillOpacity": 80,
-            "lineWidth": 1
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "orientation": "horizontal",
-        "stacking": "normal",
-        "xTickLabelRotation": 0,
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
+      "type": "barchart"
     },
     {
-      "type": "table",
-      "id": 112,
-      "title": "skill 別コスト明細",
-      "description": "上位 10 で切らず全 skill を並べる。subagent 比率は委譲の重い skill を示す",
       "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
+        "type": "loki",
+        "uid": "loki"
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 23
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range]))",
-          "instant": true,
-          "format": "table"
-        },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "(sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\",agent_name=\"\"}[$__range])) or (sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])) * 0))",
-          "instant": true,
-          "format": "table"
-        },
-        {
-          "refId": "C",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "(sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\",agent_name!=\"\"}[$__range])) or (sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])) * 0))",
-          "instant": true,
-          "format": "table"
-        },
-        {
-          "refId": "D",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "(sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\",agent_name!=\"\"}[$__range])) or (sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range])) * 0)) / sum by (skill_name) (max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__range]))",
-          "instant": true,
-          "format": "table"
-        }
-      ],
-      "transformations": [
-        {
-          "id": "joinByField",
-          "options": {
-            "byField": "skill_name",
-            "mode": "outer"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time 1": true,
-              "Time 2": true,
-              "Time 3": true,
-              "Time 4": true,
-              "Time": true
-            },
-            "renameByName": {
-              "skill_name": "skill",
-              "Value #A": "合計",
-              "Value #B": "main",
-              "Value #C": "subagent",
-              "Value #D": "subagent 比率"
-            },
-            "indexByName": {
-              "skill_name": 0,
-              "Value #A": 1,
-              "Value #B": 2,
-              "Value #C": 3,
-              "Value #D": 4
-            }
-          }
-        }
-      ],
+      "description": "上位 10 で切らず全 skill を並べる。subagent 比率は委譲の重い skill を示す",
       "fieldConfig": {
         "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 2
+          "decimals": 2,
+          "unit": "currencyUSD"
         },
         "overrides": [
           {
@@ -896,247 +872,82 @@
               {
                 "id": "custom.cellOptions",
                 "value": {
-                  "type": "gauge",
-                  "mode": "gradient"
+                  "mode": "gradient",
+                  "type": "gauge"
                 }
               }
             ]
           }
         ]
       },
-      "options": {
-        "showHeader": true,
-        "sortBy": [
-          {
-            "displayName": "合計",
-            "desc": true
-          }
-        ]
-      }
-    },
-    {
-      "type": "timeseries",
-      "id": 113,
-      "title": "skill 別コストの推移",
-      "description": "どの時期にどの skill が重かったかを追う。合計額は上の明細テーブルを見ること (こちらは増分の外挿を含む)",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 31
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum by (skill_name) (increase(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__rate_interval]))",
-          "range": true,
-          "legendFormat": "{{skill_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 3,
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 60,
-            "lineWidth": 1,
-            "stacking": {
-              "mode": "normal",
-              "group": "A"
-            }
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "calcs": []
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
-    },
-    {
-      "type": "row",
-      "id": 120,
-      "title": "handover のコスト削減 (ADR-085)",
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 39
-      },
-      "panels": []
-    },
-    {
-      "type": "stat",
-      "id": 121,
-      "title": "handover 1 回あたりコスト (バケット別)",
-      "description": "handover 1 回 (1 セッション) あたりの総コスト。親と handover-worker の両方を含む (subagent の消費にも親の skill_name が乗るため)。old = 旧手順 / new = ADR-076 の script 化後 / delegated = ADR-085 の委譲後1 call の単価がセッションの文脈量に比例するため、バケット間の比較はこの値だけでは決められない (親 1 call あたりの単価のパネルを併せて読むこと)。またコスト側は Mimir に残っている期間のぶんしか結合できず、実測では old の 249 セッション中 33 セッションしか値を持たない。",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 40
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1)) / count by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1))",
-          "instant": true,
-          "legendFormat": "{{bucket}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 2,
-          "color": {
-            "mode": "palette-classic"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "textMode": "value_and_name"
-      }
-    },
-    {
-      "type": "bargauge",
-      "id": 122,
-      "title": "親 tool call 数の中央値 (バケット別)",
-      "description": "handover 1 回で親セッションが叩いた tool call 数の中央値。親のコストはほぼ call 数に比例する (1 call あたり約 $0.15) ため、これが削減の直接の物差しになる",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 40
+        "y": 23
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "quantile by (bucket) (0.5, max_over_time(claude_handover_parent_calls[$__range]))",
-          "instant": true,
-          "legendFormat": "{{bucket}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "decimals": 1,
-          "color": {
-            "mode": "continuous-BlPu"
-          }
-        },
-        "overrides": []
-      },
+      "id": 112,
       "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "showUnfilled": true,
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        }
-      }
-    },
-    {
-      "type": "table",
-      "id": 123,
-      "title": "バケット別の明細",
-      "description": "バケットごとの handover 件数・総コスト・親 tool call 数の中央値",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 48
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "合計"
+          }
+        ]
       },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
+            "type": "loki",
+            "uid": "loki"
           },
-          "expr": "count by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1))",
+          "expr": "sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range]))",
+          "format": "table",
           "instant": true,
-          "format": "table"
+          "queryType": "instant",
+          "refId": "A"
         },
         {
-          "refId": "B",
           "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
+            "type": "loki",
+            "uid": "loki"
           },
-          "expr": "sum by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1))",
+          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name = \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0))",
+          "format": "table",
           "instant": true,
-          "format": "table"
+          "queryType": "instant",
+          "refId": "B"
         },
         {
-          "refId": "C",
           "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
+            "type": "loki",
+            "uid": "loki"
           },
-          "expr": "quantile by (bucket) (0.5, max_over_time(claude_handover_parent_calls[$__range]))",
+          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0))",
+          "format": "table",
           "instant": true,
-          "format": "table"
+          "queryType": "instant",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0)) / sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range]))",
+          "format": "table",
+          "instant": true,
+          "queryType": "instant",
+          "refId": "D"
         }
       ],
+      "title": "skill 別コスト明細",
       "transformations": [
         {
           "id": "joinByField",
           "options": {
-            "byField": "bucket",
+            "byField": "skill_name",
             "mode": "outer"
           }
         },
@@ -1144,181 +955,88 @@
           "id": "organize",
           "options": {
             "excludeByName": {
+              "Time": true,
               "Time 1": true,
               "Time 2": true,
               "Time 3": true,
-              "Time": true
-            },
-            "renameByName": {
-              "bucket": "バケット",
-              "Value #A": "件数",
-              "Value #B": "総コスト",
-              "Value #C": "call 中央値"
+              "Time 4": true
             },
             "indexByName": {
-              "bucket": 0,
               "Value #A": 1,
               "Value #B": 2,
-              "Value #C": 3
+              "Value #C": 3,
+              "Value #D": 4,
+              "skill_name": 0
+            },
+            "renameByName": {
+              "Value #A": "合計",
+              "Value #B": "main",
+              "Value #C": "subagent",
+              "Value #D": "subagent 比率",
+              "skill_name": "skill"
             }
           }
         }
       ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "decimals": 1
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "件数"
-            },
-            "properties": [
-              {
-                "id": "decimals",
-                "value": 0
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "総コスト"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "currencyUSD"
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              }
-            ]
-          }
-        ]
-      },
-      "options": {
-        "showHeader": true,
-        "sortBy": [
-          {
-            "displayName": "総コスト",
-            "desc": true
-          }
-        ]
-      }
+      "type": "table"
     },
     {
-      "type": "stat",
-      "id": 124,
-      "title": "1 回あたり削減額 (call 数削減 × 実測単価)",
-      "description": "旧手順と委譲手順の親 tool call 中央値の差に、旧手順で実測した 1 call あたり単価を掛けた見積り。素のコスト差を使わないのは、1 call の単価がセッションの文脈量に比例してバケット間で 4 倍以上ぶれるため。ADR-085 の削減モデル (削減 = 減らせた call 数 × 単価) をそのまま式にしている",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 48
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "(quantile(0.5, max_over_time(claude_handover_parent_calls{bucket=\"old\"}[$__range])) - quantile(0.5, max_over_time(claude_handover_parent_calls{bucket=\"delegated\"}[$__range]))) * (sum(sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left() (max_over_time(claude_handover_parent_calls{bucket=\"old\"}[$__range]) * 0 + 1)) / sum(max_over_time(claude_handover_parent_calls{bucket=\"old\"}[$__range]) and on(session_id) sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range]))))",
-          "instant": true,
-          "legendFormat": "削減額"
-        }
-      ],
+      "description": "どの時期にどの skill が重かったかを追う。合計額は上の明細テーブルを見ること (こちらは増分の外挿を含む)",
       "fieldConfig": {
         "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 2,
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "green"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "textMode": "auto"
-      }
-    },
-    {
-      "type": "stat",
-      "id": 125,
-      "title": "親 1 call あたりの単価 (バケット別)",
-      "description": "handover 1 call あたりのコスト。単価はそのセッションの文脈量 (cache read) に比例するため、バケット間で 4 倍以上ぶれる。1 回あたりコストの比較がこの差に引きずられるので、削減の物差しは親 tool call 数 (右上のパネル) を主に読むこと",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 56
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
           },
-          "expr": "sum by (bucket) (sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])) * on(session_id) group_left(bucket) (max_over_time(claude_handover_parent_calls[$__range]) * 0 + 1)) / sum by (bucket) (max_over_time(claude_handover_parent_calls[$__range]) and on(session_id) sum by (session_id) (max_over_time(claude_code_cost_usage_USD_total{skill_name=\"handover\"}[$__range])))",
-          "instant": true,
-          "legendFormat": "{{bucket}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "currencyUSD",
           "decimals": 3,
-          "color": {
-            "mode": "palette-classic"
-          }
+          "unit": "currencyUSD"
         },
         "overrides": []
       },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 113,
       "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "textMode": "value_and_name"
-      }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (skill_name) (increase(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__rate_interval]))",
+          "legendFormat": "{{skill_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "skill 別コストの推移",
+      "type": "timeseries"
     },
     {
-      "type": "row",
-      "id": 20,
-      "title": "トークン",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -1326,16 +1044,31 @@
         "x": 0,
         "y": 64
       },
-      "panels": []
+      "id": 20,
+      "panels": [],
+      "title": "トークン",
+      "type": "row"
     },
     {
-      "type": "timeseries",
-      "id": 21,
-      "title": "種別トークン消費",
-      "description": "cacheRead が大半を占めるのが正常。input / output の伸びが実コストに直結する。Copilot CLI は input / output のみで cache 種別を持たない",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "description": "cacheRead が大半を占めるのが正常。input / output の伸びが実コストに直結する。Copilot CLI は input / output のみで cache 種別を持たない",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
+          },
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1343,63 +1076,48 @@
         "x": 0,
         "y": 65
       },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "mimir"
           },
           "expr": "sum by (type) (increase(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval]))",
+          "legendFormat": "Claude {{type}}",
           "range": true,
-          "legendFormat": "Claude {{type}}"
+          "refId": "A"
         },
         {
-          "refId": "B",
           "datasource": {
             "type": "prometheus",
             "uid": "mimir"
           },
           "expr": "sum by (gen_ai_token_type) (increase(gen_ai_client_token_usage_sum{job=~\"$agent\"}[$__rate_interval]))",
           "legendFormat": "Copilot {{gen_ai_token_type}}",
-          "range": true
+          "range": true,
+          "refId": "B"
         }
       ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 60,
-            "lineWidth": 1,
-            "stacking": {
-              "mode": "normal",
-              "group": "A"
-            }
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "calcs": [
-            "sum",
-            "max"
-          ]
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
+      "title": "種別トークン消費",
+      "type": "timeseries"
     },
     {
-      "type": "row",
-      "id": 30,
-      "title": "コード編集",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -1407,62 +1125,24 @@
         "x": 0,
         "y": 73
       },
-      "panels": []
+      "id": 30,
+      "panels": [],
+      "title": "コード編集",
+      "type": "row"
     },
     {
-      "type": "timeseries",
-      "id": 31,
-      "title": "追加・削除行数",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 74
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum by (type) (increase(claude_code_lines_of_code_count_total{job=~\"$agent\"}[$__rate_interval]))",
-          "range": true,
-          "legendFormat": "Claude {{type}}"
-        },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(increase(github_copilot_code_lines_added_total{job=~\"$agent\"}[$__rate_interval]))",
-          "legendFormat": "Copilot added",
-          "range": true
-        },
-        {
-          "refId": "C",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(increase(github_copilot_code_lines_removed_total{job=~\"$agent\"}[$__rate_interval]))",
-          "legendFormat": "Copilot removed",
-          "range": true
-        }
-      ],
       "fieldConfig": {
         "defaults": {
-          "unit": "short",
           "custom": {
             "drawStyle": "bars",
             "fillOpacity": 60,
             "lineWidth": 1
-          }
+          },
+          "unit": "short"
         },
         "overrides": [
           {
@@ -1474,8 +1154,8 @@
               {
                 "id": "color",
                 "value": {
-                  "mode": "fixed",
-                  "fixedColor": "red"
+                  "fixedColor": "red",
+                  "mode": "fixed"
                 }
               }
             ]
@@ -1489,60 +1169,80 @@
               {
                 "id": "color",
                 "value": {
-                  "mode": "fixed",
-                  "fixedColor": "green"
+                  "fixedColor": "green",
+                  "mode": "fixed"
                 }
               }
             ]
           }
         ]
       },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 74
+      },
+      "id": 31,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "sum"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
-    },
-    {
-      "type": "stat",
-      "id": 32,
-      "title": "編集の承認・却下 (Claude Code のみ)",
-      "description": "Edit / Write に対する判断の内訳",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 74
       },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (decision) (max_over_time(claude_code_code_edit_tool_decision_total{job=~\"$agent\"}[$__range]))",
-          "instant": true,
-          "legendFormat": "{{decision}}"
+          "expr": "sum by (type) (increase(claude_code_lines_of_code_count_total{job=~\"$agent\"}[$__rate_interval]))",
+          "legendFormat": "Claude {{type}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(increase(github_copilot_code_lines_added_total{job=~\"$agent\"}[$__rate_interval]))",
+          "legendFormat": "Copilot added",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(increase(github_copilot_code_lines_removed_total{job=~\"$agent\"}[$__rate_interval]))",
+          "legendFormat": "Copilot removed",
+          "range": true,
+          "refId": "C"
         }
       ],
+      "title": "追加・削除行数",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "Edit / Write に対する判断の内訳",
       "fieldConfig": {
         "defaults": {
-          "unit": "none",
-          "decimals": 0
+          "decimals": 0,
+          "unit": "none"
         },
         "overrides": [
           {
@@ -1554,8 +1254,8 @@
               {
                 "id": "color",
                 "value": {
-                  "mode": "fixed",
-                  "fixedColor": "red"
+                  "fixedColor": "red",
+                  "mode": "fixed"
                 }
               }
             ]
@@ -1569,15 +1269,26 @@
               {
                 "id": "color",
                 "value": {
-                  "mode": "fixed",
-                  "fixedColor": "green"
+                  "fixedColor": "green",
+                  "mode": "fixed"
                 }
               }
             ]
           }
         ]
       },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 74
+      },
+      "id": 32,
       "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1585,17 +1296,25 @@
           "fields": "",
           "values": false
         },
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
         "textMode": "value_and_name"
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (decision) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_name =~ \"Edit|Write|MultiEdit|NotebookEdit\" [$__range]))",
+          "instant": true,
+          "legendFormat": "{{decision}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "編集の承認・却下 (Claude Code のみ)",
+      "type": "stat"
     },
     {
-      "type": "row",
-      "id": 40,
-      "title": "イベントとトレース",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -1603,15 +1322,30 @@
         "x": 0,
         "y": 82
       },
-      "panels": []
+      "id": 40,
+      "panels": [],
+      "title": "イベントとトレース",
+      "type": "row"
     },
     {
-      "type": "timeseries",
-      "id": 41,
-      "title": "イベント種別の発生数",
       "datasource": {
         "type": "loki",
         "uid": "loki"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
+          },
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1619,56 +1353,45 @@
         "x": 0,
         "y": 83
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "sum by (event_name) (count_over_time({service_name=~\"$agent\"} | event_name != \"\" [$__auto]))",
-          "queryType": "range",
-          "legendFormat": "{{event_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 60,
-            "lineWidth": 1,
-            "stacking": {
-              "mode": "normal",
-              "group": "A"
-            }
-          }
-        },
-        "overrides": []
-      },
+      "id": 41,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
           "calcs": [
             "sum"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (event_name) (count_over_time({service_name=~\"$agent\"} | event_name != \"\" [$__auto]))",
+          "legendFormat": "{{event_name}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "イベント種別の発生数",
+      "type": "timeseries"
     },
     {
-      "type": "table",
-      "id": 42,
-      "title": "直近のトレース",
-      "description": "行を開くとスパンの内訳 (llm_request / tool / 承認待ち) が見られる",
       "datasource": {
         "type": "tempo",
         "uid": "tempo"
+      },
+      "description": "行を開くとスパンの内訳 (llm_request / tool / 承認待ち) が見られる",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1676,31 +1399,27 @@
         "x": 12,
         "y": 83
       },
+      "id": 42,
+      "options": {
+        "showHeader": true
+      },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
             "type": "tempo",
             "uid": "tempo"
           },
-          "queryType": "traceql",
-          "query": "{resource.service.name=~\"$agent\"}",
           "limit": 20,
+          "query": "{resource.service.name=~\"$agent\"}",
+          "queryType": "traceql",
+          "refId": "A",
           "tableType": "traces"
         }
       ],
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "options": {
-        "showHeader": true
-      }
+      "title": "直近のトレース",
+      "type": "table"
     },
     {
-      "type": "row",
-      "id": 50,
-      "title": "トレース由来メトリクス",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -1708,16 +1427,29 @@
         "x": 0,
         "y": 91
       },
-      "panels": []
+      "id": 50,
+      "panels": [],
+      "title": "トレース由来メトリクス",
+      "type": "row"
     },
     {
-      "type": "timeseries",
-      "id": 51,
-      "title": "スパン別レイテンシ p95",
-      "description": "Tempo の metrics-generator (span-metrics) が生成。ヒストグラムの上限バケットは 2097.152s (約 35 分) で、それを超える実行時間は p95 に正確には反映されない。バケット境界を変更した直後は変更前後の系列が混在して単調性が崩れ、広い窓ほど p95 が歪む (最大 24h で自然解消)",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "description": "Tempo の metrics-generator (span-metrics) が生成。ヒストグラムの上限バケットは 2097.152s (約 35 分) で、それを超える実行時間は p95 に正確には反映されない。バケット境界を変更した直後は変更前後の系列が混在して単調性が崩れ、広い窓ほど p95 が歪む (最大 24h で自然解消)",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "s"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1725,55 +1457,55 @@
         "x": 0,
         "y": 92
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.95, sum by (span_name, le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "{{service}} {{span_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "lineWidth": 2,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
+      "id": 51,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "max",
             "mean"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (span_name, le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\"}[$__rate_interval])))",
+          "legendFormat": "{{service}} {{span_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "スパン別レイテンシ p95",
+      "type": "timeseries"
     },
     {
-      "type": "timeseries",
-      "id": 52,
-      "title": "承認待ち時間",
-      "description": "ツール実行の権限承認をユーザーが操作するまでの待ち時間",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "description": "ツール実行の権限承認をユーザーが操作するまでの待ち時間",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "s"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1781,98 +1513,85 @@
         "x": 12,
         "y": 92
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\",span_name=\"claude_code.tool.blocked_on_user\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "p95 ({{service}})"
-        },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\",span_name=\"claude_code.tool.blocked_on_user\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "中央値 ({{service}})"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "lineWidth": 2,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
+      "id": 52,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "max",
             "mean"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\",span_name=\"claude_code.tool.blocked_on_user\"}[$__rate_interval])))",
+          "legendFormat": "p95 ({{service}})",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\",span_name=\"claude_code.tool.blocked_on_user\"}[$__rate_interval])))",
+          "legendFormat": "中央値 ({{service}})",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "承認待ち時間",
+      "type": "timeseries"
     },
     {
-      "type": "logs",
-      "id": 43,
-      "title": "イベントログ",
       "datasource": {
         "type": "loki",
         "uid": "loki"
       },
+      "description": "Copilot CLI は logs シグナルを出さないため、Copilot 選択時は空になる",
       "gridPos": {
         "h": 10,
         "w": 24,
         "x": 0,
         "y": 100
       },
+      "id": 43,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
             "type": "loki",
             "uid": "loki"
           },
           "expr": "{service_name=~\"$agent\"}",
-          "maxLines": 200
+          "maxLines": 200,
+          "refId": "A"
         }
       ],
-      "options": {
-        "showTime": true,
-        "showLabels": false,
-        "showCommonLabels": false,
-        "wrapLogMessage": false,
-        "prettifyLogMessage": false,
-        "enableLogDetails": true,
-        "dedupStrategy": "none",
-        "sortOrder": "Descending"
-      },
-      "description": "Copilot CLI は logs シグナルを出さないため、Copilot 選択時は空になる"
+      "title": "イベントログ",
+      "type": "logs"
     },
     {
-      "type": "row",
-      "id": 60,
-      "title": "利用制限 (rate limit / Claude Code のみ)",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -1880,15 +1599,30 @@
         "x": 0,
         "y": 110
       },
-      "panels": []
+      "id": 60,
+      "panels": [],
+      "title": "利用制限 (rate limit / Claude Code のみ)",
+      "type": "row"
     },
     {
-      "type": "timeseries",
-      "id": 61,
-      "title": "使用率の推移",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "max": 100,
+          "min": 0,
+          "unit": "percent"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1896,57 +1630,49 @@
         "x": 0,
         "y": 111
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "claude_usage_rate_limit_used_percent{job=~\"$agent\"}",
-          "range": true,
-          "instant": false,
-          "legendFormat": "{{window}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100,
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "lineWidth": 2,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
+      "id": 61,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "max",
             "mean"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "claude_usage_rate_limit_used_percent{job=~\"$agent\"}",
+          "instant": false,
+          "legendFormat": "{{window}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "使用率の推移",
+      "type": "timeseries"
     },
     {
-      "type": "stat",
-      "id": 62,
-      "title": "リセットまでの残り時間",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "s"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -1954,27 +1680,12 @@
         "x": 12,
         "y": 111
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "claude_usage_rate_limit_resets_at_seconds{job=~\"$agent\"} - time()",
-          "instant": true,
-          "range": false,
-          "legendFormat": "{{window}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "decimals": 0
-        },
-        "overrides": []
-      },
+      "id": 62,
       "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -1982,17 +1693,25 @@
           "fields": "",
           "values": false
         },
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
         "textMode": "auto"
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "claude_usage_rate_limit_resets_at_seconds{job=~\"$agent\"} - time()",
+          "instant": true,
+          "legendFormat": "{{window}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "リセットまでの残り時間",
+      "type": "stat"
     },
     {
-      "type": "row",
-      "id": 70,
-      "title": "消費速度 (Claude Code のみ)",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -2000,15 +1719,27 @@
         "x": 0,
         "y": 119
       },
-      "panels": []
+      "id": 70,
+      "panels": [],
+      "title": "消費速度 (Claude Code のみ)",
+      "type": "row"
     },
     {
-      "type": "timeseries",
-      "id": 71,
-      "title": "コスト消費速度 (毎時)",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1
+          },
+          "decimals": 3,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2016,53 +1747,52 @@
         "x": 0,
         "y": 120
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval])) * 3600",
-          "range": true,
-          "legendFormat": "{{model}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "currencyUSD",
-          "decimals": 3,
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 60,
-            "lineWidth": 1
-          }
-        },
-        "overrides": []
-      },
+      "id": 71,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "mean",
             "max"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval])) * 3600",
+          "legendFormat": "{{model}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "コスト消費速度 (毎時)",
+      "type": "timeseries"
     },
     {
-      "type": "timeseries",
-      "id": 72,
-      "title": "トークン消費速度 (毎時)",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1
+          },
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2070,49 +1800,38 @@
         "x": 12,
         "y": 120
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval])) * 3600",
-          "range": true,
-          "legendFormat": "{{type}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 60,
-            "lineWidth": 1
-          }
-        },
-        "overrides": []
-      },
+      "id": 72,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "mean",
             "max"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (type) (rate(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval])) * 3600",
+          "legendFormat": "{{type}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "トークン消費速度 (毎時)",
+      "type": "timeseries"
     },
     {
-      "type": "row",
-      "id": 80,
-      "title": "セッション (Claude Code のみ)",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -2120,15 +1839,24 @@
         "x": 0,
         "y": 128
       },
-      "panels": []
+      "id": 80,
+      "panels": [],
+      "title": "セッション (Claude Code のみ)",
+      "type": "row"
     },
     {
-      "type": "bargauge",
-      "id": 81,
-      "title": "期間内で最も深かったセッション (上位 10)",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2136,28 +1864,12 @@
         "x": 0,
         "y": 129
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "topk(10, max by (session_id, dir) (max_over_time(claude_session_turns{job=~\"$agent\"}[$__range])))",
-          "instant": true,
-          "legendFormat": "{{dir}} / {{session_id}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "continuous-BlPu"
-          }
-        },
-        "overrides": []
-      },
+      "id": 81,
       "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 8,
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -2165,20 +1877,39 @@
           "fields": "",
           "values": false
         },
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "showUnfilled": true,
-        "minVizWidth": 8,
-        "minVizHeight": 10
-      }
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "topk(10, max by (session_id, dir) (max_over_time(claude_session_turns{job=~\"$agent\"}[$__range])))",
+          "instant": true,
+          "legendFormat": "{{dir}} / {{session_id}}",
+          "refId": "A"
+        }
+      ],
+      "title": "期間内で最も深かったセッション (上位 10)",
+      "type": "bargauge"
     },
     {
-      "type": "timeseries",
-      "id": 82,
-      "title": "セッション別 turn 数の推移",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "spanNulls": false
+          },
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2186,50 +1917,38 @@
         "x": 12,
         "y": 129
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "max by (session_id, dir) (claude_session_turns{job=~\"$agent\"})",
-          "range": true,
-          "legendFormat": "{{dir}} / {{session_id}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 60,
-            "lineWidth": 1,
-            "spanNulls": false
-          }
-        },
-        "overrides": []
-      },
+      "id": 82,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "mean",
             "max"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "max by (session_id, dir) (claude_session_turns{job=~\"$agent\"})",
+          "legendFormat": "{{dir}} / {{session_id}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "セッション別 turn 数の推移",
+      "type": "timeseries"
     },
     {
-      "type": "row",
-      "id": 100,
-      "title": "ツール利用状況 (Claude Code のみ)",
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -2237,16 +1956,25 @@
         "x": 0,
         "y": 137
       },
-      "panels": []
+      "id": 100,
+      "panels": [],
+      "title": "ツール利用状況 (Claude Code のみ)",
+      "type": "row"
     },
     {
-      "type": "bargauge",
-      "id": 101,
-      "title": "ツール別の呼び出し回数 (上位 15)",
-      "description": "tool_decision イベントの件数。MCP ツールは匿名化されており個別の名前が残らず、すべて mcp_tool に潰れる (内訳は右の比率パネルまで)",
       "datasource": {
         "type": "loki",
         "uid": "loki"
+      },
+      "description": "tool_decision イベントの件数。MCP ツールは匿名化されており個別の名前が残らず、すべて mcp_tool に潰れる (内訳は右の比率パネルまで)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2254,39 +1982,32 @@
         "x": 0,
         "y": 138
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "topk(15, sum by (tool_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_name != \"\" [$__range])))",
-          "queryType": "instant",
-          "legendFormat": "{{tool_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "continuous-BlPu"
-          }
-        },
-        "overrides": []
-      },
+      "id": 101,
       "options": {
         "displayMode": "gradient",
         "orientation": "horizontal",
-        "showUnfilled": true,
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
           ],
           "fields": "",
           "values": false
-        }
+        },
+        "showUnfilled": true
       },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "topk(15, sum by (tool_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_name != \"\" [$__range])))",
+          "legendFormat": "{{tool_name}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "ツール別の呼び出し回数 (上位 15)",
       "transformations": [
         {
           "id": "organize",
@@ -2294,24 +2015,28 @@
             "excludeByName": {
               "Time": true
             },
-            "renameByName": {},
-            "indexByName": {}
+            "indexByName": {},
+            "renameByName": {}
           }
         },
         {
           "id": "rowsToFields",
           "options": {}
         }
-      ]
+      ],
+      "type": "bargauge"
     },
     {
-      "type": "piechart",
-      "id": 102,
-      "title": "builtin 対 MCP の比率",
-      "description": "tool_decision の tool_source 内訳。MCP はサーバー名・ツール名とも匿名化されているため、割れるのはこの粒度まで",
       "datasource": {
         "type": "loki",
         "uid": "loki"
+      },
+      "description": "tool_decision の tool_source 内訳。MCP はサーバー名・ツール名とも匿名化されているため、割れるのはこの粒度まで",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2319,33 +2044,8 @@
         "x": 12,
         "y": 138
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "sum by (tool_source) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
-          "queryType": "instant",
-          "legendFormat": "{{tool_source}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short"
-        },
-        "overrides": []
-      },
+      "id": 102,
       "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "pieType": "donut",
         "displayLabels": [
           "percent"
         ],
@@ -2353,326 +2053,8 @@
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
-        }
-      }
-    },
-    {
-      "type": "row",
-      "id": 90,
-      "title": "Copilot CLI 固有 (GenAI semconv)",
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 146
-      },
-      "panels": []
-    },
-    {
-      "type": "timeseries",
-      "id": 91,
-      "title": "LLM 呼び出しの応答時間",
-      "description": "gen_ai.client.operation.duration。1 回の LLM 呼び出しが返るまでの時間",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 147
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.95, sum by (gen_ai_request_model, le) (rate(gen_ai_client_operation_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "p95 {{gen_ai_request_model}}"
         },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(rate(gen_ai_client_operation_duration_seconds_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_client_operation_duration_seconds_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
-          "range": true,
-          "legendFormat": "平均"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "lineWidth": 2,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "calcs": [
-            "max",
-            "mean"
-          ]
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
-    },
-    {
-      "type": "timeseries",
-      "id": 92,
-      "title": "ストリーミングの応答性",
-      "description": "time_to_first_chunk は最初のトークンが返るまで、time_per_output_chunk は 1 チャンクあたりの時間。体感速度に直結する",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 147
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_to_first_chunk_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "最初のチャンクまで p95"
-        },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_per_output_chunk_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "チャンクあたり p95"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "lineWidth": 2,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "calcs": [
-            "max",
-            "mean"
-          ]
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
-    },
-    {
-      "type": "timeseries",
-      "id": 93,
-      "title": "エージェント実行時間",
-      "description": "gen_ai.invoke_agent.duration。プロンプト 1 回に対するエージェント全体の所要時間",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 155
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_invoke_agent_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "p95"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "lineWidth": 2,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "calcs": [
-            "max",
-            "mean"
-          ]
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
-    },
-    {
-      "type": "timeseries",
-      "id": 94,
-      "title": "1 実行あたりの推論回数とツール呼び出し回数",
-      "description": "gen_ai.invoke_agent.inference_calls / tool_calls の平均。値が大きいほど 1 プロンプトで多くの往復をしている",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 155
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(rate(gen_ai_invoke_agent_inference_calls_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_invoke_agent_inference_calls_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
-          "range": true,
-          "legendFormat": "推論回数 (平均)"
-        },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(rate(gen_ai_invoke_agent_tool_calls_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_invoke_agent_tool_calls_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
-          "range": true,
-          "legendFormat": "ツール呼び出し (平均)"
-        },
-        {
-          "refId": "C",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum(rate(github_copilot_agent_turn_count_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(github_copilot_agent_turn_count_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
-          "range": true,
-          "legendFormat": "LLM 往復 (平均)"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "lineWidth": 2,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
-          "calcs": [
-            "max",
-            "mean"
-          ]
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      }
-    },
-    {
-      "type": "bargauge",
-      "id": 95,
-      "title": "ツール別の呼び出し回数 (上位 10)",
-      "description": "github.copilot.tool.call.count。表示期間内の増分",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "mimir"
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 163
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "topk(10, sum by (tool_name) (increase(github_copilot_tool_call_count_total{job=~\"$agent\"}[$__range])))",
-          "instant": true,
-          "legendFormat": "{{tool_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "continuous-BlPu"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "showUnfilled": true,
+        "pieType": "donut",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -2680,16 +2062,366 @@
           "fields": "",
           "values": false
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum by (tool_source) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
+          "legendFormat": "{{tool_source}}",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "builtin 対 MCP の比率",
+      "type": "piechart"
     },
     {
-      "type": "timeseries",
-      "id": 96,
-      "title": "ツール実行時間 p95",
-      "description": "github.copilot.tool.call.duration をツール別に。gen_ai.execute_tool.duration も同じ実行を計測している",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 146
+      },
+      "id": 90,
+      "panels": [],
+      "title": "Copilot CLI 固有 (GenAI semconv)",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "description": "gen_ai.client.operation.duration。1 回の LLM 呼び出しが返るまでの時間",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 147
+      },
+      "id": 91,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (gen_ai_request_model, le) (rate(gen_ai_client_operation_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "legendFormat": "p95 {{gen_ai_request_model}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(rate(gen_ai_client_operation_duration_seconds_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_client_operation_duration_seconds_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "legendFormat": "平均",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "LLM 呼び出しの応答時間",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "description": "time_to_first_chunk は最初のトークンが返るまで、time_per_output_chunk は 1 チャンクあたりの時間。体感速度に直結する",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 147
+      },
+      "id": 92,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_to_first_chunk_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "legendFormat": "最初のチャンクまで p95",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_per_output_chunk_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "legendFormat": "チャンクあたり p95",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "ストリーミングの応答性",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "description": "gen_ai.invoke_agent.duration。プロンプト 1 回に対するエージェント全体の所要時間",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 155
+      },
+      "id": 93,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_invoke_agent_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "legendFormat": "p95",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "エージェント実行時間",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "description": "gen_ai.invoke_agent.inference_calls / tool_calls の平均。値が大きいほど 1 プロンプトで多くの往復をしている",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 155
+      },
+      "id": 94,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(rate(gen_ai_invoke_agent_inference_calls_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_invoke_agent_inference_calls_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "legendFormat": "推論回数 (平均)",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(rate(gen_ai_invoke_agent_tool_calls_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_invoke_agent_tool_calls_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "legendFormat": "ツール呼び出し (平均)",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum(rate(github_copilot_agent_turn_count_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(github_copilot_agent_turn_count_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "legendFormat": "LLM 往復 (平均)",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "1 実行あたりの推論回数とツール呼び出し回数",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "description": "github.copilot.tool.call.count。表示期間内の増分",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-BlPu"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 163
+      },
+      "id": 95,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "topk(10, sum by (tool_name) (increase(github_copilot_tool_call_count_total{job=~\"$agent\"}[$__range])))",
+          "instant": true,
+          "legendFormat": "{{tool_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "ツール別の呼び出し回数 (上位 10)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "description": "github.copilot.tool.call.duration をツール別に。gen_ai.execute_tool.duration も同じ実行を計測している",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "s"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2697,65 +2429,65 @@
         "x": 12,
         "y": 163
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.95, sum by (tool_name, le) (rate(github_copilot_tool_call_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "{{tool_name}}"
-        },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_execute_tool_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
-          "range": true,
-          "legendFormat": "execute_tool 全体"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "custom": {
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "lineWidth": 2,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
+      "id": 96,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "max",
             "mean"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (tool_name, le) (rate(github_copilot_tool_call_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "legendFormat": "{{tool_name}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_execute_tool_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "legendFormat": "execute_tool 全体",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "ツール実行時間 p95",
+      "type": "timeseries"
     },
     {
-      "type": "timeseries",
-      "id": 97,
-      "title": "MCP サーバーへの接続試行",
-      "description": "github.copilot.mcp.server.connection.count。接続が繰り返し発生していれば MCP サーバーが不安定な可能性がある",
       "datasource": {
         "type": "prometheus",
         "uid": "mimir"
+      },
+      "description": "github.copilot.mcp.server.connection.count。接続が繰り返し発生していれば MCP サーバーが不安定な可能性がある",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "lineWidth": 1,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "short"
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -2763,46 +2495,92 @@
         "x": 0,
         "y": 171
       },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "mimir"
-          },
-          "expr": "sum by (server_name) (increase(github_copilot_mcp_server_connection_count_total{job=~\"$agent\"}[$__rate_interval]))",
-          "range": true,
-          "legendFormat": "{{server_name}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 60,
-            "lineWidth": 1,
-            "spanNulls": true,
-            "showPoints": "never"
-          }
-        },
-        "overrides": []
-      },
+      "id": 97,
       "options": {
         "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true,
           "calcs": [
             "max",
             "mean"
-          ]
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "desc"
         }
-      }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (server_name) (increase(github_copilot_mcp_server_connection_count_total{job=~\"$agent\"}[$__rate_interval]))",
+          "legendFormat": "{{server_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "MCP サーバーへの接続試行",
+      "type": "timeseries"
     }
-  ]
+  ],
+  "refresh": "1m",
+  "schemaVersion": 39,
+  "tags": [
+    "claude-code",
+    "copilot-cli",
+    "otel"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": "claude-code|claude-statusline|github-copilot",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "description": "service.name の値。Prometheus では job、span metrics では service、Loki では service_name ラベルに対応する。Claude Code は statusline hook が job=claude-statusline で別に出す補助メトリクス (rate limit / turn 数) があるため、両方を含めている",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Agent",
+        "multi": true,
+        "name": "agent",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "Claude Code",
+            "value": "claude-code|claude-statusline"
+          },
+          {
+            "selected": false,
+            "text": "Copilot CLI",
+            "value": "github-copilot"
+          }
+        ],
+        "query": "Claude Code : claude-code|claude-statusline,Copilot CLI : github-copilot",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "AI エージェント テレメトリ",
+  "uid": "agent-telemetry"
 }
