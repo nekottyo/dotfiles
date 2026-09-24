@@ -9,13 +9,23 @@ exists "headroom" && exists "claude" \
     # 実行ユーザー (ホスト uid に一致) から .cache を作れず、huggingface_hub の cache 書き込みが
     # EACCES で失敗しログを延々と汚す。native wrapper は HF_HOME を forward しないため、
     # コンテナが起動していれば .cache をホスト uid:gid 所有で先に用意しておく (冪等・無害)。
-    if command -v docker >/dev/null 2>&1 && docker ps -q -f name='^headroom-default$' | grep -q .; then
-      docker exec -u 0 headroom-default sh -c "mkdir -p \"\$HOME/.cache\" && chown $(id -u):$(id -g) \"\$HOME/.cache\"" 2>/dev/null
-    fi
+    # if command -v docker >/dev/null 2>&1 && docker ps -q -f name='^headroom-default$' | grep -q .; then
+    #   docker exec -u 0 headroom-default sh -c "mkdir -p \"\$HOME/.cache\" && chown $(id -u):$(id -g) \"\$HOME/.cache\"" 2>/dev/null
+    # fi
     # --memory は付けない。DB が {cwd}/.headroom/memory.db に落ちるうえ storage=project が
     # cwd から project key を切るため、worktree ごとに memory が分断されて実用にならない。
-    headroom wrap claude --no-serena --1m --model "opusplan" --effort "midium" -- "$@"
+    # headroom の圧縮内容 (CCR) の保持期間。既定 30 分では handover までのセッション長に足りず、
+    # retrieve の 23% が期限切れで失敗して再 Read に落ちていた (2026-09-02 実測)。proxy 起動時にだけ読まれる。
+    export HEADROOM_CCR_TTL_SECONDS=14400
+    headroom wrap claude --no-serena --1m --model "opusplan" --append-system-prompt-file ~/.claude/sr_opus_5_system_prompt.md -- "$@"
+    # claude --model "opusplan" --effort "high" --append-system-prompt-file ~/.claude/sr_opus_5_system_prompt.md -- "$@"
 }
+# alias claude='claude --model "opusplan" --effort "high" --append-system-prompt-file ~/.claude/sr_opus_5_system_prompt.md'
+
+alias oclaude='claude --model "opus[1m]"'
+alias fclaude='claude --model "claude-fable-5-1[1m]"'
+# alias srclaude='claude --model "opus[1m]" --append-system-prompt-file ~/.claude/sr_opus_5_system_prompt.md '
+
 
 # Copilot CLI のテレメトリをローカルの LGTM スタックへ送る (hack/claude-telemetry)
 # Claude Code は gRPC 4317 を使うが、Copilot CLI は OTLP HTTP のみ対応なので 4318 を使う。
@@ -24,8 +34,10 @@ exists "headroom" && exists "copilot" \
   && copilot() {
   OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 \
   OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-  headroom wrap copilot --subscription --model gemini-3.7-flash -- "$@"
+  headroom wrap copilot --subscription --model claude-opus-5.5 -- "$@"
 }
+
+# alias copilot='OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf copilot --model gemini-3.7-flash'
 
 ## aliases
 alias vim="nvim"
