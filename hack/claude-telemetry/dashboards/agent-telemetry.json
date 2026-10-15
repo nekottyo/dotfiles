@@ -1949,12 +1949,67 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineWidth": 1,
+            "spanNulls": false
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 137
+      },
+      "id": 83,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "max by (session_id, dir) (claude_session_output_tokens_per_second{job=~\"$agent\"})",
+          "legendFormat": "{{dir}} / {{session_id}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "セッション別 出力速度 (tok/s)",
+      "type": "timeseries",
+      "description": "statusline が transcript から算出するセッション平均。TTFT と hook 時間を含み、advisor 等の server tool を呼んだ応答は除く (~/.agents ADR-243)"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 137
+        "y": 145
       },
       "id": 100,
       "panels": [],
@@ -1980,7 +2035,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 138
+        "y": 146
       },
       "id": 101,
       "options": {
@@ -2042,7 +2097,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 138
+        "y": 146
       },
       "id": 102,
       "options": {
@@ -2084,7 +2139,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 146
+        "y": 154
       },
       "id": 90,
       "panels": [],
@@ -2114,7 +2169,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 147
+        "y": 155
       },
       "id": 91,
       "options": {
@@ -2180,7 +2235,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 147
+        "y": 155
       },
       "id": 92,
       "options": {
@@ -2246,7 +2301,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 155
+        "y": 163
       },
       "id": 93,
       "options": {
@@ -2302,7 +2357,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 155
+        "y": 163
       },
       "id": 94,
       "options": {
@@ -2374,7 +2429,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 163
+        "y": 171
       },
       "id": 95,
       "options": {
@@ -2427,7 +2482,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 163
+        "y": 171
       },
       "id": 96,
       "options": {
@@ -2493,7 +2548,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 171
+        "y": 179
       },
       "id": 97,
       "options": {
