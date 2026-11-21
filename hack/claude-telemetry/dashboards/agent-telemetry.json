@@ -88,20 +88,57 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "loki"
+        "type": "datasource",
+        "uid": "-- Mixed --"
       },
-      "description": "表示期間内に発生した API コストの合計",
+      "description": "表示期間内の記録を CLI と金額の算出元ごとに表示。Codex は画面で観測できた同一スレッドの増分。",
       "fieldConfig": {
         "defaults": {
           "color": {
             "fixedColor": "green",
             "mode": "fixed"
           },
-          "decimals": 2,
+          "decimals": 4,
           "unit": "currencyUSD"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 推定額"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex API 換算"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 4,
@@ -122,7 +159,7 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "value_and_name"
       },
       "targets": [
         {
@@ -130,11 +167,31 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
+          "expr": "sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
           "instant": true,
-          "legendFormat": "コスト",
+          "legendFormat": "Claude Code",
           "queryType": "instant",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum (((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__range]) == 0)) or on (thread_id) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__range]) == 0)))",
+          "legendFormat": "Codex 推定額",
+          "refId": "B",
+          "instant": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) == 0))",
+          "legendFormat": "Codex API 換算",
+          "refId": "C",
+          "instant": true
         }
       ],
       "title": "コスト",
@@ -145,7 +202,7 @@
         "type": "datasource",
         "uid": "-- Mixed --"
       },
-      "description": "表示期間内に消費した全トークン。Claude Code は counter、Copilot CLI は gen_ai.client.token.usage ヒストグラムの sum から算出する",
+      "description": "表示期間内のトークン消費。Codex は statusline が観測した同一スレッドの増分。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -155,7 +212,44 @@
           "decimals": 1,
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Copilot CLI"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex・観測分"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 4,
@@ -176,7 +270,7 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "value_and_name"
       },
       "targets": [
         {
@@ -184,7 +278,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap input_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap output_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_creation_tokens [$__range]))",
+          "expr": "sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap input_tokens [$__range])) + sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap output_tokens [$__range])) + sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) + sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cache_creation_tokens [$__range]))",
           "instant": true,
           "legendFormat": "トークン (Claude Code)",
           "queryType": "instant",
@@ -195,10 +289,20 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(increase(gen_ai_client_token_usage_sum{job=~\"$agent\"}[$__range]))",
+          "expr": "sum(increase(gen_ai_client_token_usage_sum{job=~\"${agent:pipe}\"}[$__range]))",
           "instant": true,
           "legendFormat": "トークン (Copilot CLI)",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum ((max_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__range]) - min_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__range])) and (count_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__range]) >= 2) and (resets(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__range]) == 0))",
+          "legendFormat": "トークン (Codex・観測分)",
+          "refId": "C",
+          "instant": true
         }
       ],
       "title": "トークン",
@@ -248,7 +352,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "count(sum by (session_id) (count_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | session_id != \"\" [$__range])))",
+          "expr": "count(sum by (session_id) (count_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | session_id != \"\" [$__range])))",
           "instant": true,
           "legendFormat": "セッション",
           "queryType": "instant",
@@ -302,7 +406,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(increase(claude_code_active_time_seconds_total{job=~\"$agent\",type=\"user\"}[$__range]))",
+          "expr": "sum(increase(claude_code_active_time_seconds_total{job=~\"${agent:pipe}\",type=\"user\"}[$__range]))",
           "instant": true,
           "legendFormat": "作業時間",
           "refId": "A"
@@ -370,7 +474,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) / (sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap input_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap output_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) + sum(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cache_creation_tokens [$__range])))",
+          "expr": "sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) / (sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap input_tokens [$__range])) + sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap output_tokens [$__range])) + sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cache_read_tokens [$__range])) + sum(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cache_creation_tokens [$__range])))",
           "instant": true,
           "legendFormat": "キャッシュ率",
           "queryType": "instant",
@@ -390,7 +494,7 @@
       },
       "id": 10,
       "panels": [],
-      "title": "コスト (Claude Code のみ)",
+      "title": "コスト",
       "type": "row"
     },
     {
@@ -409,10 +513,38 @@
               "mode": "normal"
             }
           },
-          "decimals": 3,
+          "decimals": 4,
           "unit": "currencyUSD"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^Codex[ /]/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.stacking",
+                "value": {
+                  "mode": "none",
+                  "group": "A"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -423,9 +555,7 @@
       "id": 11,
       "options": {
         "legend": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": [],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -441,14 +571,37 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (model) ((increase(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval] offset $__rate_interval), 0))",
-          "legendFormat": "{{model}}",
+          "expr": "sum by (model) ((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval] offset $__rate_interval), 0))",
+          "legendFormat": "Claude Code / {{model}}",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum (((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) == 0)) or on (thread_id) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) == 0)))",
+          "legendFormat": "Codex 推定額",
+          "refId": "B",
+          "range": true,
+          "interval": "1m"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) == 0))",
+          "legendFormat": "Codex API 換算 / {{model}}",
+          "refId": "C",
+          "range": true,
+          "interval": "1m"
         }
       ],
-      "title": "モデル別コスト",
-      "type": "timeseries"
+      "title": "コストの推移",
+      "type": "timeseries",
+      "description": "Claude Code はモデル別、Codex はスレッドの推定額または Standard 単価による API 換算の観測増分。"
     },
     {
       "datasource": {
@@ -494,14 +647,14 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (model) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
+          "expr": "sum by (model) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
           "instant": true,
           "legendFormat": "{{model}}",
           "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "モデル別コスト比率",
+      "title": "モデル別コスト比率 (Claude Code のみ)",
       "type": "piechart"
     },
     {
@@ -553,13 +706,13 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (query_source) ((increase(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval] offset $__rate_interval), 0))",
+          "expr": "sum by (query_source) ((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval] offset $__rate_interval), 0))",
           "legendFormat": "{{query_source}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "呼び出し元別コスト",
+      "title": "呼び出し元別コスト (Claude Code のみ)",
       "type": "timeseries"
     },
     {
@@ -606,14 +759,14 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (query_source) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
+          "expr": "sum by (query_source) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
           "instant": true,
           "legendFormat": "{{query_source}}",
           "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "呼び出し元別コスト比率",
+      "title": "呼び出し元別コスト比率 (Claude Code のみ)",
       "type": "piechart"
     },
     {
@@ -672,7 +825,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "topk(10, sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])))",
+          "expr": "topk(10, sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])))",
           "instant": true,
           "legendFormat": "{{skill_name}}",
           "queryType": "instant",
@@ -722,7 +875,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "topk(10, sum by (skill_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" [$__range])))",
+          "expr": "topk(10, sum by (skill_name) (count_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" [$__range])))",
           "legendFormat": "{{skill_name}}",
           "queryType": "instant",
           "refId": "A"
@@ -791,7 +944,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "((sum by (skill_name, caller) (label_replace(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name = \"\" | unwrap cost_usd [$__range]), \"caller\", \"main\", \"skill_name\", \".+\"))) or (sum by (skill_name, caller) (label_replace(sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range]), \"caller\", \"subagent\", \"skill_name\", \".+\")))) and on (skill_name) topk(10, sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])))",
+          "expr": "((sum by (skill_name, caller) (label_replace(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name = \"\" | unwrap cost_usd [$__range]), \"caller\", \"main\", \"skill_name\", \".+\"))) or (sum by (skill_name, caller) (label_replace(sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range]), \"caller\", \"subagent\", \"skill_name\", \".+\")))) and on (skill_name) topk(10, sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])))",
           "format": "table",
           "instant": true,
           "queryType": "instant",
@@ -902,7 +1055,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range]))",
+          "expr": "sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range]))",
           "format": "table",
           "instant": true,
           "queryType": "instant",
@@ -913,7 +1066,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name = \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0))",
+          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name = \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0))",
           "format": "table",
           "instant": true,
           "queryType": "instant",
@@ -924,7 +1077,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0))",
+          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0))",
           "format": "table",
           "instant": true,
           "queryType": "instant",
@@ -935,7 +1088,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0)) / sum by (skill_name) (sum_over_time({service_name=~\"$agent\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range]))",
+          "expr": "(sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | agent_name != \"\" | unwrap cost_usd [$__range])) or (sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range])) * 0)) / sum by (skill_name) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | skill_name != \"\" | unwrap cost_usd [$__range]))",
           "format": "table",
           "instant": true,
           "queryType": "instant",
@@ -1027,7 +1180,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (skill_name) ((increase(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\",skill_name!=\"\"}[$__rate_interval] offset $__rate_interval), 0))",
+          "expr": "sum by (skill_name) ((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",skill_name!=\"\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",skill_name!=\"\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",skill_name!=\"\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",skill_name!=\"\"}[$__rate_interval] offset $__rate_interval), 0))",
           "legendFormat": "{{skill_name}}",
           "range": true,
           "refId": "A"
@@ -1054,7 +1207,7 @@
         "type": "prometheus",
         "uid": "mimir"
       },
-      "description": "cacheRead が大半を占めるのが正常。input / output の伸びが実コストに直結する。Copilot CLI は input / output のみで cache 種別を持たない",
+      "description": "cacheRead が大半を占めるのが正常。input / output の伸びが実コストに直結する。Copilot CLI は input / output のみで cache 種別を持たない。Codex は statusline が観測した同一スレッドの増分。",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -1068,7 +1221,35 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^Codex[ /]/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.stacking",
+                "value": {
+                  "mode": "none",
+                  "group": "A"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -1080,7 +1261,6 @@
       "options": {
         "legend": {
           "calcs": [
-            "sum",
             "max"
           ],
           "displayMode": "table",
@@ -1098,7 +1278,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (type) ((increase(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval]) and resets(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval]) - max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval] offset $__rate_interval), 0))",
+          "expr": "sum by (type) ((increase(claude_code_token_usage_tokens_total{job=~\"${agent:pipe}\"}[$__rate_interval]) and resets(claude_code_token_usage_tokens_total{job=~\"${agent:pipe}\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_token_usage_tokens_total{job=~\"${agent:pipe}\"}[$__rate_interval]) - max_over_time(claude_code_token_usage_tokens_total{job=~\"${agent:pipe}\"}[$__rate_interval] offset $__rate_interval), 0))",
           "legendFormat": "Claude {{type}}",
           "range": true,
           "refId": "A"
@@ -1108,10 +1288,21 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (gen_ai_token_type) (increase(gen_ai_client_token_usage_sum{job=~\"$agent\"}[$__rate_interval]))",
+          "expr": "sum by (gen_ai_token_type) (increase(gen_ai_client_token_usage_sum{job=~\"${agent:pipe}\"}[$__rate_interval]))",
           "legendFormat": "Copilot {{gen_ai_token_type}}",
           "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (type) ((max_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__rate_interval]) - min_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__rate_interval])) and (count_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__rate_interval]) == 0))",
+          "legendFormat": "Codex / {{type}}",
+          "refId": "C",
+          "range": true,
+          "interval": "1m"
         }
       ],
       "title": "種別トークン消費",
@@ -1204,7 +1395,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (type) (increase(claude_code_lines_of_code_count_total{job=~\"$agent\"}[$__rate_interval]))",
+          "expr": "sum by (type) (increase(claude_code_lines_of_code_count_total{job=~\"${agent:pipe}\"}[$__rate_interval]))",
           "legendFormat": "Claude {{type}}",
           "range": true,
           "refId": "A"
@@ -1214,7 +1405,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(increase(github_copilot_code_lines_added_total{job=~\"$agent\"}[$__rate_interval]))",
+          "expr": "sum(increase(github_copilot_code_lines_added_total{job=~\"${agent:pipe}\"}[$__rate_interval]))",
           "legendFormat": "Copilot added",
           "range": true,
           "refId": "B"
@@ -1224,7 +1415,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(increase(github_copilot_code_lines_removed_total{job=~\"$agent\"}[$__rate_interval]))",
+          "expr": "sum(increase(github_copilot_code_lines_removed_total{job=~\"${agent:pipe}\"}[$__rate_interval]))",
           "legendFormat": "Copilot removed",
           "range": true,
           "refId": "C"
@@ -1238,7 +1429,7 @@
         "type": "loki",
         "uid": "loki"
       },
-      "description": "Edit / Write に対する判断の内訳",
+      "description": "Claude Code は Edit / Write / MultiEdit / NotebookEdit、Codex は apply_patch に対する tool_decision の件数。自動判断を含む。",
       "fieldConfig": {
         "defaults": {
           "decimals": 0,
@@ -1247,10 +1438,52 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "reject"
+              "id": "byFrameRefID",
+              "options": "A"
             },
             "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code 承認"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 承認"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code 却下"
+              },
               {
                 "id": "color",
                 "value": {
@@ -1262,16 +1495,44 @@
           },
           {
             "matcher": {
-              "id": "byName",
-              "options": "accept"
+              "id": "byFrameRefID",
+              "options": "D"
             },
             "properties": [
               {
+                "id": "displayName",
+                "value": "Codex 却下"
+              },
+              {
                 "id": "color",
                 "value": {
-                  "fixedColor": "green",
+                  "fixedColor": "red",
                   "mode": "fixed"
                 }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 期限切れ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 中断"
               }
             ]
           }
@@ -1304,14 +1565,69 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (decision) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_name =~ \"Edit|Write|MultiEdit|NotebookEdit\" [$__range]))",
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_name =~ \"Edit|Write|MultiEdit|NotebookEdit\" | decision =~ \"accept\" [$__range]))",
           "instant": true,
-          "legendFormat": "{{decision}}",
+          "legendFormat": "Claude Code 承認",
           "queryType": "instant",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" | decision =~ \"approved(_.*)?\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex 承認",
+          "queryType": "instant",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_name =~ \"Edit|Write|MultiEdit|NotebookEdit\" | decision =~ \"reject\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Claude Code 却下",
+          "queryType": "instant",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" | decision =~ \"denied(_.*)?\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex 却下",
+          "queryType": "instant",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" | decision =~ \"timed_out\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex 期限切れ",
+          "queryType": "instant",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" | decision =~ \"abort\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex 中断",
+          "queryType": "instant",
+          "refId": "F"
         }
       ],
-      "title": "編集の承認・却下 (Claude Code のみ)",
+      "title": "編集の承認・却下",
       "type": "stat"
     },
     {
@@ -1374,7 +1690,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (event_name) (count_over_time({service_name=~\"$agent\"} | event_name != \"\" [$__auto]))",
+          "expr": "sum by (event_name) (count_over_time({service_name=~\"${agent:pipe}\"} | event_name != \"\" [$__auto]))",
           "legendFormat": "{{event_name}}",
           "queryType": "range",
           "refId": "A"
@@ -1410,7 +1726,7 @@
             "uid": "tempo"
           },
           "limit": 20,
-          "query": "{resource.service.name=~\"$agent\"}",
+          "query": "{resource.service.name=~\"${agent:pipe}\"}",
           "queryType": "traceql",
           "refId": "A",
           "tableType": "traces"
@@ -1479,7 +1795,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (span_name, le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (span_name, le) (rate(traces_spanmetrics_latency_bucket{service=~\"${agent:pipe}\"}[$__rate_interval])))",
           "legendFormat": "{{service}} {{span_name}}",
           "range": true,
           "refId": "A"
@@ -1535,7 +1851,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\",span_name=\"claude_code.tool.blocked_on_user\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_latency_bucket{service=~\"${agent:pipe}\",span_name=\"claude_code.tool.blocked_on_user\"}[$__rate_interval])))",
           "legendFormat": "p95 ({{service}})",
           "range": true,
           "refId": "A"
@@ -1545,7 +1861,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(traces_spanmetrics_latency_bucket{service=~\"$agent\",span_name=\"claude_code.tool.blocked_on_user\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(traces_spanmetrics_latency_bucket{service=~\"${agent:pipe}\",span_name=\"claude_code.tool.blocked_on_user\"}[$__rate_interval])))",
           "legendFormat": "中央値 ({{service}})",
           "range": true,
           "refId": "B"
@@ -1583,7 +1899,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{service_name=~\"$agent\"}",
+          "expr": "{service_name=~\"${agent:pipe}\"}",
           "maxLines": 200,
           "refId": "A"
         }
@@ -1601,7 +1917,7 @@
       },
       "id": 60,
       "panels": [],
-      "title": "利用制限 (rate limit / Claude Code のみ)",
+      "title": "利用制限",
       "type": "row"
     },
     {
@@ -1721,7 +2037,7 @@
       },
       "id": 70,
       "panels": [],
-      "title": "消費速度 (Claude Code のみ)",
+      "title": "消費速度",
       "type": "row"
     },
     {
@@ -1736,10 +2052,38 @@
             "fillOpacity": 60,
             "lineWidth": 1
           },
-          "decimals": 3,
+          "decimals": 4,
           "unit": "currencyUSD"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^Codex[ /]/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.stacking",
+                "value": {
+                  "mode": "none",
+                  "group": "A"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -1769,14 +2113,37 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (model) ((increase(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"$agent\"}[$__rate_interval] offset $__rate_interval), 0)) * 3600000 / $__rate_interval_ms",
-          "legendFormat": "{{model}}",
+          "expr": "sum by (model) ((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\"}[$__rate_interval] offset $__rate_interval), 0)) * 3600000 / $__rate_interval_ms",
+          "legendFormat": "Claude Code / {{model}}",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum (((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) == 0)) or on (thread_id) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) == 0))) * 3600000 / $__rate_interval_ms",
+          "legendFormat": "Codex 推定額",
+          "refId": "B",
+          "range": true,
+          "interval": "1m"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) == 0)) * 3600000 / $__rate_interval_ms",
+          "legendFormat": "Codex API 換算 / {{model}}",
+          "refId": "C",
+          "range": true,
+          "interval": "1m"
         }
       ],
       "title": "コスト消費速度 (毎時)",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "観測された増分を 1 時間あたりに換算する。"
     },
     {
       "datasource": {
@@ -1792,7 +2159,35 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^Codex[ /]/"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.stacking",
+                "value": {
+                  "mode": "none",
+                  "group": "A"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -1822,10 +2217,21 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (type) ((increase(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval]) and resets(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval]) - max_over_time(claude_code_token_usage_tokens_total{job=~\"$agent\"}[$__rate_interval] offset $__rate_interval), 0)) * 3600000 / $__rate_interval_ms",
-          "legendFormat": "{{type}}",
+          "expr": "sum by (type) ((increase(claude_code_token_usage_tokens_total{job=~\"${agent:pipe}\"}[$__rate_interval]) and resets(claude_code_token_usage_tokens_total{job=~\"${agent:pipe}\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_token_usage_tokens_total{job=~\"${agent:pipe}\"}[$__rate_interval]) - max_over_time(claude_code_token_usage_tokens_total{job=~\"${agent:pipe}\"}[$__rate_interval] offset $__rate_interval), 0)) * 3600000 / $__rate_interval_ms",
+          "legendFormat": "Claude Code / {{type}}",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (type) ((max_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__rate_interval]) - min_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__rate_interval])) and (count_over_time(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_token_usage_tokens{job=~\"${agent:pipe}\",job=\"codex-statusline\"}[$__rate_interval]) == 0)) * 3600000 / $__rate_interval_ms",
+          "legendFormat": "Codex / {{type}}",
+          "refId": "B",
+          "range": true,
+          "interval": "1m"
         }
       ],
       "title": "トークン消費速度 (毎時)",
@@ -1885,7 +2291,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "topk(10, max by (session_id, dir) (max_over_time(claude_session_turns{job=~\"$agent\"}[$__range])))",
+          "expr": "topk(10, max by (session_id, dir) (max_over_time(claude_session_turns{job=~\"${agent:pipe}\"}[$__range])))",
           "instant": true,
           "legendFormat": "{{dir}} / {{session_id}}",
           "refId": "A"
@@ -1939,7 +2345,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "max by (session_id, dir) (claude_session_turns{job=~\"$agent\"})",
+          "expr": "max by (session_id, dir) (claude_session_turns{job=~\"${agent:pipe}\"})",
           "legendFormat": "{{dir}} / {{session_id}}",
           "range": true,
           "refId": "A"
@@ -1993,7 +2399,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "max by (session_id, dir) (claude_session_output_tokens_per_second{job=~\"$agent\"})",
+          "expr": "max by (session_id, dir) (claude_session_output_tokens_per_second{job=~\"${agent:pipe}\"})",
           "legendFormat": "{{dir}} / {{session_id}}",
           "range": true,
           "refId": "A"
@@ -2013,7 +2419,7 @@
       },
       "id": 100,
       "panels": [],
-      "title": "ツール利用状況 (Claude Code のみ)",
+      "title": "ツール利用状況",
       "type": "row"
     },
     {
@@ -2021,13 +2427,11 @@
         "type": "loki",
         "uid": "loki"
       },
-      "description": "tool_decision イベントの件数。MCP ツールは匿名化されており個別の名前が残らず、すべて mcp_tool に潰れる (内訳は右の比率パネルまで)",
+      "description": "Claude Code は tool_decision、Codex は codex.tool_result の件数。Claude Code の MCP 名は匿名化される。Codex は namespace と tool_name の組で集計する。",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "continuous-BlPu"
-          },
-          "unit": "short"
+          "unit": "none",
+          "decimals": 0
         },
         "overrides": []
       },
@@ -2038,6 +2442,132 @@
         "y": 146
       },
       "id": 101,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "件数",
+            "desc": true
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "topk by (agent_cli) (15, sum by (agent_cli, tool_name) (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_name != \"\" | label_format agent_cli=\"Claude Code\" [$__range])) or sum by (agent_cli, tool_namespace, tool_name) (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_result\" | tool_name != \"\" | label_format agent_cli=\"Codex\" [$__range])))",
+          "instant": true,
+          "legendFormat": "",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "ツール別イベント数 (CLI ごとに上位 15)",
+      "type": "table",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "agent_cli": 0,
+              "tool_namespace": 1,
+              "tool_name": 2,
+              "Value": 3,
+              "Value #A": 3
+            },
+            "renameByName": {
+              "agent_cli": "CLI",
+              "tool_namespace": "名前空間",
+              "tool_name": "ツール",
+              "Value": "件数",
+              "Value #A": "件数"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "description": "Claude Code は tool_decision の tool_source、Codex は codex.tool_result の mcp_server の有無で分類する。割合の分母は CLI ごとの分類可能なイベント数。",
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "decimals": 1
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code MCP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code 非 MCP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex MCP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 非 MCP"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 146
+      },
+      "id": 102,
       "options": {
         "displayMode": "gradient",
         "orientation": "horizontal",
@@ -2056,82 +2586,48 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "topk(15, sum by (tool_name) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_name != \"\" [$__range])))",
-          "legendFormat": "{{tool_name}}",
+          "expr": "100 * sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source = \"mcp\" [$__range])) / sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Claude Code MCP",
           "queryType": "instant",
           "refId": "A"
-        }
-      ],
-      "title": "ツール別の呼び出し回数 (上位 15)",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true
-            },
-            "indexByName": {},
-            "renameByName": {}
-          }
         },
-        {
-          "id": "rowsToFields",
-          "options": {}
-        }
-      ],
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "description": "tool_decision の tool_source 内訳。MCP はサーバー名・ツール名とも匿名化されているため、割れるのはこの粒度まで",
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 146
-      },
-      "id": 102,
-      "options": {
-        "displayLabels": [
-          "percent"
-        ],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "pieType": "donut",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        }
-      },
-      "targets": [
         {
           "datasource": {
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (tool_source) (count_over_time({service_name=~\"$agent\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
-          "legendFormat": "{{tool_source}}",
+          "expr": "100 * sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source != \"\" | tool_source != \"mcp\" [$__range])) / sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Claude Code 非 MCP",
           "queryType": "instant",
-          "refId": "A"
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "100 * sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_result\" | mcp_server != \"\" [$__range])) / sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_result\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex MCP",
+          "queryType": "instant",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "100 * sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_result\" | mcp_server = \"\" [$__range])) / sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_result\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex 非 MCP",
+          "queryType": "instant",
+          "refId": "C"
         }
       ],
-      "title": "builtin 対 MCP の比率",
-      "type": "piechart"
+      "title": "MCP とその他の割合 (CLI ごと)",
+      "type": "bargauge"
     },
     {
       "collapsed": false,
@@ -2193,7 +2689,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (gen_ai_request_model, le) (rate(gen_ai_client_operation_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (gen_ai_request_model, le) (rate(gen_ai_client_operation_duration_seconds_bucket{job=~\"${agent:pipe}\"}[$__rate_interval])))",
           "legendFormat": "p95 {{gen_ai_request_model}}",
           "range": true,
           "refId": "A"
@@ -2203,7 +2699,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(rate(gen_ai_client_operation_duration_seconds_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_client_operation_duration_seconds_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "expr": "sum(rate(gen_ai_client_operation_duration_seconds_sum{job=~\"${agent:pipe}\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_client_operation_duration_seconds_count{job=~\"${agent:pipe}\"}[$__rate_interval])), 0.000001)",
           "legendFormat": "平均",
           "range": true,
           "refId": "B"
@@ -2259,7 +2755,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_to_first_chunk_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_to_first_chunk_seconds_bucket{job=~\"${agent:pipe}\"}[$__rate_interval])))",
           "legendFormat": "最初のチャンクまで p95",
           "range": true,
           "refId": "A"
@@ -2269,7 +2765,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_per_output_chunk_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_client_operation_time_per_output_chunk_seconds_bucket{job=~\"${agent:pipe}\"}[$__rate_interval])))",
           "legendFormat": "チャンクあたり p95",
           "range": true,
           "refId": "B"
@@ -2325,7 +2821,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_invoke_agent_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_invoke_agent_duration_seconds_bucket{job=~\"${agent:pipe}\"}[$__rate_interval])))",
           "legendFormat": "p95",
           "range": true,
           "refId": "A"
@@ -2381,7 +2877,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(rate(gen_ai_invoke_agent_inference_calls_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_invoke_agent_inference_calls_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "expr": "sum(rate(gen_ai_invoke_agent_inference_calls_sum{job=~\"${agent:pipe}\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_invoke_agent_inference_calls_count{job=~\"${agent:pipe}\"}[$__rate_interval])), 0.000001)",
           "legendFormat": "推論回数 (平均)",
           "range": true,
           "refId": "A"
@@ -2391,7 +2887,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(rate(gen_ai_invoke_agent_tool_calls_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_invoke_agent_tool_calls_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "expr": "sum(rate(gen_ai_invoke_agent_tool_calls_sum{job=~\"${agent:pipe}\"}[$__rate_interval])) / clamp_min(sum(rate(gen_ai_invoke_agent_tool_calls_count{job=~\"${agent:pipe}\"}[$__rate_interval])), 0.000001)",
           "legendFormat": "ツール呼び出し (平均)",
           "range": true,
           "refId": "B"
@@ -2401,7 +2897,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum(rate(github_copilot_agent_turn_count_sum{job=~\"$agent\"}[$__rate_interval])) / clamp_min(sum(rate(github_copilot_agent_turn_count_count{job=~\"$agent\"}[$__rate_interval])), 0.000001)",
+          "expr": "sum(rate(github_copilot_agent_turn_count_sum{job=~\"${agent:pipe}\"}[$__rate_interval])) / clamp_min(sum(rate(github_copilot_agent_turn_count_count{job=~\"${agent:pipe}\"}[$__rate_interval])), 0.000001)",
           "legendFormat": "LLM 往復 (平均)",
           "range": true,
           "refId": "C"
@@ -2450,7 +2946,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "topk(10, sum by (tool_name) (increase(github_copilot_tool_call_count_total{job=~\"$agent\"}[$__range])))",
+          "expr": "topk(10, sum by (tool_name) (increase(github_copilot_tool_call_count_total{job=~\"${agent:pipe}\"}[$__range])))",
           "instant": true,
           "legendFormat": "{{tool_name}}",
           "refId": "A"
@@ -2506,7 +3002,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (tool_name, le) (rate(github_copilot_tool_call_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (tool_name, le) (rate(github_copilot_tool_call_duration_seconds_bucket{job=~\"${agent:pipe}\"}[$__rate_interval])))",
           "legendFormat": "{{tool_name}}",
           "range": true,
           "refId": "A"
@@ -2516,7 +3012,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_execute_tool_duration_seconds_bucket{job=~\"$agent\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(gen_ai_execute_tool_duration_seconds_bucket{job=~\"${agent:pipe}\"}[$__rate_interval])))",
           "legendFormat": "execute_tool 全体",
           "range": true,
           "refId": "B"
@@ -2572,7 +3068,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (server_name) (increase(github_copilot_mcp_server_connection_count_total{job=~\"$agent\"}[$__rate_interval]))",
+          "expr": "sum by (server_name) (increase(github_copilot_mcp_server_connection_count_total{job=~\"${agent:pipe}\"}[$__rate_interval]))",
           "legendFormat": "{{server_name}}",
           "range": true,
           "refId": "A"
@@ -2592,7 +3088,7 @@
   "templating": {
     "list": [
       {
-        "allValue": "claude-code|claude-statusline|github-copilot|codex-statusline",
+        "allValue": "claude-code|claude-statusline|github-copilot|codex-statusline|codex-app-server|codex_cli_rs|codex_exec",
         "current": {
           "selected": true,
           "text": [
@@ -2627,10 +3123,10 @@
           {
             "selected": false,
             "text": "Codex",
-            "value": "codex-statusline"
+            "value": "codex-statusline|codex-app-server|codex_cli_rs|codex_exec"
           }
         ],
-        "query": "Claude Code : claude-code|claude-statusline,Copilot CLI : github-copilot,Codex : codex-statusline",
+        "query": "Claude Code : claude-code|claude-statusline,Copilot CLI : github-copilot,Codex : codex-statusline|codex-app-server|codex_cli_rs|codex_exec",
         "skipUrlSync": false,
         "type": "custom"
       }

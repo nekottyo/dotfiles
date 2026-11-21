@@ -44,12 +44,18 @@ Grafana: http://localhost:3000 (認証なし)
 
 variable の値は `service.name` そのもので、Prometheus では `job`、span metrics では `service`、
 Loki では `service_name` ラベルに対応する。Claude Code の選択肢は内蔵と statusline の
-`claude-code|claude-statusline`、Codex の選択肢は `codex-statusline` を指す。
+`claude-code|claude-statusline`、Codex の選択肢は statusline と Codex のネイティブ OTel サービスを含む。
 7d の要約と使用率の推移は、CLI ごとに消費率を分けて表示する。
 
-両方を同時に表示するパネル (トークン、コード編集行数、スパンレイテンシ) は、凡例の頭に
-どちらの agent かが出る。片方にしか無い指標はパネルのタイトルに `(Claude Code のみ)` と付けるか、
-`Copilot CLI 固有` の row にまとめてある。
+コストとトークン消費は Codex の観測分を既存の推移・毎時速度に重ねる。Codex は statusline が見ている
+スレッドの累積値を受け取り、時間窓内で 2 点以上を観測し、値が減らなかった系列の増分を表示する。
+Codex 推定額と Codex API 換算は凡例で区別する。API 換算は現在のモデルの Standard 単価を用いた目安である。
+旧 exporter と新版が同じスレッドを観測した場合、Codex 推定額は新版の増分を優先する。
+
+編集の承認・却下に Codex の apply_patch を重ねる。ツール利用状況では Claude Code の判断イベントと
+Codex の結果イベントを CLI 別に数え、MCP の割合もそれぞれの件数から算出する。
+Codex の API 換算はコストの推移と消費速度でモデル別に表示する。モデル別コストの割合、
+呼び出し元・skill 別コストとセッションの turn 数・出力速度は Claude Code の収集データを表示する。
 
 ## 停止
 
