@@ -98,10 +98,47 @@
             "fixedColor": "green",
             "mode": "fixed"
           },
-          "decimals": 2,
+          "decimals": 4,
           "unit": "currencyUSD"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 推定額"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex API 換算"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 4,
@@ -141,7 +178,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__range]) == 0))",
+          "expr": "sum (((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__range]) == 0)) or on (thread_id) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__range]) == 0)))",
           "legendFormat": "Codex 推定額",
           "refId": "B",
           "instant": true
@@ -175,7 +212,44 @@
           "decimals": 1,
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Copilot CLI"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex・観測分"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 4,
@@ -439,7 +513,7 @@
               "mode": "normal"
             }
           },
-          "decimals": 3,
+          "decimals": 4,
           "unit": "currencyUSD"
         },
         "overrides": [
@@ -507,7 +581,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__rate_interval]) == 0))",
+          "expr": "sum (((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) == 0)) or on (thread_id) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) == 0)))",
           "legendFormat": "Codex 推定額",
           "refId": "B",
           "range": true,
@@ -1364,10 +1438,52 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byRegexp",
-              "options": "/^(Claude Code reject|Codex denied)$/"
+              "id": "byFrameRefID",
+              "options": "A"
             },
             "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code 承認"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 承認"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code 却下"
+              },
               {
                 "id": "color",
                 "value": {
@@ -1379,16 +1495,44 @@
           },
           {
             "matcher": {
-              "id": "byRegexp",
-              "options": "/^(Claude Code accept|Codex approved)$/"
+              "id": "byFrameRefID",
+              "options": "D"
             },
             "properties": [
               {
+                "id": "displayName",
+                "value": "Codex 却下"
+              },
+              {
                 "id": "color",
                 "value": {
-                  "fixedColor": "green",
+                  "fixedColor": "red",
                   "mode": "fixed"
                 }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 期限切れ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 中断"
               }
             ]
           }
@@ -1421,9 +1565,9 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (decision) (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_name =~ \"Edit|Write|MultiEdit|NotebookEdit\" [$__range]))",
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_name =~ \"Edit|Write|MultiEdit|NotebookEdit\" | decision =~ \"accept\" [$__range]))",
           "instant": true,
-          "legendFormat": "Claude Code {{decision}}",
+          "legendFormat": "Claude Code 承認",
           "queryType": "instant",
           "refId": "A"
         },
@@ -1432,11 +1576,55 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (decision) (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" [$__range]))",
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" | decision =~ \"approved(_.*)?\" [$__range]))",
           "instant": true,
-          "legendFormat": "Codex {{decision}}",
+          "legendFormat": "Codex 承認",
           "queryType": "instant",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_name =~ \"Edit|Write|MultiEdit|NotebookEdit\" | decision =~ \"reject\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Claude Code 却下",
+          "queryType": "instant",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" | decision =~ \"denied(_.*)?\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex 却下",
+          "queryType": "instant",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" | decision =~ \"timed_out\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex 期限切れ",
+          "queryType": "instant",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_decision\" | tool_name = \"apply_patch\" | decision =~ \"abort\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Codex 中断",
+          "queryType": "instant",
+          "refId": "F"
         }
       ],
       "title": "編集の承認・却下",
@@ -1864,7 +2052,7 @@
             "fillOpacity": 60,
             "lineWidth": 1
           },
-          "decimals": 3,
+          "decimals": 4,
           "unit": "currencyUSD"
         },
         "overrides": [
@@ -1935,7 +2123,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=~\"reported|\"}[$__rate_interval]) == 0)) * 3600000 / $__rate_interval_ms",
+          "expr": "sum (((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"reported\"}[$__rate_interval]) == 0)) or on (thread_id) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"\"}[$__rate_interval]) == 0))) * 3600000 / $__rate_interval_ms",
           "legendFormat": "Codex 推定額",
           "refId": "B",
           "range": true,
@@ -2242,10 +2430,8 @@
       "description": "Claude Code は tool_decision、Codex は codex.tool_result の件数。Claude Code の MCP 名は匿名化される。Codex は namespace と tool_name の組で集計する。",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "continuous-BlPu"
-          },
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         },
         "overrides": []
       },
@@ -2257,16 +2443,13 @@
       },
       "id": 101,
       "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "件数",
+            "desc": true
+          }
+        ]
       },
       "targets": [
         {
@@ -2274,7 +2457,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "topk(15, sum by (tool_name) (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_name != \"\" [$__range])))",
+          "expr": "topk(15, sum by (agent_cli, tool_name) (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_name != \"\" | label_format agent_cli=\"Claude Code\" [$__range])))",
           "instant": true,
           "legendFormat": "Claude Code {{tool_name}}",
           "queryType": "instant",
@@ -2285,7 +2468,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "topk(15, sum by (tool_namespace, tool_name) (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_result\" | tool_name != \"\" [$__range])))",
+          "expr": "topk(15, sum by (agent_cli, tool_namespace, tool_name) (count_over_time({service_name=~\"${agent:pipe}\",service_name=~\"codex-app-server|codex_cli_rs|codex_exec\"} | event_name = \"codex.tool_result\" | tool_name != \"\" | label_format agent_cli=\"Codex\" [$__range])))",
           "instant": true,
           "legendFormat": "Codex {{tool_namespace}} {{tool_name}}",
           "queryType": "instant",
@@ -2293,7 +2476,35 @@
         }
       ],
       "title": "ツール別イベント数 (CLI ごとに上位 15)",
-      "type": "bargauge"
+      "type": "table",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "agent_cli": 0,
+              "tool_namespace": 1,
+              "tool_name": 2,
+              "Value": 3
+            },
+            "renameByName": {
+              "agent_cli": "CLI",
+              "tool_namespace": "名前空間",
+              "tool_name": "ツール",
+              "Value": "件数"
+            }
+          }
+        }
+      ]
     },
     {
       "datasource": {
@@ -2308,7 +2519,56 @@
           "unit": "percent",
           "decimals": 1
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code MCP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Claude Code 非 MCP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex MCP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Codex 非 MCP"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -2335,11 +2595,22 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "100 * sum by (tool_source) (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range])) / on() group_left sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
+          "expr": "100 * sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source = \"mcp\" [$__range])) / sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
           "instant": true,
-          "legendFormat": "Claude Code {{tool_source}}",
+          "legendFormat": "Claude Code MCP",
           "queryType": "instant",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "100 * sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source != \"\" | tool_source != \"mcp\" [$__range])) / sum (count_over_time({service_name=~\"${agent:pipe}\",service_name=\"claude-code\"} | event_name = \"tool_decision\" | tool_source != \"\" [$__range]))",
+          "instant": true,
+          "legendFormat": "Claude Code 非 MCP",
+          "queryType": "instant",
+          "refId": "D"
         },
         {
           "datasource": {
