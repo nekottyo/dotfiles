@@ -37,7 +37,7 @@ Grafana: http://localhost:3000 (認証なし)
 ダッシュボードは `dashboards/` から自動プロビジョニングされるので、インポート操作は不要。
 フォルダ `AI Agents` に 2 枚入る。
 
-- **AI エージェント テレメトリ** — Claude Code と Copilot CLI。上部の `Agent` は既定で `All`
+- **AI エージェント テレメトリ** — Claude Code、Copilot CLI、Codex。上部の `Agent` は既定で `All`
   で、対象の CLI を絞り込める。Codex の 5h / 7d は statusline が送る消費率を表示する
 - **Headroom プロキシ** — Headroom の圧縮とキャッシュの挙動。agent 側とは指標体系が全く別なので
   ダッシュボードを分けてある
