@@ -1,6 +1,6 @@
 # AI エージェント テレメトリ (Grafana LGTM Stack)
 
-Claude Code と Copilot CLI の OpenTelemetry テレメトリ、および Headroom プロキシのメトリクスを
+Claude Code、Copilot CLI、Codex のメトリクスと、Headroom プロキシのメトリクスを
 Grafana で可視化するためのローカル収集スタック。
 
 ## 構成
@@ -38,15 +38,14 @@ Grafana: http://localhost:3000 (認証なし)
 フォルダ `AI Agents` に 2 枚入る。
 
 - **AI エージェント テレメトリ** — Claude Code と Copilot CLI。上部の `Agent` は既定で `All`
-  (両方) で、片方だけ見たいときに絞る
+  で、対象の CLI を絞り込める。Codex の 5h / 7d は statusline が送る消費率を表示する
 - **Headroom プロキシ** — Headroom の圧縮とキャッシュの挙動。agent 側とは指標体系が全く別なので
   ダッシュボードを分けてある
 
 variable の値は `service.name` そのもので、Prometheus では `job`、span metrics では `service`、
-Loki では `service_name` ラベルに対応する。3 者でラベル名が違うだけで値は共通なので、
-1 つの variable で全パネルを切り替えられる。Claude Code だけは statusline hook が
-`job=claude-statusline` で rate limit と turn 数を別に出しているため、variable の値に
-`claude-code|claude-statusline` の 2 つを含めている。
+Loki では `service_name` ラベルに対応する。Claude Code の選択肢は内蔵と statusline の
+`claude-code|claude-statusline`、Codex の選択肢は `codex-statusline` を指す。
+7d の要約と使用率の推移は、CLI ごとに消費率を分けて表示する。
 
 両方を同時に表示するパネル (トークン、コード編集行数、スパンレイテンシ) は、凡例の頭に
 どちらの agent かが出る。片方にしか無い指標はパネルのタイトルに `(Claude Code のみ)` と付けるか、

@@ -23,7 +23,7 @@
         "type": "prometheus",
         "uid": "mimir"
       },
-      "description": "Claude のアカウント週次上限に対する使用率。statusline hook が headroom の subscription-window から取って push する値 (job=claude-statusline) で、アカウント全体の値なので $agent の絞り込みは掛けていない",
+      "description": "7 日枠の消費率を CLI ごとに表示する。Agent フィルターで対象を選ぶ。",
       "fieldConfig": {
         "defaults": {
           "decimals": 1,
@@ -69,7 +69,7 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "textMode": "value_and_name"
       },
       "targets": [
         {
@@ -77,9 +77,9 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "max(claude_usage_rate_limit_used_percent{window=\"seven_day\"})",
+          "expr": "max by (job) ({__name__=~\"(claude|codex)_usage_rate_limit_used_percent\",job=~\"$agent\",window=\"seven_day\"})",
           "instant": true,
-          "legendFormat": "7d 使用率",
+          "legendFormat": "{{job}}",
           "refId": "A"
         }
       ],
@@ -1652,9 +1652,9 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "claude_usage_rate_limit_used_percent{job=~\"$agent\"}",
+          "expr": "{__name__=~\"(claude|codex)_usage_rate_limit_used_percent\",job=~\"$agent\"}",
           "instant": false,
-          "legendFormat": "{{window}}",
+          "legendFormat": "{{job}} / {{window}}",
           "range": true,
           "refId": "A"
         }
@@ -1701,9 +1701,9 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "claude_usage_rate_limit_resets_at_seconds{job=~\"$agent\"} - time()",
+          "expr": "{__name__=~\"(claude|codex)_usage_rate_limit_resets_at_seconds\",job=~\"$agent\"} - time()",
           "instant": true,
-          "legendFormat": "{{window}}",
+          "legendFormat": "{{job}} / {{window}}",
           "range": false,
           "refId": "A"
         }
@@ -2592,7 +2592,7 @@
   "templating": {
     "list": [
       {
-        "allValue": "claude-code|claude-statusline|github-copilot",
+        "allValue": "claude-code|claude-statusline|github-copilot|codex-statusline",
         "current": {
           "selected": true,
           "text": [
@@ -2602,7 +2602,7 @@
             "$__all"
           ]
         },
-        "description": "service.name の値。Prometheus では job、span metrics では service、Loki では service_name ラベルに対応する。Claude Code は statusline hook が job=claude-statusline で別に出す補助メトリクス (rate limit / turn 数) があるため、両方を含めている",
+        "description": "service.name は Prometheus の job、span metrics の service、Loki の service_name に対応する。statusline の使用率は claude-statusline と codex-statusline から送られる。",
         "hide": 0,
         "includeAll": true,
         "label": "Agent",
@@ -2623,9 +2623,14 @@
             "selected": false,
             "text": "Copilot CLI",
             "value": "github-copilot"
+          },
+          {
+            "selected": false,
+            "text": "Codex",
+            "value": "codex-statusline"
           }
         ],
-        "query": "Claude Code : claude-code|claude-statusline,Copilot CLI : github-copilot",
+        "query": "Claude Code : claude-code|claude-statusline,Copilot CLI : github-copilot,Codex : codex-statusline",
         "skipUrlSync": false,
         "type": "custom"
       }
