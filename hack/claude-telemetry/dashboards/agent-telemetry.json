@@ -605,10 +605,10 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "loki"
+        "type": "prometheus",
+        "uid": "mimir"
       },
-      "description": "選択期間内でのモデル別コスト内訳",
+      "description": "選択期間内に statusline で観測したセッション累計コストの増分をモデル別に集計する。subagent の分もセッションのモデルに含まれ、複数モデルが観測されたセッションは除外する。従来の Loki の API リクエスト単位の集計とは対象が異なる。",
       "fieldConfig": {
         "defaults": {
           "decimals": 2,
@@ -648,13 +648,13 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "loki"
+            "type": "prometheus",
+            "uid": "mimir"
           },
-          "expr": "sum by (model) (sum_over_time({service_name=~\"${agent:pipe}\"} | event_name = \"api_request\" | unwrap cost_usd [$__range]))",
+          "expr": "sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range] offset $__range), 0)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]))) > 1) > 0",
           "instant": true,
           "legendFormat": "{{model}}",
-          "queryType": "instant",
+          "range": false,
           "refId": "A"
         }
       ],
@@ -832,12 +832,132 @@
       "type": "piechart"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "description": "各時点の集計窓で statusline のコスト増分を集計する。subagent の分もセッションのモデルに含まれ、複数モデルが観測されたセッションはその窓から除外する。コスト増分がない窓は空白。",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 0,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
+          },
+          "decimals": 1,
+          "max": 1,
+          "min": 0,
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 17,
+      "interval": "15m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "(sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval] offset $__rate_interval), 0)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]))) > 1) > 0) / ignoring (model) group_left sum (sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval] offset $__rate_interval), 0)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]))) > 1))",
+          "instant": false,
+          "legendFormat": "{{model}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "モデル別コスト比率の推移 (Claude Code)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
+      "description": "各時点の集計窓で API 換算額の増分を集計する。複数モデルが観測されたスレッドはその窓から除外する。コスト増分がない窓は空白。",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 0,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            }
+          },
+          "decimals": 1,
+          "max": 1,
+          "min": 0,
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 18,
+      "interval": "15m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "(sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) == 0) unless on (thread_id) (count by (thread_id) (group by (thread_id, model) (present_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]))) > 1)) > 0) / ignoring (model) group_left sum (sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) == 0) unless on (thread_id) (count by (thread_id) (group by (thread_id, model) (present_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]))) > 1)))",
+          "instant": false,
+          "legendFormat": "{{model}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "モデル別コスト比率の推移 (Codex API 換算)",
+      "type": "timeseries"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 22
       },
       "id": 110,
       "panels": [],
@@ -864,7 +984,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 15
+        "y": 23
       },
       "id": 13,
       "options": {
@@ -916,7 +1036,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 15
+        "y": 23
       },
       "id": 103,
       "options": {
@@ -983,7 +1103,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 23
+        "y": 31
       },
       "id": 111,
       "options": {
@@ -1099,7 +1219,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 23
+        "y": 31
       },
       "id": 112,
       "options": {
@@ -1221,7 +1341,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 39
       },
       "id": 113,
       "options": {
