@@ -618,7 +618,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 5,
         "x": 6,
         "y": 6
       },
@@ -628,9 +628,13 @@
           "percent"
         ],
         "legend": {
-          "displayMode": "list",
+          "displayMode": "table",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
         },
         "pieType": "donut",
         "reduceOptions": {
@@ -662,6 +666,64 @@
         "type": "prometheus",
         "uid": "mimir"
       },
+      "description": "選択期間内でのモデル別 API 換算額。サマリの Codex API 換算と同じ条件で集計する。",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 11,
+        "y": 6
+      },
+      "id": 16,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "mimir"
+          },
+          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) == 0))",
+          "legendFormat": "{{model}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "title": "モデル別コスト比率 (Codex API 換算)",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "mimir"
+      },
       "description": "main (対話) / subagent (委譲) / auxiliary (要約などの内部処理) の推移",
       "fieldConfig": {
         "defaults": {
@@ -681,8 +743,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 12,
+        "w": 4,
+        "x": 16,
         "y": 6
       },
       "id": 15,
@@ -730,8 +792,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 18,
+        "w": 4,
+        "x": 20,
         "y": 6
       },
       "id": 12,
