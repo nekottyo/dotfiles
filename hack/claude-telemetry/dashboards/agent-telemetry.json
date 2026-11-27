@@ -608,7 +608,7 @@
         "type": "prometheus",
         "uid": "mimir"
       },
-      "description": "選択期間内に statusline で観測したセッション累計コストの増分をモデル別に集計する。subagent の分もセッションのモデルに含まれ、複数モデルが観測されたセッションは除外する。従来の Loki の API リクエスト単位の集計とは対象が異なる。",
+      "description": "選択期間内に statusline で観測したセッション累計コストの増分をモデル別に集計する。subagent の分もセッションのモデルに含まれる。区間内で正の増分が取れない場合は前区間の最大値と比較し、比較に使う区間で複数モデルが観測されたセッションは除く。Loki は API リクエスト単位で集計する。",
       "fieldConfig": {
         "defaults": {
           "decimals": 2,
@@ -651,7 +651,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range] offset $__range), 0)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]))) > 1) > 0",
+          "expr": "sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) > 0 and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) == 0) or (clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range] offset $__range), 0) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range] offset $__range))) > 1)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__range]))) > 1) > 0",
           "instant": true,
           "legendFormat": "{{model}}",
           "range": false,
@@ -836,7 +836,7 @@
         "type": "prometheus",
         "uid": "mimir"
       },
-      "description": "各時点の集計窓で statusline のコスト増分を集計する。subagent の分もセッションのモデルに含まれ、複数モデルが観測されたセッションはその窓から除外する。コスト増分がない窓は空白。",
+      "description": "各時点の集計区間で statusline のコスト増分をモデル別に集計する。subagent の分もセッションのモデルに含まれる。区間内で正の増分が取れない場合は前区間の最大値と比較し、比較に使う区間で複数モデルが観測されたセッションは除く。増分がない区間は空白。",
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -881,7 +881,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "(sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval] offset $__rate_interval), 0)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]))) > 1) > 0) / ignoring (model) group_left sum (sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) == 0) or clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval] offset $__rate_interval), 0)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]))) > 1))",
+          "expr": "(sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) > 0 and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) == 0) or (clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval] offset $__rate_interval), 0) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval] offset $__rate_interval))) > 1)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]))) > 1) > 0) / ignoring (model) group_left sum (sum by (model) (((increase(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) > 0 and resets(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) == 0) or (clamp_min(max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]) - max_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval] offset $__rate_interval), 0) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval] offset $__rate_interval))) > 1)) unless on (session_id) count by (session_id) (group by (session_id, model) (present_over_time(claude_code_cost_usage_USD_total{job=~\"${agent:pipe}\",job=\"claude-statusline\",model!=\"\"}[$__rate_interval]))) > 1))",
           "instant": false,
           "legendFormat": "{{model}}",
           "range": true,
@@ -896,7 +896,7 @@
         "type": "prometheus",
         "uid": "mimir"
       },
-      "description": "各時点の集計窓で API 換算額の増分を集計する。複数モデルが観測されたスレッドはその窓から除外する。コスト増分がない窓は空白。",
+      "description": "各時点の集計区間で観測した API 換算額の増分を集計する。複数モデルが観測されたスレッドはその区間から除外する。API 換算データがないモデルへの切り替えは検出できない。増分がない区間は空白。",
       "fieldConfig": {
         "defaults": {
           "custom": {
