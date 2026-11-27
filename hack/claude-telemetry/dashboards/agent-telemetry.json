@@ -91,7 +91,7 @@
         "type": "datasource",
         "uid": "-- Mixed --"
       },
-      "description": "表示期間内の記録を CLI と金額の算出元ごとに表示。Codex は画面で観測できた同一スレッドの増分。",
+      "description": "表示期間内の記録を CLI と金額の算出元ごとに表示。Codex は画面で観測できた同一スレッドの増分。集計区間に複数モデルが観測されたスレッドは API 換算集計から除外する。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -188,7 +188,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) == 0))",
+          "expr": "sum ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) == 0) unless on (thread_id) (count by (thread_id) (group by (thread_id, model) (present_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]))) > 1))",
           "legendFormat": "Codex API 換算",
           "refId": "C",
           "instant": true
@@ -592,7 +592,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) == 0))",
+          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) == 0) unless on (thread_id) (count by (thread_id) (group by (thread_id, model) (present_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]))) > 1))",
           "legendFormat": "Codex API 換算 / {{model}}",
           "refId": "C",
           "range": true,
@@ -601,7 +601,7 @@
       ],
       "title": "コストの推移",
       "type": "timeseries",
-      "description": "Claude Code はモデル別、Codex はスレッドの推定額または Standard 単価による API 換算の観測増分。"
+      "description": "Claude Code はモデル別、Codex はスレッドの推定額または Standard 単価による API 換算の観測増分。集計区間に複数モデルが観測されたスレッドは API 換算集計から除外する。"
     },
     {
       "datasource": {
@@ -666,7 +666,7 @@
         "type": "prometheus",
         "uid": "mimir"
       },
-      "description": "選択期間内でのモデル別 API 換算額。サマリの Codex API 換算と同じ条件で集計する。",
+      "description": "選択期間内でのモデル別 API 換算額。サマリの Codex API 換算と同じ条件で集計する。集計区間に複数モデルが観測されたスレッドは API 換算集計から除外する。",
       "fieldConfig": {
         "defaults": {
           "decimals": 2,
@@ -709,7 +709,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) == 0))",
+          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]) == 0) unless on (thread_id) (count by (thread_id) (group by (thread_id, model) (present_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__range]))) > 1))",
           "legendFormat": "{{model}}",
           "refId": "A",
           "instant": true,
@@ -2196,7 +2196,7 @@
             "type": "prometheus",
             "uid": "mimir"
           },
-          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) == 0)) * 3600000 / $__rate_interval_ms",
+          "expr": "sum by (model) ((max_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) - min_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval])) and (count_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) >= 2) and (resets(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]) == 0) unless on (thread_id) (count by (thread_id) (group by (thread_id, model) (present_over_time(codex_statusline_estimated_cost_USD{job=~\"${agent:pipe}\",job=\"codex-statusline\",cost_basis=\"api_equivalent\"}[$__rate_interval]))) > 1)) * 3600000 / $__rate_interval_ms",
           "legendFormat": "Codex API 換算 / {{model}}",
           "refId": "C",
           "range": true,
@@ -2205,7 +2205,7 @@
       ],
       "title": "コスト消費速度 (毎時)",
       "type": "timeseries",
-      "description": "観測された増分を 1 時間あたりに換算する。"
+      "description": "観測された増分を 1 時間あたりに換算する。集計区間に複数モデルが観測されたスレッドは API 換算集計から除外する。"
     },
     {
       "datasource": {
