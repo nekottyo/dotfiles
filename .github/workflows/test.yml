@@ -18,7 +18,7 @@ jobs:
     - name: uninstall brew
       run: echo y | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)" || true
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@50fbc622fc4ef5163becd7fab6573eac35f8462e # v1
 
     - name: Run test
       run: make test.${{ matrix.target }}

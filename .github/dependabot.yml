@@ -1,0 +1,13 @@
+# GitHub Actions の依存を Dependabot で管理する。
+# ただし version updates は有効化しない (open-pull-requests-limit: 0)。
+# cooldown は security updates にも適用されるため、脆弱性修正版の公開から
+# 7 日経つまで Dependabot が PR を作らなくなる (supply chain 対策)。
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
+    cooldown:
+      default-days: 7
