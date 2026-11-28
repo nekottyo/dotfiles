@@ -8,11 +8,11 @@ jobs:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/rebase')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@61b9e3751b92087fd0b06925ba6dd6314e06f089 # master (2026-11-28 時点)
+    - uses: actions/checkout@master
       with:
         fetch-depth: 0
     - name: Automatic Rebase
-      uses: cirrus-actions/rebase@cf2ad5908b365d40882ef06dab959717ec1aaf71 # 1.2
+      uses: cirrus-actions/rebase@1.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # https://github.community/t5/GitHub-Actions/Workflow-is-failing-if-no-job-can-be-ran-due-to-condition/m-p/38186#M3250
