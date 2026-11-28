@@ -3,18 +3,8 @@ exists "lsd"       && alias ls="lsd"
 exists "colordiff" && alias diff="colordiff"
 exists "terraform" && alias t="terraform"
 
-# headroom wrap は外した。resume 時に CCR の headroom_retrieve 履歴修復 (neutralize) が
-# 不正なリクエストを作り、セッションが 400 (tool use concurrency) で再開不能になった (2026-10-05)
-exists "claude" \
-  && claude() {
-    command claude --model "opus[1m]" --append-system-prompt-file ~/.claude/sr_opus_5_system_prompt.md "$@"
-}
-# alias claude='claude --model "opusplan" --effort "high" --append-system-prompt-file ~/.claude/sr_opus_5_system_prompt.md'
-
 alias oclaude='claude --model "opus[1m]"'
 alias fclaude='claude --model "claude-fable-5-1[1m]"'
-# alias srclaude='claude --model "opus[1m]" --append-system-prompt-file ~/.claude/sr_opus_5_system_prompt.md '
-
 
 # Copilot CLI のテレメトリをローカルの LGTM スタックへ送る (hack/claude-telemetry)
 # Claude Code は gRPC 4317 を使うが、Copilot CLI は OTLP HTTP のみ対応なので 4318 を使う。
