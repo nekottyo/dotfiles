@@ -1,0 +1,13 @@
+# GitHub Actions の依存を Dependabot で管理する。version updates も有効化している。
+# cooldown は version updates にのみ適用され、新しいリリースの公開から 7 日経つまで
+# version update の PR を作らない (supply chain 対策: 悪意あるリリースや事故リリースの
+# 初期被害を避ける)。security updates は cooldown の対象外なので、脆弱性修正は
+# 従来どおり即時に PR が作られる。
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
